@@ -31,7 +31,6 @@ public class View {
             for (int x = 0; x < this.Columns; x++) {
                 Tile tile = tiles[y * this.Columns + x];
                 Color[] autoTile = View.TerrainColors[tile.Type][tile.AutoTileID];
-                Debug.Log(tile.Id + " " + tile.AutoTileID);
                 texture.SetPixels( 
                     x * this.TileResolution, 
                     this.Rows * this.TileResolution - y * this.TileResolution - this.TileResolution, 
@@ -39,7 +38,6 @@ public class View {
                     this.TileResolution, 
                     autoTile
                 );
-                Debug.Log(autoTile.Length);
             }
         }
 

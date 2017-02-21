@@ -18,11 +18,13 @@ public enum TileType {
 public class Global {
 	public const int TrianglesInASquare = 2;
 	public const int VertsInATri = 3;
+    public static Vector3 Origin = new Vector3(0, 0, 0);
+    public static Vector3 SmallOffset = new Vector3(0, 0, 0);
+    public static Vector3 Offset = new Vector3(0, 0, 0);
 
     public static Color[][] GetColorsFromTexture2D(Texture2D texture, int tileResolution) {
         int columns = texture.width / tileResolution;
         int rows = texture.height / tileResolution;
-        Debug.Log("Columns " + columns + " Rows " + rows );
 
         Color[][] tiles = new Color[columns * rows][];
 

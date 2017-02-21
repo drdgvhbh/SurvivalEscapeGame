@@ -6,18 +6,25 @@ public class TerrainBuilder {
 	private int NumTiles;
 	private int Rows;
 	private int Columns;
+    private float TileSize;
 	private Tile[] Tiles; 
 
-	public TerrainBuilder(int numTiles, int rows, int columns) {
+	public TerrainBuilder(int numTiles, int rows, int columns, float tileSize) {
 		this.NumTiles = numTiles;
 		this.Rows = rows;
 		this.Columns = columns;
+        this.TileSize = tileSize;
 		this.Tiles = new Tile[this.NumTiles];
 	}
 
 	public Tile[] CreateTerrain() {
 		for (int i = 0; i < NumTiles; i++) {
-			this.Tiles[i] = new Tile(i, TileType.Placeholder);			
+            int currentRow = i / this.Columns;
+            //Debug.Log(currentRow);
+            int currentColumn = i % this.Columns;
+            Vector3 position = Global.Origin + Global.Offset + new Vector3(this.TileSize * currentColumn, -this.TileSize * currentRow);
+            //Debug.Log(position);
+			this.Tiles[i] = new Tile(i, TileType.Placeholder, position);			
 		}
 		this.FindNeighbours();
 		return Tiles;

@@ -13,11 +13,13 @@ public class Tile {
 	public int Id;
 	public Tile[] Neighbours = new Tile[4];
 	public int AutoTileID;
+    private Vector3 Position;
 	public TileType Type;
 
-	public Tile(int id, TileType type) {
+	public Tile(int id, TileType type, Vector3 position) {
 		this.Id = id;
 		this.Type = type;
+        this.SetPosition(position);
 	}
 
 	public bool AddNeighbour(Sides side, Tile tile) {
@@ -41,4 +43,11 @@ public class Tile {
 		this.AutoTileID = sum;
     }
 
+    public Vector3 GetPosition() {
+        return new Vector3(this.Position.x, this.Position.y, this.Position.z);
+    }
+
+    public void SetPosition(Vector3 position) {
+        this.Position = new Vector3(position.x, position.y, position.z);
+    }
 }
