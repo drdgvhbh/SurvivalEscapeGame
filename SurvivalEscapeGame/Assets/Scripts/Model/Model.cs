@@ -16,7 +16,7 @@ public class Model : MonoBehaviour {
     public GameObject Player1;
 
     [Header("View Properties")]
-    public int TileResolution = 18;
+    public int TileResolution = 32;
     public Texture2D[] TileTextures;
 
     private void Start() {

@@ -140,7 +140,7 @@ MonoBehaviour:
   Player1: {fileID: 1605786990989672, guid: add6538f1cf313e409e6f3f60ee3e1b3, type: 2}
   TileResolution: 18
   TileTextures:
-  - {fileID: 2800000, guid: ec052f81a4b5726459d0db9ff56f70e2, type: 3}
+  - {fileID: 2800000, guid: 85bf8599834dcea4e8de5ed6ec3ca8f4, type: 3}
 --- !u!114 &114473287400587204
 MonoBehaviour:
   m_ObjectHideFlags: 1
