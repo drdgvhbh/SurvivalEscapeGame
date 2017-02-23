@@ -7,9 +7,19 @@ public class TerrainBuilder {
 	private int Rows;
 	private int Columns;
     private float TileSize;
-	private Tile[] Tiles; 
+	private Tile[] Tiles;
 
-	public TerrainBuilder(int numTiles, int rows, int columns, float tileSize) {
+    public static Dictionary<ItemList, float> ItemChance = new Dictionary<ItemList, float>() {
+        { ItemList.Gem, 100.0f}
+    };
+
+    public static Dictionary<TileType, Item[][]> ItemLocations = new Dictionary<TileType, Item[][]>() {
+        { TileType.Empty, new Item[0][] },
+        { TileType.Placeholder, new Item[][] {new Gem[0] }},
+        { TileType.Grass, new Item[0][]}
+    };
+
+    public TerrainBuilder(int numTiles, int rows, int columns, float tileSize) {
 		this.NumTiles = numTiles;
 		this.Rows = rows;
 		this.Columns = columns;
@@ -20,11 +30,19 @@ public class TerrainBuilder {
 	public Tile[] CreateTerrain() {
 		for (int i = 0; i < NumTiles; i++) {
             int currentRow = i / this.Columns;
-            //Debug.Log(currentRow);
             int currentColumn = i % this.Columns;
             Vector3 position = Global.Origin + Global.Offset + new Vector3(this.TileSize * currentColumn, -this.TileSize * currentRow);
-            //Debug.Log(position);
-			this.Tiles[i] = new Tile(i, TileType.Placeholder, position);			
+			this.Tiles[i] = new Tile(i, TileType.Placeholder, position);
+            if (Random.Range(0.0f, 100.0f) <= ItemChance[ItemList.Gem]) {
+                this.Tiles[i].AddItem(new Gem(
+                                                Item.IdCounter, 
+                                                Random.Range(0, this.Tiles[i].GetTileDepth()),
+                                                false,
+                                                1
+                                                )
+                                     );
+                Item.IdCounter++;
+            }
 		}
 		this.FindNeighbours();
 		return Tiles;

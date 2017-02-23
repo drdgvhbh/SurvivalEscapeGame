@@ -37,7 +37,10 @@ public class Model : MonoBehaviour {
 	}
 
     private void CreatePlayer() {
-        GameObject player = Instantiate(Player1, Terrain[5].GetPosition() - Global.SmallOffset, Quaternion.identity);
+        GameObject player = Instantiate(Player1, Terrain[20].GetPosition() - Global.SmallOffset, Quaternion.identity);
         player.transform.SetParent(this.GetComponent<Transform>());
+        player.AddComponent<PlayerData>();
+        player.GetComponent<PlayerData>().SetCurrentTile(Terrain[20]);
+        player.GetComponent<PlayerInput>().SetPlayerData(player.GetComponent<PlayerData>());
     }
 }
