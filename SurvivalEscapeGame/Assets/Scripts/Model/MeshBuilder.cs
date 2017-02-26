@@ -17,7 +17,9 @@ public class MeshBuilder : MonoBehaviour {
 	public float TileSize = 1.0f;
 	[HideInInspector]
     public int NumTiles;
+
 	private Mesh GameGrid;
+    public Vector3[] Norms;
 
 	private void Awake() {
 		this.Filter = this.GetComponentInParent<MeshFilter>();
@@ -39,15 +41,15 @@ public class MeshBuilder : MonoBehaviour {
 
 		//Intialization
 		Vector3[] verts = new Vector3[numVerts];
-		Vector3[] norms = new Vector3[numVerts];
+		this.Norms = new Vector3[numVerts];
 		Vector2[] uv = new Vector2[numVerts];
 		int[] trisAsVerts = new int[numTris * Global.VertsInATri];
 
 		for (int y = 0; y < vSizeY; y++) {
 			for (int x = 0; x < vSizeX; x++) {
 				verts[y * vSizeX + x] = new Vector3(x * this.TileSize, -y * this.TileSize, 0);
-				norms[y * vSizeX + x] = Vector3.back;
-				uv[y * vSizeX + x] = new Vector2((float)x / Columns, 1f - (float)y / Rows);
+                this.Norms[y * vSizeX + x] = Vector3.zero;
+                uv[y * vSizeX + x] = new Vector2((float)x / Columns, 1f - (float)y / Rows);
 			}
 		}
 
@@ -70,7 +72,7 @@ public class MeshBuilder : MonoBehaviour {
 		Mesh mesh = new Mesh();
 		mesh.vertices = verts;
 		mesh.triangles = trisAsVerts;
-		mesh.normals = norms;
+		mesh.normals = this.Norms;
 		mesh.uv = uv;
 
 		this.Filter.mesh = mesh;
@@ -78,4 +80,5 @@ public class MeshBuilder : MonoBehaviour {
 
 		return mesh;
 	} 
+
 }

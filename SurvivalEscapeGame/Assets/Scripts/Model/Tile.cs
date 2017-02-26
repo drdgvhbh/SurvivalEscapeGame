@@ -22,17 +22,40 @@ public class Tile {
 	public TileType Type;
     private int TileDepth;
     private List<Item> Items;
+    public Vector3[] Norms;
+    private bool Active;
+    public int[] NormIdx;
 
-	public Tile(int id, TileType type, Vector3 position) {
+	public Tile(int id, TileType type, Vector3 position, ref Vector3[] norms, int[] normIdx) {
 		this.Id = id;
 		this.Type = type;
         this.TileDepth = Tile.TileDepthTable[this.Type] + UnityEngine.Random.Range(Global.DepthVarianceMin, Global.DepthVarianceMax);
         this.SetPosition(position);
         this.Items = new List<Item>();
+        this.Norms = norms;
+        this.NormIdx = normIdx;
+        this.Active = false;
 	}
 
     public Tile[] GetNeighbours() {
         return this.Neighbours;
+    }
+
+    public List<Tile> GetExtendedNeighbours(int numExtended) {
+        List<Tile> tiles = new List<Tile>();
+        tiles.Add(this);
+        for (int i = 0; i < numExtended; i++) {
+            int c = tiles.Count;
+            for (int k = 0; k < c; k++) {
+                for (int j = 0; j < tiles[k].GetNeighbours().Length; j++) {
+                    if (tiles[k].GetNeighbours()[j] == null || tiles.Contains(tiles[k].GetNeighbours()[j])) {
+                        continue;
+                    }
+                    tiles.Add(tiles[k].GetNeighbours()[j]);
+                }
+            }
+        }
+       return tiles;
     }
 
 	public bool AddNeighbour(Sides side, Tile tile) {
@@ -89,5 +112,13 @@ public class Tile {
 
     public void SetTileDepth(int depth) {
         this.TileDepth = depth;
+    }
+
+    public bool IsActive() {
+        return this.Active;
+    }
+
+    public void SetActive(bool active) {
+        this.Active = active;
     }
 }

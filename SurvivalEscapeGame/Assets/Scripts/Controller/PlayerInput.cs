@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
-    public float MovementSpeed = 1;
     public Vector3 Destination = new Vector3();
     public PlayerData PlayerData;
     private int NeighbourIndex;
@@ -39,7 +38,7 @@ public class PlayerInput : MonoBehaviour {
                this.Move();
             }
         } else {
-            float step = this.MovementSpeed * Time.deltaTime;
+            float step = this.GetPlayerData().MovementSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, this.Destination, step);
             if (transform.position.Equals(this.Destination)) {
                 if (this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex] != null) {
@@ -47,6 +46,7 @@ public class PlayerInput : MonoBehaviour {
                 }
                 this.GetPlayerData().PerformingAction[PlayerActions.Move] = false;
                 this.GetPlayerData().IsPerformingAction = false;
+                this.GetPlayerData().UpdateTileVisibility();
             }
         }
     }

@@ -26,7 +26,7 @@ public enum ItemList {
     Gem
 }
 
-public class Global {
+public static class Global {
     public const int TrianglesInASquare = 2;
 	public const int VertsInATri = 3;
     public const int DepthVarianceMin = 0;

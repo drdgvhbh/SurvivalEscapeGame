@@ -14,26 +14,15 @@ public abstract class Item {
     protected int Quantity;
 
     public Item(int id, int depthLevel, bool active) {
-        this.Id = id;
-        this.DepthLevel = depthLevel;
-        this.Active = active;
     }
 
     public Item(int id, int depthLevel, bool active, int quantity) {
-        this.Id = id;
-        this.DepthLevel = depthLevel;
-        this.Active = active;
     }
 
     public Item(int id, bool active) {
-        this.Id = id;
-        this.Active = active;
     }
 
     public Item(int id, bool active, int quantity) {
-        this.Id = id;
-        this.Active = active;
-        this.Quantity = quantity;
     }
 
     public bool IsActive() {
