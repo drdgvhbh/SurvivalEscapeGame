@@ -12,6 +12,7 @@ public abstract class Item {
     protected int DepthLevel; //Tiledepth of 5, DepthLevel 2 -> 3 digs
     protected bool Active;
     protected int Quantity;
+    public GameObject ItemObject { get; set; }
 
     public Item(int id, int depthLevel, bool active) {
     }

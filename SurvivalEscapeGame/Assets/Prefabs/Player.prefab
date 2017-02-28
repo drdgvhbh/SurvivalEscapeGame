@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4983457755452624}
   - component: {fileID: 212768887434700220}
   - component: {fileID: 114542600320837952}
+  - component: {fileID: 114859095252022116}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -133,7 +134,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3546bb9189b8a7349972fba866414bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1
+  Destination: {x: 0, y: 0, z: 0}
+  PlayerData: {fileID: 0}
+--- !u!114 &114859095252022116
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1605786990989672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52bc64d90daf4f54abdf018f93cecd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  IsPerformingAction: 0
+  NourishmentLevel: 0
+  NourishmentStatus: 0
+  NourishmentDecayRate: 0
+  HealthRegeneration: 0
+  MaximumHealth: 0
+  Health: 0
+  MaximumStamina: 0
+  Stamina: 0
+  MovementSpeed: 0
+  Alive: 0
+  HealthBar: {fileID: 0}
 --- !u!124 &124015553607171718
 Behaviour:
   m_ObjectHideFlags: 1

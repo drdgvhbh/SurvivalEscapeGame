@@ -13,7 +13,7 @@ public class Model : MonoBehaviour {
 
     public int Key = 1;
 
-    [Header("Prefabs")]
+    [Header("Player")]
     public GameObject Player1;
 
     [Header("View Properties")]
@@ -35,15 +35,14 @@ public class Model : MonoBehaviour {
 		this.Controller.SetView(this.View);
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
-        this.CreatePlayer();
+        this.CreatePlayerProperties();
 	}
 
-    private void CreatePlayer() {
-        GameObject player = Instantiate(Player1, Terrain[0].GetPosition() - Global.SmallOffset, Quaternion.identity);
-        player.transform.SetParent(this.GetComponent<Transform>());
-        player.AddComponent<PlayerData>();
-        player.GetComponent<PlayerData>().SetCurrentTile(Terrain[0]);
-        player.GetComponent<PlayerInput>().SetPlayerData(player.GetComponent<PlayerData>());
+    private void CreatePlayerProperties() {
+        Player1.transform.position = Terrain[0].GetPosition() - Global.SmallOffset;
+        Player1.GetComponent<PlayerData>().SetCurrentTile(Terrain[0]);
+        Player1.GetComponent<PlayerData>().LateStart();
+        Player1.GetComponent<PlayerInput>().SetPlayerData(Player1.GetComponent<PlayerData>());
     }
 
     public Mesh GetGameGrid() {

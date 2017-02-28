@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerData : MonoBehaviour {
     public Tile CurrentTile;
@@ -20,12 +21,34 @@ public class PlayerData : MonoBehaviour {
     //private List<Item> Inventory;
 
     private Dictionary<string, Item> Inventory;
+    private float MaximumNourishmentStatus;
 
     public Dictionary<PlayerActions, bool> PerformingAction;
 
+    public GameObject HealthBar;
+    public GameObject NourishmentBar;
+    public GameObject StaminaBar;
+
+    private const int NumItemSlots = 16;
+
+    [SerializeField]
+    private GameObject InventoryPanel;
+    [SerializeField]
+    private GameObject SlotPanel;
+    [SerializeField]
+    private GameObject InventorySlot;
+    [SerializeField]
+    private GameObject InventoryItem;
+
+    public List<GameObject> Slots = new List<GameObject>();
+    public List<GameObject> Items = new List<GameObject>();
+
     // Use this for initialization
     private void Start() {
-        this.NourishmentLevel = 2;
+    }
+
+    public void LateStart() {
+        this.NourishmentLevel = 0;
         this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.Health = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
@@ -34,8 +57,8 @@ public class PlayerData : MonoBehaviour {
         this.HealthRegeneration = NourishmentLevels.BaseHealthRegeneration[this.NourishmentLevel];
         this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] / 2;
         this.NourishmentDecayRate = NourishmentLevels.NourishmentDecayRate[this.NourishmentLevel];
-        this.Alive = true;
         this.position = this.GetComponent<Transform>().position;
+        this.Alive = true;
         this.IsPerformingAction = false;
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
@@ -44,6 +67,15 @@ public class PlayerData : MonoBehaviour {
         this.Inventory = new Dictionary<string, Item>();
         this.Inventory.Add(Global.ItemNames[ItemList.Shovel], new Shovel(++Item.IdCounter, true));
         this.UpdateTileVisibility();
+        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / this.MaximumHealth;
+        this.MaximumNourishmentStatus = 0f;
+        for (int i = -2; i <= 2; i++) {
+            this.MaximumNourishmentStatus += NourishmentLevels.NourishmentThreshold[i];
+        }
+        for (int i = 0; i < PlayerData.NumItemSlots; i++) {
+            this.Slots.Add(Instantiate(InventorySlot));
+            this.Slots[i].transform.SetParent(this.SlotPanel.transform);
+        }
     }
 
     // Update is called once per frame
@@ -54,6 +86,7 @@ public class PlayerData : MonoBehaviour {
         this.UpdateHealth();
         this.ApplyNourishmentDecay();
         this.UpdateNourishmentStatus();
+        this.UpdateStamina();
         //  Debug.Log(this.NourishmentStatus);        
     }
 
@@ -69,6 +102,21 @@ public class PlayerData : MonoBehaviour {
     }
 
     private void UpdateTileVisibilityDay() {
+        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(3)) {
+            for (int j = 0; j < t.NormIdx.Length; j++) {
+                t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
+                t.SetActive(false);
+            }
+        }
+        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
+            for (int j = 0; j < t.NormIdx.Length; j++) {
+                t.Norms[t.NormIdx[j]].Set(0f, 0f, -1f);
+                this.GetCurrentTile().SetActive(true);
+            }
+        }
+    }
+
+    private void UpdateTileVisibilityNight() {
         foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
             for (int j = 0; j < t.NormIdx.Length; j++) {
                 t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
@@ -83,23 +131,15 @@ public class PlayerData : MonoBehaviour {
         }
     }
 
-    private void UpdateTileVisibilityNight() {
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(1)) {
-            for (int j = 0; j < t.NormIdx.Length; j++) {
-                t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
-                t.SetActive(false);
-            }
-        }
-        this.GetCurrentTile().SetActive(true);
-        for (int i = 0; i < this.GetCurrentTile().NormIdx.Length; i++) {
-            this.GetCurrentTile().Norms[this.GetCurrentTile().NormIdx[i]].Set(0f, 0f, -1f);
-        }
+    public void UpdateStamina() {
+        this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
     }
 
     public void UpdateHealth() {
         if (this.Health < NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel]) {
             this.Health = System.Math.Min(NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel], this.Health + this.HealthRegeneration);
         }
+        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / this.MaximumHealth;
     }
 
     public void ApplyNourishmentDecay() {
@@ -118,15 +158,36 @@ public class PlayerData : MonoBehaviour {
             this.NourishmentLevel++;
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }
+        float NBarOffset = 0f;
+        for (int i = -2; i < this.NourishmentLevel; i++) {
+            NBarOffset += NourishmentLevels.NourishmentThreshold[i];
+        }
+        this.NourishmentBar.GetComponent<Image>().fillAmount = (NBarOffset + this.NourishmentStatus) / this.MaximumNourishmentStatus;
     }
 
     public void AddItem(Item it) {
+        if (this.GetInventory().Count < PlayerData.NumItemSlots)
+            return;
         if (!this.GetInventory().ContainsKey(it.GetName())) {
             this.GetInventory().Add(it.GetName(), it);
         } else {
             Item tmp = this.GetInventory()[it.GetName()];
             tmp.SetQuantity(tmp.GetQuantity() + 1);
         }
+        /*  for (int i = 0; i < PlayerData.NumItemSlots; i++) {
+              if (this.Slots[i].transform.childCount == 0) {
+                  GameObject item = Instantiate(this.InventoryItem);
+                  Items.Add(item);
+                  this.GetInventory()[it.GetName()].ItemObject = item;
+                  item.transform.SetParent(this.Slots[i].transform);
+                  item.transform.position = Vector3.zero;
+                  break;
+              }
+
+          }*/
+
+
+
     }
 
     public bool InventoryContains(string key) {
