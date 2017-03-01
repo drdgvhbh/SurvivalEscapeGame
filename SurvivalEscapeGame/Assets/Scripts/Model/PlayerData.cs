@@ -40,8 +40,8 @@ public class PlayerData : MonoBehaviour {
     [SerializeField]
     private GameObject InventoryItem;
 
-    public List<GameObject> Slots = new List<GameObject>();
-    public List<GameObject> Items = new List<GameObject>();
+    public static List<GameObject> Slots = new List<GameObject>();
+    public static List<GameObject> Items = new List<GameObject>();
 
     // Use this for initialization
     private void Start() {
@@ -65,7 +65,6 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.Dig, false }
         };
         this.Inventory = new Dictionary<string, Item>();
-        this.Inventory.Add(Global.ItemNames[ItemList.Shovel], new Shovel(++Item.IdCounter, true));
         this.UpdateTileVisibility();
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / this.MaximumHealth;
         this.MaximumNourishmentStatus = 0f;
@@ -73,9 +72,12 @@ public class PlayerData : MonoBehaviour {
             this.MaximumNourishmentStatus += NourishmentLevels.NourishmentThreshold[i];
         }
         for (int i = 0; i < PlayerData.NumItemSlots; i++) {
-            this.Slots.Add(Instantiate(InventorySlot));
-            this.Slots[i].transform.SetParent(this.SlotPanel.transform);
+            PlayerData.Slots.Add(Instantiate(InventorySlot));
+            PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform);
+            PlayerData.Slots[i].AddComponent<SlotInput>();
+            PlayerData.Slots[i].GetComponent<SlotInput>().SlotID = i;
         }
+        this.AddItem(new Shovel(++Item.IdCounter, true));
     }
 
     // Update is called once per frame
@@ -165,29 +167,37 @@ public class PlayerData : MonoBehaviour {
         this.NourishmentBar.GetComponent<Image>().fillAmount = (NBarOffset + this.NourishmentStatus) / this.MaximumNourishmentStatus;
     }
 
-    public void AddItem(Item it) {
-        if (this.GetInventory().Count < PlayerData.NumItemSlots)
-            return;
+    public bool AddItem(Item it) {
+        if (this.GetInventory().Count > PlayerData.NumItemSlots) {
+            return false;
+        }
         if (!this.GetInventory().ContainsKey(it.GetName())) {
             this.GetInventory().Add(it.GetName(), it);
-        } else {
+            for (int i = 0; i < PlayerData.NumItemSlots; i++) {
+                if (PlayerData.Slots[i].transform.childCount == 0) {
+                    GameObject item = Instantiate(this.InventoryItem);
+                    Items.Add(item);
+                    this.GetInventory()[it.GetName()].ItemObject = item;
+                    item.transform.SetParent(PlayerData.Slots[i].transform);
+                    item.transform.localPosition = Vector3.zero;
+                    item.GetComponent<Image>().sprite = this.GetInventory()[it.GetName()].Icon;
+                    item.transform.GetChild(0).GetComponent<Text>().text = it.GetQuantity().ToString();
+                    ItemInput input = item.AddComponent<ItemInput>();
+                    input.Item = it;
+                    it.Slot = i;
+                    PlayerData.Slots[i].GetComponent<SlotInput>().StoredItem = it;
+                    return true;
+                }
+            }
+        } else if (this.GetInventory()[it.GetName()].GetQuantity() < this.GetInventory()[it.GetName()].MaximumQuantity) {
             Item tmp = this.GetInventory()[it.GetName()];
             tmp.SetQuantity(tmp.GetQuantity() + 1);
+            tmp.ItemObject.transform.GetChild(0).GetComponent<Text>().text = tmp.GetQuantity().ToString();
+            return true;
+        } else {
+            Debug.Log("You've reached the maximum quantity of this item!");            
         }
-        /*  for (int i = 0; i < PlayerData.NumItemSlots; i++) {
-              if (this.Slots[i].transform.childCount == 0) {
-                  GameObject item = Instantiate(this.InventoryItem);
-                  Items.Add(item);
-                  this.GetInventory()[it.GetName()].ItemObject = item;
-                  item.transform.SetParent(this.Slots[i].transform);
-                  item.transform.position = Vector3.zero;
-                  break;
-              }
-
-          }*/
-
-
-
+        return false;
     }
 
     public bool InventoryContains(string key) {

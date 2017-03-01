@@ -5,22 +5,14 @@ using UnityEngine;
 public class Shovel : ActionItem {
     public Shovel(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
         this.Name = Global.ItemNames[ItemList.Shovel];
-        this.Id = id;
-        this.DepthLevel = depthLevel;
-        this.Active = active;
-        this.Quantity = 1;
         this.HungerCost = 0.1f;
         this.ThirstCost = 0.4f;
+        this.MaximumQuantity = 1;
+        this.Slot = -1;
+        this.Icon = Resources.LoadAll<Sprite>("Sprites/Items/ToolsSprites")[1];
     }
 
-    public Shovel(int id, bool active) : base(id, active) {
-        this.Name = Global.ItemNames[ItemList.Shovel];
-        this.Id = id;
-        this.DepthLevel = 0;
-        this.Active = active;
-        this.Quantity = 1;
-        this.HungerCost = 0.1f;
-        this.ThirstCost = 0.4f;
+    public Shovel(int id, bool active) : this(id, 0, active) {
     }
 
     public void Dig(PlayerData pd) {
@@ -34,9 +26,10 @@ public class Shovel : ActionItem {
         foreach (Item it in tile.GetItems()) {
             if (it.GetDepthLevel() == tile.GetTileDepth()) {
                 tile.RemoveItem(it.GetId());
-                pd.AddItem(it);
-                Debug.Log("Found: " + it.GetName() + ", Player now has: " + pd.GetInventory()[it.GetName()].GetQuantity() + " " + it.GetName() + "(s).");
+                if (pd.AddItem(it)) {
+                    Debug.Log("Found: " + it.GetName() + ", Player now has: " + pd.GetInventory()[it.GetName()].GetQuantity() + " " + it.GetName() + "(s).");
+                }
             }
-        }       
+        }
     }
 }
