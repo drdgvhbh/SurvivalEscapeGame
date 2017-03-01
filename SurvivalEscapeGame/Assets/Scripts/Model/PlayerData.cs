@@ -182,8 +182,7 @@ public class PlayerData : MonoBehaviour {
                     item.transform.localPosition = Vector3.zero;
                     item.GetComponent<Image>().sprite = this.GetInventory()[it.GetName()].Icon;
                     item.transform.GetChild(0).GetComponent<Text>().text = it.GetQuantity().ToString();
-                    ItemInput input = item.AddComponent<ItemInput>();
-                    input.Item = it;
+                    item.GetComponent<ItemInput>().Item = it;
                     it.Slot = i;
                     PlayerData.Slots[i].GetComponent<SlotInput>().StoredItem = it;
                     return true;

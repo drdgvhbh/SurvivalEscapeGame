@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
     public Vector3 Destination = new Vector3();
-    public PlayerData PlayerData;
+    [SerializeField]
+    private PlayerData PlayerData;
     private int NeighbourIndex;
+    [SerializeField]
+    private GameObject InventoryPanel;
 
     private Vector3 previousPosition = Vector3.zero;
 
@@ -20,9 +23,10 @@ public class PlayerInput : MonoBehaviour {
             return;
         this.Movement(this.GetPlayerData().PerformingAction[PlayerActions.Move]);
         this.Dig(this.GetPlayerData().PerformingAction[PlayerActions.Dig]);
+        ToggleInventory();
     }
 
-    public void Movement(bool exec) {
+    private void Movement(bool exec) {
         if (!exec && !this.GetPlayerData().IsPerformingAction) { 
             if (Input.GetAxisRaw("Vertical") > 0) {
                 this.NeighbourIndex = (int)Sides.Top;
@@ -51,7 +55,7 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
-    public void Move() {
+    protected void Move() {
         if (this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex] != null) {
             this.Destination = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex].GetPosition() - Global.SmallOffset;
             this.GetPlayerData().PerformingAction[PlayerActions.Move] = true;
@@ -68,7 +72,6 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
-
     public void SetPlayerData(PlayerData pd) {
         this.PlayerData = pd;
     }
@@ -76,6 +79,14 @@ public class PlayerInput : MonoBehaviour {
     public PlayerData GetPlayerData() {
         return this.PlayerData;
     }
+
+    public void ToggleInventory() {
+        if (Input.GetKeyDown(KeyCode.I)) {
+            InventoryPanel.SetActive(!InventoryPanel.activeSelf);
+        }
+    }
+
+
 }
 
 
