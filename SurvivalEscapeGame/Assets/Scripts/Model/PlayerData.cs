@@ -39,6 +39,8 @@ public class PlayerData : MonoBehaviour {
     private GameObject InventorySlot;
     [SerializeField]
     private GameObject InventoryItem;
+    [SerializeField]
+    private GameObject ActivePanel;
 
     public static List<GameObject> Slots = new List<GameObject>();
     public static List<GameObject> Items = new List<GameObject>();
@@ -185,6 +187,20 @@ public class PlayerData : MonoBehaviour {
                     item.GetComponent<ItemInput>().Item = it;
                     it.Slot = i;
                     PlayerData.Slots[i].GetComponent<SlotInput>().StoredItem = it;
+                    int numActive = ActivePanel.transform.childCount;
+                    for (int j = 0; j < numActive; j++) {                        
+                        if (it.GetType().IsSubclassOf(typeof(ActionItem))) {
+                            Transform activeSlot = ActivePanel.transform.GetChild(j);
+                            activeSlot.GetComponent<ActiveInput>().Item = it;
+                            activeSlot.GetComponent<ActiveInput>().Slot = j;
+                            activeSlot.GetChild(0).GetComponent<Image>().sprite = Item.BorderSprite;
+                            activeSlot.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                            activeSlot.GetChild(1).GetComponent<Image>().sprite = item.GetComponent<Image>().sprite;
+                            activeSlot.GetChild(1).GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                            activeSlot.GetChild(2).GetComponent<Text>().text = ActiveInput.Hotkeys[activeSlot.GetComponent<ActiveInput>().Slot].ToString();
+                            break;
+                        }                 
+                    }
                     return true;
                 }
             }

@@ -16,6 +16,8 @@ public abstract class Item {
     protected int Quantity;
     public GameObject ItemObject { get; set; }
 
+    public static Sprite BorderSprite = Resources.Load<Sprite>("Sprites/UI/UniqueBorderV11");
+
     public Item(int id, int depthLevel, bool active) : this(id, depthLevel, active, 1) {
     }
 

@@ -13,6 +13,13 @@ public class Model : MonoBehaviour {
 
     public int Key = 1;
 
+    [SerializeField]
+    private GameObject ActivePanel;
+    [SerializeField]
+    private GameObject ActiveSlot;
+    private static int NumberOfActiveSlots = 6;
+    public List<GameObject> ActiveContainer { get; set; }
+
     [Header("Player")]
     public GameObject Player1;
 
@@ -21,7 +28,8 @@ public class Model : MonoBehaviour {
     public Texture2D[] TileTextures;
 
     private void Start() {
-		this.Mb = this.GetComponentInChildren<MeshBuilder>();
+        CreateActivePanel();
+        this.Mb = this.GetComponentInChildren<MeshBuilder>();
 		this.GameGrid = Mb.GetGameGrid();
         this.Day = true;
         Global.SmallOffset = new Vector3(-this.Mb.TileSize / 2.0f, this.Mb.TileSize / 2.0f);
@@ -36,7 +44,9 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-	}
+        
+
+    }
 
     private void CreatePlayerProperties() {
         Player1.transform.position = Terrain[0].GetPosition() - Global.SmallOffset;
@@ -55,5 +65,13 @@ public class Model : MonoBehaviour {
 
     public bool IsDay() {
         return this.Day;
+    }
+
+    private void CreateActivePanel() {
+        if (ActiveContainer == null)
+            ActiveContainer = new List<GameObject>();
+        for (int i = 0; i < NumberOfActiveSlots; i++) {
+            ActiveContainer.Add(GameObject.Instantiate(ActiveSlot, ActivePanel.transform));            
+        }
     }
 }

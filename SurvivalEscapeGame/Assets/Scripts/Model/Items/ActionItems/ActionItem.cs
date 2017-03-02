@@ -10,6 +10,8 @@ public abstract class ActionItem : Item {
     //The duration in seconds
     protected float ChannelTime;
 
+
+
     public ActionItem(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
 
     }

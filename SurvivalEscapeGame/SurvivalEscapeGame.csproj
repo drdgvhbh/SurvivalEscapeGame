@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Controller\ActiveInput.cs" />
     <Compile Include="Assets\Scripts\Controller\Controller.cs" />
     <Compile Include="Assets\Scripts\Controller\InventoryInput.cs" />
     <Compile Include="Assets\Scripts\Controller\ItemInput.cs" />
