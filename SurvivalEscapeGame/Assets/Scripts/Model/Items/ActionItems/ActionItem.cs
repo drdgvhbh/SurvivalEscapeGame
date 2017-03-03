@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ActionItem : Item {
-    // Cost per second
-    protected float HungerCost;
-    protected float ThirstCost;
-
+public abstract class ActionItem : Item { 
+    public float StaminaCost;
     //The duration in seconds
-    protected float ChannelTime;
+    public float ChannelDuration;
 
 
 
@@ -20,11 +17,4 @@ public abstract class ActionItem : Item {
 
     }
 
-    public float GetTotalThirstCost() {
-        return this.ThirstCost * this.ChannelTime;
-    }
-
-    public float GetTotalHungerCost() {
-        return this.HungerCost * this.ChannelTime;
-    }
 }
