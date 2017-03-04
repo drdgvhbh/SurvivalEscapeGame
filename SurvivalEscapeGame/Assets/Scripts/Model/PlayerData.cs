@@ -17,6 +17,7 @@ public class PlayerData : MonoBehaviour {
     public float MaximumStamina;
     public float Stamina;
     public float MovementSpeed;
+    public float StaminaRegeneration;
     public bool Alive;
     //private List<Item> Inventory;
 
@@ -25,9 +26,14 @@ public class PlayerData : MonoBehaviour {
 
     public Dictionary<PlayerActions, bool> PerformingAction;
 
-    public GameObject HealthBar;
-    public GameObject NourishmentBar;
-    public GameObject StaminaBar;
+    [SerializeField]
+    private GameObject HealthBar;
+    [SerializeField]
+    private GameObject NourishmentBar;
+    [SerializeField]
+    private GameObject StaminaBar;
+    [SerializeField]
+    private GameObject NourishmentText;
 
     private const int NumItemSlots = 16;
 
@@ -50,11 +56,12 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void LateStart() {
-        this.NourishmentLevel = 0;
+        this.NourishmentLevel = 1;
         this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.Health = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
         this.Stamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
+        this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
         this.MovementSpeed = NourishmentLevels.BaseMovementSpeed[this.NourishmentLevel];
         this.HealthRegeneration = NourishmentLevels.BaseHealthRegeneration[this.NourishmentLevel];
         this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] / 2;
@@ -84,14 +91,13 @@ public class PlayerData : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {
-        this.Stamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
+        this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
         this.MovementSpeed = NourishmentLevels.BaseMovementSpeed[this.NourishmentLevel];
         this.HealthRegeneration = NourishmentLevels.BaseHealthRegeneration[this.NourishmentLevel];
         this.UpdateHealth();
         this.ApplyNourishmentDecay();
         this.UpdateNourishmentStatus();
-        this.UpdateStamina();
-        //  Debug.Log(this.NourishmentStatus);        
+        this.UpdateStamina();    
     }
 
     public void UpdateTileVisibility() {
@@ -136,14 +142,17 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateStamina() {
+        if (this.Stamina < this.MaximumStamina) {
+            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);      
+        }
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
     }
 
     public void UpdateHealth() {
-        if (this.Health < NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel]) {
-            this.Health = System.Math.Min(NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel], this.Health + this.HealthRegeneration);
+        if (this.Health < MaximumHealth) {
+            this.Health = System.Math.Min(MaximumHealth, this.Health + this.HealthRegeneration);
         }
-        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / this.MaximumHealth;
+        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
     }
 
     public void ApplyNourishmentDecay() {
@@ -152,6 +161,7 @@ public class PlayerData : MonoBehaviour {
         } else if (this.NourishmentLevel == -2) {
             this.NourishmentStatus = 0;
         }
+        NourishmentText.GetComponent<Text>().text = this.NourishmentLevel.ToString();
     }
 
     public void UpdateNourishmentStatus() {
@@ -162,11 +172,7 @@ public class PlayerData : MonoBehaviour {
             this.NourishmentLevel++;
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }
-        float NBarOffset = 0f;
-        for (int i = -2; i < this.NourishmentLevel; i++) {
-            NBarOffset += NourishmentLevels.NourishmentThreshold[i];
-        }
-        this.NourishmentBar.GetComponent<Image>().fillAmount = (NBarOffset + this.NourishmentStatus) / this.MaximumNourishmentStatus;
+        this.NourishmentBar.GetComponent<Image>().fillAmount = this.NourishmentStatus / NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
     }
 
     public bool AddItem(Item it) {
@@ -198,6 +204,8 @@ public class PlayerData : MonoBehaviour {
                             activeSlot.GetChild(1).GetComponent<Image>().sprite = item.GetComponent<Image>().sprite;
                             activeSlot.GetChild(1).GetComponent<Image>().color = new Color(255, 255, 255, 255);
                             activeSlot.GetChild(2).GetComponent<Text>().text = ActiveInput.Hotkeys[activeSlot.GetComponent<ActiveInput>().Slot].ToString();
+                            ActionItem ai = (ActionItem)it;
+                            activeSlot.GetChild(3).GetComponent<Text>().text = ai.StaminaCost.ToString();
                             break;
                         }                 
                     }

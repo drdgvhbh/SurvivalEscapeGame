@@ -8,15 +8,17 @@ public class Shovel : ActionItem {
         this.MaximumQuantity = 1;
         this.Slot = -1;
         this.Icon = Resources.LoadAll<Sprite>("Sprites/Items/ToolsSprites")[1];
-        this.StaminaCost = 25.0f;
+        this.StaminaCost = 10.0f;
         this.ChannelDuration = 1.5f;
+        this.Consumable = false;
     }
 
     public Shovel(int id, bool active) : this(id, 0, active) {
     }
 
     public void Dig(PlayerData pd) {
-        Debug.Log("Done Digging");        
+        Debug.Log("Done Digging");
+        pd.Stamina = pd.Stamina - StaminaCost;
         Tile tile = pd.GetCurrentTile();
         if (tile.GetTileDepth() == 0) {
             Debug.Log("This tile can be dug no more.");

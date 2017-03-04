@@ -11,6 +11,13 @@ public class TerrainBuilder {
     private Vector3[] Normals;
     private Mesh GameGrid;
 
+    private static Dictionary<int, TileType> InverseTileType = new Dictionary<int, TileType>() {
+        { -1, TileType.Empty},
+        { 0, TileType.Placeholder},
+        { 1, TileType.Grass },
+        { 2, TileType.Sand }
+    };
+
     public static Dictionary<ItemList, float> ItemChance = new Dictionary<ItemList, float>() {
         { ItemList.Gem, 100.0f}
     };
@@ -18,7 +25,8 @@ public class TerrainBuilder {
     public static Dictionary<TileType, Item[][]> ItemLocations = new Dictionary<TileType, Item[][]>() {
         { TileType.Empty, new Item[0][] },
         { TileType.Placeholder, new Item[][] {new Gem[0] }},
-        { TileType.Grass, new Item[0][]}
+        { TileType.Grass, new Item[0][]},
+        { TileType.Sand, new Item[0][]}
     };
 
     public TerrainBuilder(int numTiles, int rows, int columns, float tileSize, ref Vector3[] norms, Mesh gameGrid) {
@@ -40,7 +48,7 @@ public class TerrainBuilder {
             for (int j = 0; j < Global.TrianglesInASquare * Global.VertsInATri; j++) {
                 normIdx[j] = this.GameGrid.triangles[j + i * Global.TrianglesInASquare * Global.VertsInATri];
             }
-			this.Tiles[i] = new Tile(i, TileType.Placeholder, position, ref this.Normals, normIdx);
+            this.Tiles[i] = new Tile(i, InverseTileType[Random.Range(1,3)], position, ref this.Normals, normIdx);
             if (Random.Range(0.0f, 100.0f) <= ItemChance[ItemList.Gem]) {
                 this.Tiles[i].AddItem(new Gem(
                                                 Item.IdCounter, 

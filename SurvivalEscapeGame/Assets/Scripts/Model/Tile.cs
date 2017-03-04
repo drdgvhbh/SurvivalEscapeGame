@@ -13,7 +13,8 @@ public class Tile {
     public static Dictionary<TileType, int> TileDepthTable = new Dictionary<TileType, int>() {
         { TileType.Empty, -1 },
         { TileType.Placeholder, 3},
-        { TileType.Grass, 2}
+        { TileType.Grass, 2},
+        { TileType.Sand, 4}
     };
 	public int Id;
 	public Tile[] Neighbours = new Tile[4];
@@ -72,7 +73,7 @@ public class Tile {
 		int sum = 0;
 		for (int i = 0; i < Neighbours.Length; i++) { }
 		foreach (Tile tile in this.Neighbours) {
-            if (tile != null) {
+            if (tile != null && this.Type == tile.Type) {
                 sum += Tile.Sides[Array.IndexOf(Neighbours, tile)];
             }
 		}

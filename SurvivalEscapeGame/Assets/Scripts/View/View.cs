@@ -23,6 +23,8 @@ public class View {
 
     private void InitializeTerrainColors() {
         View.TerrainColors.Add(TileType.Placeholder, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Placeholder], this.TileResolution));
+        View.TerrainColors.Add(TileType.Grass, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Grass], this.TileResolution));
+        View.TerrainColors.Add(TileType.Sand, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Sand], this.TileResolution));
     }
 
     public void UpdateTileView() {

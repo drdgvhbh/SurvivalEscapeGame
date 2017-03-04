@@ -75,7 +75,8 @@ public class PlayerInput : MonoBehaviour {
 
     public void Dig() {
         bool exec = this.GetPlayerData().PerformingAction[PlayerActions.Dig];
-        if (!exec && !this.GetPlayerData().IsPerformingAction) {
+        Shovel s = (Shovel)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Shovel]]);
+        if (!exec && !this.GetPlayerData().IsPerformingAction && GetPlayerData().Stamina >= s.StaminaCost) {
             this.GetPlayerData().PerformingAction[PlayerActions.Dig] = true;
             this.GetPlayerData().IsPerformingAction = true;
             Debug.Log("Digging");

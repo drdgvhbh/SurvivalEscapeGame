@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 83d3062c92a89fa4ca14d8a327c7bdfd
-timeCreated: 1488502590
+timeCreated: 1488568579
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -10,6 +10,7 @@ TextureImporter:
     21300006: UITextures_3
     21300008: UITextures_4
     21300010: UITextures_5
+    21300012: UITextures_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -150,6 +151,19 @@ TextureImporter:
         height: 67
       alignment: 0
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UITextures_6
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 1033
+        width: 741
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

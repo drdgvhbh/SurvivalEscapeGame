@@ -13,7 +13,8 @@ public enum Sides {
 public enum TileType {
     Empty = -1,
     Placeholder = 0,
-    Grass = 1
+    Grass = 1,
+    Sand = 2
 }
 
 public enum PlayerActions {
@@ -23,7 +24,8 @@ public enum PlayerActions {
 
 public enum ItemList {
     Shovel,
-    Gem
+    Gem,
+    Tent
 }
 
 public static class Global {
@@ -38,7 +40,8 @@ public static class Global {
 
     public static Dictionary<ItemList, string> ItemNames = new Dictionary<ItemList, string>() {
         {ItemList.Shovel, "Shovel" },
-        {ItemList.Gem, "Gem" }
+        {ItemList.Gem, "Gem" },
+        {ItemList.Tent, "Tent" }
     };
 
 

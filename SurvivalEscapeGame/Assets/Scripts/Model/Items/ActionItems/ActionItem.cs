@@ -6,8 +6,7 @@ public abstract class ActionItem : Item {
     public float StaminaCost;
     //The duration in seconds
     public float ChannelDuration;
-
-
+    public bool Consumable;
 
     public ActionItem(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
 
