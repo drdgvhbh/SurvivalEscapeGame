@@ -16,4 +16,10 @@ public abstract class ActionItem : Item {
 
     }
 
+    public ActionItem(ActionItem ai) : base(ai) {
+        this.StaminaCost = ai.StaminaCost;
+        this.ChannelDuration = ai.ChannelDuration;
+        this.Consumable = ai.Consumable;
+    }
+
 }

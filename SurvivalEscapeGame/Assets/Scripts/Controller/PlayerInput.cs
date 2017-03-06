@@ -23,8 +23,9 @@ public class PlayerInput : MonoBehaviour {
     };
 
     // Use this for initialization
-    private void Start() {
+    private void Awake() {
         Actions.Add(Global.ItemNames[ItemList.Shovel], Dig);
+        Actions.Add(Global.ItemNames[ItemList.Tent], BuildTent);
     }
 
     private void Update() {
@@ -34,6 +35,7 @@ public class PlayerInput : MonoBehaviour {
         this.Movement(this.GetPlayerData().PerformingAction[PlayerActions.Move]);
         Digging();
         ToggleInventory();
+        BuildingTent();
     }
 
     private void Movement(bool exec) {
@@ -73,12 +75,58 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
-    public void Dig() {
-        bool exec = this.GetPlayerData().PerformingAction[PlayerActions.Dig];
-        Shovel s = (Shovel)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Shovel]]);
-        if (!exec && !this.GetPlayerData().IsPerformingAction && GetPlayerData().Stamina >= s.StaminaCost) {
-            this.GetPlayerData().PerformingAction[PlayerActions.Dig] = true;
+    private bool AItemFcns(PlayerActions pa, ItemList il) {
+        ActionItem it = (ActionItem)this.GetPlayerData().GetInventory()[Global.ItemNames[il]];
+        if (it == null)
+            return false;
+        bool exec = this.GetPlayerData().PerformingAction[pa];
+        if (!exec && !this.GetPlayerData().IsPerformingAction && GetPlayerData().Stamina >= it.StaminaCost) {
+            this.GetPlayerData().PerformingAction[pa] = true;
             this.GetPlayerData().IsPerformingAction = true;
+            return true;
+        }
+        return false;
+    }
+
+    protected PlayerActions Channeling(ItemList il, PlayerActions pa) {
+        if (this.GetPlayerData().InventoryContains(Global.ItemNames[il])
+              && this.GetPlayerData().PerformingAction[pa]) {
+            ActionItem ai = (ActionItem)(this.GetPlayerData().GetInventory()[Global.ItemNames[il]]);
+            float step = Mathf.Lerp(0.0f, 1.0f, LerpStep);
+            LerpStep += Time.deltaTime / ai.ChannelDuration;
+            if (1.0f - LerpStep >= 0) {
+                ChannelingBarMask.transform.GetChild(0).GetComponent<Image>().fillAmount = 1.0f - LerpStep;
+                ChannelingBarMask.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Channeling: "
+                    + Math.Round((1.0f - LerpStep) * ai.ChannelDuration, 2);
+            }
+            if (step >= 1.0f) {
+                this.GetPlayerData().PerformingAction[pa] = false;
+                this.GetPlayerData().IsPerformingAction = false;
+                LerpStep = 0.0f;
+                ChannelingBarMask.SetActive(false);
+                return pa;
+            }
+        }
+        return PlayerActions.NotThisAction;
+    }
+
+    public void BuildTent() {
+        if (AItemFcns(PlayerActions.BuildTent, ItemList.Tent)) {
+            Debug.Log("Building Tent");
+            ChannelingBarMask.SetActive(true);
+            BuildingTent();
+        }
+    }
+
+    protected void BuildingTent() {
+        if (Channeling(ItemList.Tent, PlayerActions.BuildTent) == PlayerActions.BuildTent) {
+            Tent ai = (Tent)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Tent]]);
+            ai.BuildTent(this.GetPlayerData());
+        }
+    }
+
+    public void Dig() {
+        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
             Debug.Log("Digging");
             ChannelingBarMask.SetActive(true);
             Digging();
@@ -86,23 +134,9 @@ public class PlayerInput : MonoBehaviour {
     }
 
     protected void Digging() {
-        if (this.GetPlayerData().InventoryContains(Global.ItemNames[ItemList.Shovel]) 
-                && this.GetPlayerData().PerformingAction[PlayerActions.Dig]) {
+        if (Channeling(ItemList.Shovel, PlayerActions.Dig) == PlayerActions.Dig) {
             Shovel s = (Shovel)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Shovel]]);
-            float step = Mathf.Lerp(0.0f, 1.0f, LerpStep);
-            LerpStep += Time.deltaTime / s.ChannelDuration;
-            if (1.0f - LerpStep >= 0) {
-                ChannelingBarMask.transform.GetChild(0).GetComponent<Image>().fillAmount = 1.0f - LerpStep;
-                ChannelingBarMask.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Channeling: " 
-                    + Math.Round((1.0f - LerpStep) * s.ChannelDuration, 2);
-            }
-            if (step >= 1.0f) {
-                s.Dig(this.GetPlayerData());
-                this.GetPlayerData().PerformingAction[PlayerActions.Dig] = false;
-                this.GetPlayerData().IsPerformingAction = false;
-                LerpStep = 0.0f;
-                ChannelingBarMask.SetActive(false);
-            }
+            s.Dig(this.GetPlayerData());
         }
     }
 

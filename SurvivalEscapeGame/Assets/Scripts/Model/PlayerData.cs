@@ -19,12 +19,13 @@ public class PlayerData : MonoBehaviour {
     public float MovementSpeed;
     public float StaminaRegeneration;
     public bool Alive;
-    //private List<Item> Inventory;
 
-    private Dictionary<string, Item> Inventory;
     private float MaximumNourishmentStatus;
 
     public Dictionary<PlayerActions, bool> PerformingAction;
+
+    [SerializeField]
+    private GameObject Model;
 
     [SerializeField]
     private GameObject HealthBar;
@@ -35,10 +36,8 @@ public class PlayerData : MonoBehaviour {
     [SerializeField]
     private GameObject NourishmentText;
 
-    private const int NumItemSlots = 16;
-
-    [SerializeField]
-    private GameObject InventoryPanel;
+    public const int NumItemSlots = 16;
+    public const int NumCraftingSlots = 6;
     [SerializeField]
     private GameObject SlotPanel;
     [SerializeField]
@@ -47,9 +46,15 @@ public class PlayerData : MonoBehaviour {
     private GameObject InventoryItem;
     [SerializeField]
     private GameObject ActivePanel;
+    [SerializeField]
+    private GameObject CraftingPanel;
 
+    private Dictionary<string, Item> Inventory;
+    public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
     public static List<GameObject> Slots = new List<GameObject>();
+    public static List<GameObject> CraftingSlots = new List<GameObject>();
     public static List<GameObject> Items = new List<GameObject>();
+    public static List<GameObject> CraftingItems = new List<GameObject>();
 
     // Use this for initialization
     private void Start() {
@@ -71,7 +76,8 @@ public class PlayerData : MonoBehaviour {
         this.IsPerformingAction = false;
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
-            {PlayerActions.Dig, false }
+            {PlayerActions.Dig, false },
+            {PlayerActions.BuildTent, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.UpdateTileVisibility();
@@ -80,13 +86,24 @@ public class PlayerData : MonoBehaviour {
         for (int i = -2; i <= 2; i++) {
             this.MaximumNourishmentStatus += NourishmentLevels.NourishmentThreshold[i];
         }
-        for (int i = 0; i < PlayerData.NumItemSlots; i++) {
-            PlayerData.Slots.Add(Instantiate(InventorySlot));
-            PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform);
+        SlotInput.Pd = this;
+        for (int i = 0; i < PlayerData.NumItemSlots + PlayerData.NumCraftingSlots; i++) {
+            GameObject Is = Instantiate(InventorySlot);
+            PlayerData.Slots.Add(Is);
             PlayerData.Slots[i].AddComponent<SlotInput>();
             PlayerData.Slots[i].GetComponent<SlotInput>().SlotID = i;
+            if (i >= PlayerData.NumItemSlots) {
+                PlayerData.CraftingSlots.Add(Is);
+                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots] = PlayerData.Slots[i];
+                PlayerData.Slots[i].transform.SetParent(CraftingPanel.transform);
+                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots].GetComponent<SlotInput>().CraftingSlot = true;
+            } else {
+                PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform);
+                PlayerData.Slots[i].GetComponent<SlotInput>().CraftingSlot = false;
+            }
         }
-        this.AddItem(new Shovel(++Item.IdCounter, true));
+        this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -97,7 +114,7 @@ public class PlayerData : MonoBehaviour {
         this.UpdateHealth();
         this.ApplyNourishmentDecay();
         this.UpdateNourishmentStatus();
-        this.UpdateStamina();    
+        this.UpdateStamina();
     }
 
     public void UpdateTileVisibility() {
@@ -116,12 +133,18 @@ public class PlayerData : MonoBehaviour {
             for (int j = 0; j < t.NormIdx.Length; j++) {
                 t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
                 t.SetActive(false);
+                foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
+                    entry.Value.SetActive(false);
+                }
             }
         }
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
+        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(10)) {
             for (int j = 0; j < t.NormIdx.Length; j++) {
                 t.Norms[t.NormIdx[j]].Set(0f, 0f, -1f);
                 this.GetCurrentTile().SetActive(true);
+                foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
+                    entry.Value.SetActive(true);
+                }
             }
         }
     }
@@ -142,8 +165,12 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateStamina() {
+        this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
+        if (CurrentTile.Structures.ContainsKey(ItemList.Tent)) {
+            this.StaminaRegeneration += 3.0f * Time.deltaTime;
+        }
         if (this.Stamina < this.MaximumStamina) {
-            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);      
+            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);
         }
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
     }
@@ -176,51 +203,98 @@ public class PlayerData : MonoBehaviour {
     }
 
     public bool AddItem(Item it) {
-        if (this.GetInventory().Count > PlayerData.NumItemSlots) {
+        return AddItem(it, this.GetInventory(), NumItemSlots, Slots, Items);
+    }
+
+    public bool AddItem(Item it, Dictionary<string, Item> inventory, int maximumSlotNumber, List<GameObject> SlotContainer,
+        List<GameObject> ItemContainer) {
+        return AddItem(it, inventory, maximumSlotNumber, SlotContainer, ItemContainer, false);
+    }
+
+    public bool AddItem(Item it, Dictionary<string, Item> inventory, int maximumSlotNumber, List<GameObject> SlotContainer, 
+        List<GameObject> ItemContainer, bool ignoreContains) {
+        if (inventory.Count > maximumSlotNumber) {
             return false;
         }
-        if (!this.GetInventory().ContainsKey(it.GetName())) {
-            this.GetInventory().Add(it.GetName(), it);
-            for (int i = 0; i < PlayerData.NumItemSlots; i++) {
-                if (PlayerData.Slots[i].transform.childCount == 0) {
+        if (!inventory.ContainsKey(it.GetName())) {
+            inventory.Add(it.GetName(), it);
+            for (int i = 0; i < maximumSlotNumber; i++) {
+                if (SlotContainer[i].transform.childCount == 0) {
                     GameObject item = Instantiate(this.InventoryItem);
-                    Items.Add(item);
-                    this.GetInventory()[it.GetName()].ItemObject = item;
-                    item.transform.SetParent(PlayerData.Slots[i].transform);
+                    ItemContainer.Add(item);
+                    inventory[it.GetName()].ItemObject = item;
+                    item.transform.SetParent(SlotContainer[i].transform);
                     item.transform.localPosition = Vector3.zero;
-                    item.GetComponent<Image>().sprite = this.GetInventory()[it.GetName()].Icon;
+                    item.GetComponent<Image>().sprite = inventory[it.GetName()].Icon;
                     item.transform.GetChild(0).GetComponent<Text>().text = it.GetQuantity().ToString();
                     item.GetComponent<ItemInput>().Item = it;
-                    it.Slot = i;
-                    PlayerData.Slots[i].GetComponent<SlotInput>().StoredItem = it;
-                    int numActive = ActivePanel.transform.childCount;
-                    for (int j = 0; j < numActive; j++) {                        
-                        if (it.GetType().IsSubclassOf(typeof(ActionItem))) {
-                            Transform activeSlot = ActivePanel.transform.GetChild(j);
-                            activeSlot.GetComponent<ActiveInput>().Item = it;
-                            activeSlot.GetComponent<ActiveInput>().Slot = j;
-                            activeSlot.GetChild(0).GetComponent<Image>().sprite = Item.BorderSprite;
-                            activeSlot.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
-                            activeSlot.GetChild(1).GetComponent<Image>().sprite = item.GetComponent<Image>().sprite;
-                            activeSlot.GetChild(1).GetComponent<Image>().color = new Color(255, 255, 255, 255);
-                            activeSlot.GetChild(2).GetComponent<Text>().text = ActiveInput.Hotkeys[activeSlot.GetComponent<ActiveInput>().Slot].ToString();
-                            ActionItem ai = (ActionItem)it;
-                            activeSlot.GetChild(3).GetComponent<Text>().text = ai.StaminaCost.ToString();
-                            break;
-                        }                 
+                    if (SlotContainer[i].GetComponent<SlotInput>().CraftingSlot) {
+                        it.Slot = i + NumItemSlots;
+                    } else {
+                        it.Slot = i;
+                    }
+                    SlotContainer[i].GetComponent<SlotInput>().StoredItem = it;
+                    if (inventory == this.GetInventory()) {
+                        FillActiveSlot(it, item);
                     }
                     return true;
                 }
             }
-        } else if (this.GetInventory()[it.GetName()].GetQuantity() < this.GetInventory()[it.GetName()].MaximumQuantity) {
-            Item tmp = this.GetInventory()[it.GetName()];
+        } else if ((PlayerData.CraftingInventory.ContainsKey(it.GetName()) && this.GetInventory()[it.GetName()].GetQuantity() 
+                + PlayerData.CraftingInventory[it.GetName()].GetQuantity() < inventory[it.GetName()].MaximumQuantity) 
+            || (PlayerData.CraftingInventory.ContainsKey(it.GetName()) == false && this.GetInventory()[it.GetName()].GetQuantity()
+                < inventory[it.GetName()].MaximumQuantity) || ignoreContains) {
+            Item tmp = inventory[it.GetName()];
             tmp.SetQuantity(tmp.GetQuantity() + 1);
             tmp.ItemObject.transform.GetChild(0).GetComponent<Text>().text = tmp.GetQuantity().ToString();
             return true;
         } else {
-            Debug.Log("You've reached the maximum quantity of this item!");            
+            Debug.Log("You've reached the maximum quantity of this item!");
         }
         return false;
+    }
+
+    public void FillActiveSlot(Item it, GameObject item) {
+        int numActive = ActivePanel.transform.childCount;
+        for (int j = 0; j < numActive; j++) {
+            Transform activeSlot = ActivePanel.transform.GetChild(j);
+            if (it.GetType().IsSubclassOf(typeof(ActionItem)) && activeSlot.GetComponent<ActiveInput>().Item == null) {
+                activeSlot.GetComponent<ActiveInput>().Item = it;
+                activeSlot.GetComponent<ActiveInput>().Slot = j;
+                activeSlot.GetChild(0).GetComponent<Image>().sprite = Item.BorderSprite;
+                activeSlot.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                activeSlot.GetChild(1).GetComponent<Image>().sprite = item.GetComponent<Image>().sprite;
+                activeSlot.GetChild(1).GetComponent<Image>().color = new Color(255, 255, 255, 255);
+                activeSlot.GetChild(2).GetComponent<Text>().text = ActiveInput.Hotkeys[activeSlot.GetComponent<ActiveInput>().Slot].ToString();
+                ActionItem ai = (ActionItem)it;
+                activeSlot.GetChild(3).GetComponent<Text>().text = ai.StaminaCost.ToString();
+                it.ActiveContainer = activeSlot.gameObject;
+                break;
+            }
+        }
+    }
+
+    public void RemoveItem(Item it, int quantity, Dictionary<string, Item> inventory) {
+        if (inventory.ContainsKey(it.GetName())) {
+            Item itInvent = inventory[it.GetName()];
+            itInvent.SetQuantity(itInvent.GetQuantity() - quantity);
+            itInvent.ItemObject.transform.GetChild(0).GetComponent<Text>().text = itInvent.GetQuantity().ToString();
+            if (itInvent.GetQuantity() <= 0) {
+                inventory.Remove(it.GetName());
+                Destroy(it.ItemObject);
+                if (it.GetType().IsSubclassOf(typeof(ActionItem)) && it.ActiveContainer != null) {
+                    Destroy(it.ActiveContainer);
+                    Model.GetComponent<Model>().CreateActivePanel();
+                }
+                
+            }
+        } else {
+            Debug.Log("Item does not exist in player's invetory!");
+        }
+    }
+
+    public void RemoveItem(Item it, Dictionary<string, Item> inventory) {
+        RemoveItem(it, it.GetQuantity(), inventory);
     }
 
     public bool InventoryContains(string key) {

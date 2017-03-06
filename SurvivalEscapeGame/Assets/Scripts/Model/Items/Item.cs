@@ -14,6 +14,7 @@ public abstract class Item {
     protected int DepthLevel; //Tiledepth of 5, DepthLevel 2 -> 3 digs
     protected bool Active;
     protected int Quantity;
+    public GameObject ActiveContainer { get; set; }
     public GameObject ItemObject { get; set; }
 
     public static Sprite BorderSprite = Resources.Load<Sprite>("Sprites/UI/UniqueBorderV11");
@@ -32,6 +33,17 @@ public abstract class Item {
     }
 
     public Item(int id, bool active, int quantity) : this(id, 0, active, quantity) {
+
+    }
+
+    public Item(Item it) : this(it.Id, it.DepthLevel, it.Active, it.Quantity) {
+        this.Name = it.Name;
+        this.Icon = it.Icon;
+        this.MaximumQuantity = it.MaximumQuantity;
+        this.Slot = it.Slot;
+        this.Description = it.Description;
+        this.ActiveContainer = it.ActiveContainer;
+        this.ItemObject = it.ItemObject;
     }
 
     public bool IsActive() {

@@ -135,7 +135,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Destination: {x: 0, y: 0, z: 0}
-  PlayerData: {fileID: 0}
+  PlayerData: {fileID: 114859095252022116}
+  InventoryPanel: {fileID: 0}
+  ChannelingBarMask: {fileID: 0}
 --- !u!114 &114859095252022116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -147,19 +149,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52bc64d90daf4f54abdf018f93cecd0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
+  position: {x: -5, y: 5, z: 0}
   IsPerformingAction: 0
-  NourishmentLevel: 0
-  NourishmentStatus: 0
-  NourishmentDecayRate: 0
-  HealthRegeneration: 0
-  MaximumHealth: 0
-  Health: 0
-  MaximumStamina: 0
-  Stamina: 0
-  MovementSpeed: 0
-  Alive: 0
+  NourishmentLevel: 1
+  NourishmentStatus: 7.1282673
+  NourishmentDecayRate: 0.008333333
+  HealthRegeneration: 0.0175
+  MaximumHealth: 100
+  Health: 100
+  MaximumStamina: 100
+  Stamina: 100
+  MovementSpeed: 1.6
+  StaminaRegeneration: 0
+  Alive: 1
   HealthBar: {fileID: 0}
+  NourishmentBar: {fileID: 0}
+  StaminaBar: {fileID: 0}
+  NourishmentText: {fileID: 0}
+  InventoryPanel: {fileID: 0}
+  SlotPanel: {fileID: 0}
+  InventorySlot: {fileID: 1282370650488658, guid: 8b75b2070a03d50498b9f156bd98615c,
+    type: 2}
+  InventoryItem: {fileID: 1609854577235664, guid: 5f42969c5002c4747ab61a46786aaefb,
+    type: 2}
+  ActivePanel: {fileID: 0}
 --- !u!124 &124015553607171718
 Behaviour:
   m_ObjectHideFlags: 1
@@ -197,7 +210,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c55dba727be88b44dbc497b086529650, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

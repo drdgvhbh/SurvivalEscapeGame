@@ -12,8 +12,8 @@ public class MeshBuilder : MonoBehaviour {
     public MeshCollider Collider;
 
 	[Header("MeshBuilder Grid Dimensions")]
-	public int Columns = 10;
-	public int Rows = 10;
+	public static int Columns = 10;
+	public static int Rows = 10;
 	public float TileSize = 1.0f;
 	[HideInInspector]
     public int NumTiles;
@@ -25,7 +25,7 @@ public class MeshBuilder : MonoBehaviour {
 		this.Filter = this.GetComponentInParent<MeshFilter>();
 		this.Renderer = this.GetComponentInParent<MeshRenderer>();
 		this.Collider = this.GetComponentInParent<MeshCollider>();
-		this.NumTiles = this.Columns * this.Rows;
+		this.NumTiles = MeshBuilder.Columns * MeshBuilder.Rows;
 		this.GameGrid = this.BuildMesh();
 	}
 
@@ -34,8 +34,8 @@ public class MeshBuilder : MonoBehaviour {
 	}
 
 	public Mesh BuildMesh() {
-		int vSizeX = this.Columns + 1;
-		int vSizeY = this.Rows + 1;
+		int vSizeX = MeshBuilder.Columns + 1;
+		int vSizeY = MeshBuilder.Rows + 1;
 		int numVerts = vSizeX * vSizeY;
 		int numTris = this.NumTiles * Global.TrianglesInASquare;
 
@@ -53,9 +53,9 @@ public class MeshBuilder : MonoBehaviour {
 			}
 		}
 
-		for (int y = 0; y < this.Rows; y++) {
-			for (int x = 0; x < this.Columns; x++) {
-				int squareIndex = y * this.Columns + x;
+		for (int y = 0; y < MeshBuilder.Rows; y++) {
+			for (int x = 0; x < MeshBuilder.Columns; x++) {
+				int squareIndex = y * MeshBuilder.Columns + x;
 				int triOffset = squareIndex * 6;
 				trisAsVerts[triOffset + 0] = y * vSizeX + x;
 				trisAsVerts[triOffset + 1] = y * vSizeX + vSizeX + x + 1;

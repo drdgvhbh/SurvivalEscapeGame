@@ -15,8 +15,8 @@ public class View {
     public View(int tileResolution, MeshBuilder mb, Texture2D[] tileTextures) {
         this.TileResolution = tileResolution;
         this.Renderer = mb.GetComponentInParent<MeshRenderer>();
-        this.Rows = mb.Rows;
-        this.Columns = mb.Columns;
+        this.Rows = MeshBuilder.Rows;
+        this.Columns = MeshBuilder.Columns;
         this.TileTextures = tileTextures;
         InitializeTerrainColors();
     }

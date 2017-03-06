@@ -81,8 +81,10 @@
     <Compile Include="Assets\Scripts\Controller\ItemInput.cs" />
     <Compile Include="Assets\Scripts\Controller\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\Controller\SlotInput.cs" />
+    <Compile Include="Assets\Scripts\Controller\ToggleCrafting.cs" />
     <Compile Include="Assets\Scripts\Controller\Tooltip.cs" />
     <Compile Include="Assets\Scripts\Global.cs" />
+    <Compile Include="Assets\Scripts\Model\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Assets\Scripts\Model\MeshBuilder.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
     <Compile Include="Assets\Scripts\Model\NourishmentLevels.cs" />
+    <Compile Include="Assets\Scripts\Model\PathNode.cs" />
     <Compile Include="Assets\Scripts\Model\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Model\TerrainBuilder.cs" />
     <Compile Include="Assets\Scripts\Model\Tile.cs" />

@@ -36,7 +36,12 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
             return;
         if (Input.GetKeyDown(Hotkeys[Slot])) {
             ExecuteEvents.Execute(Button, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-            Pi.Actions[Item.GetName()]();
+            try {
+                Pi.Actions[Item.GetName()]();
+            }
+            catch (KeyNotFoundException e) {
+                Debug.Log("No implementation for usage of the item " + Item.GetName() + "!");
+            }
         }
     }
 

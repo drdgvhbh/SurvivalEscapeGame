@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grid
   - Tooltip
+  - Building
   layers:
   - Default
   - TransparentFX
