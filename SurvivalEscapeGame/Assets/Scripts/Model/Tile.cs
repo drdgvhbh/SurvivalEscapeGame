@@ -41,6 +41,8 @@ public class Tile {
     public bool IsWalkable { get; set; }
     public int MovementCost { get; set; }
 
+    public GameObject CurrentGameObject;
+
     public Tile(int id, TileType type, Vector3 position, ref Vector3[] norms, int[] normIdx) {
         this.Id = id;
         this.Type = type;
@@ -55,6 +57,7 @@ public class Tile {
         } else {
             IsWalkable = true;
         }
+        //IsWalkable = true;
         MovementCost = 1;
     }
 
@@ -77,6 +80,15 @@ public class Tile {
             }
         }
         return tiles;
+    }
+
+    public bool IsAdjacent(Tile t) {
+        Tile[] neighbours = this.GetNeighbours();
+        for (int i = 0; i < this.GetNeighbours().Length; i++) {
+            if (neighbours[i] != null && neighbours[i] == t)
+                return true; 
+        }
+        return false;
     }
 
     public bool AddNeighbour(Sides side, Tile tile) {

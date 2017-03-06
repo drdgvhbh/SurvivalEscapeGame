@@ -28,7 +28,7 @@ public class PathNode {
         List<PathNode> pnTiles = new List<PathNode>();
         for (int i = 0; i < tiles.Length; i++) {
             Tile nTile = tiles[i];
-            if (nTile != null && nTile.IsWalkable == IsWalkable && !NotInthisList.Exists(x => x.GetTile() == nTile)) {
+            if (nTile != null && (nTile.IsWalkable == IsWalkable) && !NotInthisList.Exists(x => x.GetTile() == nTile)) {
                 PathNode pn = new PathNode(tiles[i], baseNode);
                 pnTiles.Add(pn);
                 if (IsWalkable == true) {
@@ -38,7 +38,7 @@ public class PathNode {
                     int destRow = destination.Id / MeshBuilder.Columns;
                     int destColumn = destination.Id % MeshBuilder.Columns;
                     pn.SetH(Mathf.Abs(destRow - currentRow + destColumn - currentColumn));
-                    Debug.Log(" NodeID: " + baseNode.GetTile().Id + ", LookingID: " + pn.GetTile().Id + ", G: " + pn.GetG() + ", H: " + pn.GetH() + ", F: " + pn.GetF());
+                    //Debug.Log(" NodeID: " + baseNode.GetTile().Id + ", LookingID: " + pn.GetTile().Id + ", G: " + pn.GetG() + ", H: " + pn.GetH() + ", F: " + pn.GetF());
                 }
             }
         }

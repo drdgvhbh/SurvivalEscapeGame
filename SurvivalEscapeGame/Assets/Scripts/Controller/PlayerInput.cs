@@ -57,8 +57,10 @@ public class PlayerInput : MonoBehaviour {
             float step = this.GetPlayerData().MovementSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, this.Destination, step);
             if (transform.position.Equals(this.Destination)) {
-                if (this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex] != null) {
-                    this.GetPlayerData().SetCurrentTile(this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex]);
+                Tile enter = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex];
+                if (enter != null) {                    
+                    this.GetPlayerData().SetCurrentTile(enter);
+                    GetPlayerData().CurrentTile.CurrentGameObject = this.gameObject;
                 }
                 this.GetPlayerData().PerformingAction[PlayerActions.Move] = false;
                 this.GetPlayerData().IsPerformingAction = false;
@@ -68,10 +70,13 @@ public class PlayerInput : MonoBehaviour {
     }
 
     protected void Move() {
-        if (this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex] != null) {
-            this.Destination = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex].GetPosition() - Global.SmallOffset;
+        Tile enter = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex];
+        if (enter != null && enter.CurrentGameObject == null) {
+            this.Destination = enter.GetPosition() - Global.SmallOffset;
             this.GetPlayerData().PerformingAction[PlayerActions.Move] = true;
             this.GetPlayerData().IsPerformingAction = true;
+            this.GetPlayerData().CurrentTile.CurrentGameObject = null;
+            enter.CurrentGameObject = this.gameObject;
         }
     }
 

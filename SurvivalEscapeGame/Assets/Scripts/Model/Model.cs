@@ -56,12 +56,15 @@ public class Model : MonoBehaviour {
         enemy.transform.SetParent(this.gameObject.transform);
         EnemyData ed = enemy.GetComponent<EnemyData>();
         ed.CurrentTile = Terrain[5];
+        Terrain[5].CurrentGameObject = enemy;
+        ed.DestinationTile = Player1.GetComponent<PlayerData>().CurrentTile;
         ed.Initialize(Player1);
     }
 
     private void CreatePlayerProperties() {
         Player1.transform.position = Terrain[0].GetPosition() - Global.SmallOffset;
         Player1.GetComponent<PlayerData>().SetCurrentTile(Terrain[0]);
+        Terrain[0].CurrentGameObject = Player1;
         Player1.GetComponent<PlayerData>().LateStart();
         Player1.GetComponent<PlayerInput>().SetPlayerData(Player1.GetComponent<PlayerData>());
     }

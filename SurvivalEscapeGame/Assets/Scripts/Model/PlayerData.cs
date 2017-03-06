@@ -77,7 +77,8 @@ public class PlayerData : MonoBehaviour {
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
             {PlayerActions.Dig, false },
-            {PlayerActions.BuildTent, false }
+            {PlayerActions.BuildTent, false },
+            {PlayerActions.Attack, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.UpdateTileVisibility();
@@ -200,6 +201,17 @@ public class PlayerData : MonoBehaviour {
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }
         this.NourishmentBar.GetComponent<Image>().fillAmount = this.NourishmentStatus / NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
+    }
+
+    public void DamagePlayer(float damage) {
+        this.Health = this.Health - damage;
+        if (this.Health <= 0) {
+            Transform camera = this.gameObject.transform.GetChild(0);
+            Debug.Log(this.gameObject.transform.GetComponentInParent<Transform>());
+            camera.SetParent(this.gameObject.transform.parent.gameObject.transform);
+            UpdateHealth();
+            Destroy(this.gameObject);
+        }
     }
 
     public bool AddItem(Item it) {

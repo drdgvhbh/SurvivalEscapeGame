@@ -21,7 +21,8 @@ public enum PlayerActions {
 	NotThisAction,
 	Move,
 	Dig,
-	BuildTent
+	BuildTent,
+    Attack
 }
 
 public enum ItemList {

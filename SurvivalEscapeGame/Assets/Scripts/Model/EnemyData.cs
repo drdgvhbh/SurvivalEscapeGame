@@ -8,6 +8,22 @@ public class EnemyData : MonoBehaviour {
     public Vector3 Position { get; set; }
     public bool IsAlive { get; set; }
     private GameObject Player { get; set; }
+    private float MovementSpeed { get; set; }
+    public Tile DestinationTile { get; set; }
+    public Tile TileTobeMovedTo { get; set; }
+    public bool IsReachable { get; set; }
+    public float AttackDamage { get; set; }
+    public float AttackCooldown { get; set; }
+    private bool IsAttackOnCooldown { get; set; }
+    private float LerpStep { get; set; }
+    private bool intialized = false;
+
+    private List<GameObject> TempSight = new List<GameObject>();
+
+    private Dictionary<PlayerActions, bool> TypeOfPerformingAction = new Dictionary<PlayerActions, bool>() {
+        { PlayerActions.Move, false },
+        { PlayerActions.Attack, false }
+    };
 
     private void Awake() {
         IsPerformingAction = false;
@@ -23,16 +39,48 @@ public class EnemyData : MonoBehaviour {
         Position = CurrentTile.GetPosition();
         this.transform.position = Position - Global.SmallOffset;
         Player = player;
-        CalculatePath();
+        TileTobeMovedTo = CurrentTile;
+        MovementSpeed = 1.2f;
+        AttackDamage = 15.0f;
+        AttackCooldown = 1.33333f;
+        LerpStep = 0.0f;
+        IsAttackOnCooldown = false;
+        intialized = true;        
     }
 
     // Update is called once per frame
     private void Update() {
-        //Move();
+        if (!intialized || Player.gameObject == null)
+            return;
+        if (!IsPerformingAction) {
+            /*foreach (GameObject g in TempSight) {
+                Destroy(g);
+            }
+            TempSight.Clear();    
+            */        
+            DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
+            TileTobeMovedTo = CalculatePath();
+            if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && TileTobeMovedTo.CurrentGameObject == null) {
+                TypeOfPerformingAction[PlayerActions.Move] = true;
+                IsPerformingAction = true;
+                CurrentTile.CurrentGameObject = null;
+                TileTobeMovedTo.CurrentGameObject = this.gameObject;
+            } else if (CurrentTile.IsAdjacent(DestinationTile)) {
+               TypeOfPerformingAction[PlayerActions.Attack] = true;
+                IsPerformingAction = true;
+            }   
+        } else {            
+            Move();
+            Attack();
+        }   
     }
 
     private Tile CalculatePath() {
-        Tile destination = Player.GetComponent<PlayerData>().CurrentTile;
+        Tile destination = DestinationTile;
+        bool oldWalkable = destination.IsWalkable;
+        if (destination.IsWalkable == false) {
+            destination.IsWalkable = true;
+        }
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
         PathNode baseNode = new PathNode(CurrentTile, null);
@@ -56,18 +104,53 @@ public class EnemyData : MonoBehaviour {
         }
         while (MoveToNode.GetParent() != null && MoveToNode.GetParent().GetTile() != CurrentTile) {
             MoveToNode = (MoveToNode.GetParent());
-            Object prefab = Resources.Load("Prefabs/Tent");
+            /*Object prefab = Resources.Load("Prefabs/Tent");
             GameObject tent = (GameObject)GameObject.Instantiate(prefab);
+            TempSight.Add(tent);
             tent.transform.position = (MoveToNode.GetTile().GetPosition() - Global.SmallOffset);
+            */            
+        }
+        if (openList.Count < 0) {
+            IsReachable = false;
+        } else {
+            IsReachable = true;
+        }
+        if (oldWalkable == false) {
+            destination.IsWalkable = oldWalkable;
         }
         return MoveToNode.GetTile();
     }
-  
-    private void Foo() {
-
-    }
 
     private void Move() {
+        if (TypeOfPerformingAction[PlayerActions.Move]) {
+            float step = MovementSpeed * Time.deltaTime;
+            Vector3 moveTo = TileTobeMovedTo.GetPosition() - Global.SmallOffset;
+            transform.position = Vector3.MoveTowards(transform.position, moveTo, step);
+            if (transform.position.Equals(moveTo)) {                
+                CurrentTile = TileTobeMovedTo;                
+                TypeOfPerformingAction[PlayerActions.Move] = false;
+                IsPerformingAction = false;
+                //this.GetPlayerData().UpdateTileVisibility();
+            }
+        }
+    }
 
+    private void Attack() {
+        if (TypeOfPerformingAction[PlayerActions.Attack]) {
+            if (IsAttackOnCooldown == false) {
+                Player.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
+                IsAttackOnCooldown = true;
+            }
+            float step = Mathf.Lerp(0.0f, 1.0f, LerpStep);
+            LerpStep += Time.deltaTime / AttackCooldown;
+            if (step >= 1.0f) {
+                TypeOfPerformingAction[PlayerActions.Attack] = false;
+                IsPerformingAction = false;
+                IsAttackOnCooldown = false; 
+                LerpStep = 0.0f;
+                
+
+            }
+        }
     }
 }

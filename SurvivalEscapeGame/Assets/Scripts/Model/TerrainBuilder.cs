@@ -16,8 +16,7 @@ public class TerrainBuilder {
 		{ -1, TileType.Empty},
 		{ 0, TileType.Placeholder},
 		{ 1, TileType.Grass },
-		{ 2, TileType.Sand },
-        { 3, TileType.Sand }
+		{ 2, TileType.Sand }
     };
 
 	public static Dictionary<ItemList, float> ItemChance = new Dictionary<ItemList, float>() {
@@ -50,13 +49,13 @@ public class TerrainBuilder {
 			for (int j = 0; j < Global.TrianglesInASquare * Global.VertsInATri; j++) {
 				normIdx[j] = this.GameGrid.triangles[j + i * Global.TrianglesInASquare * Global.VertsInATri];
 			}
-			this.Tiles[i] = new Tile(i, InverseTileType[Random.Range(1,4)], position, ref this.Normals, normIdx);
-            Object prefab = Resources.Load("Prefabs/RandomText");
+			this.Tiles[i] = new Tile(i, InverseTileType[Random.Range(1,3)], position, ref this.Normals, normIdx);
+            /*Object prefab = Resources.Load("Prefabs/RandomText");
             GameObject tileNum = (GameObject)GameObject.Instantiate(prefab);
             tileNum.transform.SetParent(GameObject.Find("GridNumbers").transform);
             tileNum.transform.localPosition = (position - Global.SmallOffset) * 32 + new Vector3(160, -160);
             tileNum.GetComponent<Text>().text = i.ToString();
-            
+            */            
             if (Random.Range(0.0f, 100.0f) <= ItemChance[ItemList.Gem]) {
 				this.Tiles[i].AddItem(new Gem(
 												Item.IdCounter, 
