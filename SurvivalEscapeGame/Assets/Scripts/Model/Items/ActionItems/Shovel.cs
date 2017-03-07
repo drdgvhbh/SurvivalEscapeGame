@@ -9,7 +9,7 @@ public class Shovel : ActionItem {
         this.Slot = -1;
         this.Icon = Resources.LoadAll<Sprite>("Sprites/Items/ToolsSprites")[1];
         this.StaminaCost = 10.0f;
-        this.ChannelDuration = 1.5f;
+        this.ChannelDuration = 0f;
         this.Consumable = false;
     }
 

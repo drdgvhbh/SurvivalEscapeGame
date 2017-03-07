@@ -40,7 +40,7 @@ public class EnemyData : MonoBehaviour {
         this.transform.position = Position - Global.SmallOffset;
         Player = player;
         TileTobeMovedTo = CurrentTile;
-        MovementSpeed = 0.0f;
+        MovementSpeed = 1.2f;
         AttackDamage = 15.0f;
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
