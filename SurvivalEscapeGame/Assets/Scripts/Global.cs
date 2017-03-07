@@ -14,7 +14,9 @@ public enum TileType {
 	Empty = -1,
 	Placeholder = 0,
 	Grass = 1,
-	Sand = 2
+	Sand = 2,
+    Mountain = 3,
+    Water = 4
 }
 
 public enum PlayerActions {

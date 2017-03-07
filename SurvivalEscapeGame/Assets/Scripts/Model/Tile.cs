@@ -14,16 +14,42 @@ public class Tile {
         { TileType.Empty, -1 },
         { TileType.Placeholder, 3},
         { TileType.Grass, 2},
-        { TileType.Sand, 4}
+        { TileType.Sand, 4},
+        { TileType.Mountain, 6 },
+        { TileType.Water, 2}
     };
 
     public static Dictionary<TileType, List<TileType>> AutoTlleNeighbours = new Dictionary<TileType, List<TileType>>() {
         { TileType.Grass, new List<TileType>()
-            { TileType.Grass }
+            { TileType.Grass, TileType.Mountain }
         },
         { TileType.Sand, new List<TileType>()
             { TileType.Sand, TileType.Grass }
+        },
+        { TileType.Mountain, new List<TileType>()
+            { TileType.Mountain }
+        },
+        { TileType.Water, new List<TileType>()
+            { TileType.Water }
         }
+    };
+
+    public static Dictionary<TileType, bool> WalkableTypes = new Dictionary<TileType, bool>() {
+        { TileType.Empty, true },
+        { TileType.Placeholder, true},
+        { TileType.Grass, true},
+        { TileType.Sand, true},
+        { TileType.Mountain, true },
+        { TileType.Water, false}
+    };
+
+    public static Dictionary<TileType, int> MovementCostTable = new Dictionary<TileType, int>() {
+        { TileType.Empty, 1 },
+        { TileType.Placeholder, 1},
+        { TileType.Grass, 1},
+        { TileType.Sand, 1},
+        { TileType.Mountain, 3 },
+        { TileType.Water, 0}
     };
 
     public Dictionary<ItemList, GameObject> Structures = new Dictionary<ItemList, GameObject>();
@@ -52,13 +78,15 @@ public class Tile {
         this.Norms = norms;
         this.NormIdx = normIdx;
         this.Active = false;
-        if (this.Type == TileType.Grass) {
-            IsWalkable = false;
-        } else {
-            IsWalkable = true;
-        }
-        //IsWalkable = true;
-        MovementCost = 1;
+        IsWalkable = Tile.WalkableTypes[type];
+        MovementCost = Tile.MovementCostTable[type];
+    }
+
+    public void SetTileType(TileType type) {
+        this.Type = type;
+        this.TileDepth = Tile.TileDepthTable[this.Type] + UnityEngine.Random.Range(Global.DepthVarianceMin, Global.DepthVarianceMax);
+        IsWalkable = Tile.WalkableTypes[type];
+        MovementCost = Tile.MovementCostTable[type];
     }
 
     public Tile[] GetNeighbours() {

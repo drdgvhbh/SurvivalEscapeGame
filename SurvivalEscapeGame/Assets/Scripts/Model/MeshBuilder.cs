@@ -12,8 +12,8 @@ public class MeshBuilder : MonoBehaviour {
     public MeshCollider Collider;
 
 	[Header("MeshBuilder Grid Dimensions")]
-	public static int Columns = 10;
-	public static int Rows = 10;
+	public static int Columns = 32;
+	public static int Rows = 32;
 	public float TileSize = 1.0f;
 	[HideInInspector]
     public int NumTiles;

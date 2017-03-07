@@ -987,7 +987,7 @@ Prefab:
     - target: {fileID: 114292700102270532, guid: a1eaec952f898504b9a884f3c6f9037c,
         type: 2}
       propertyPath: TileTextures.Array.size
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4967005407453842, guid: a1eaec952f898504b9a884f3c6f9037c, type: 2}
       propertyPath: m_LocalPosition.x
@@ -1066,13 +1066,23 @@ Prefab:
         type: 2}
       propertyPath: TileTextures.Array.data[2]
       value: 
-      objectReference: {fileID: 2800000, guid: 743eda12eb2b5a8419033619849921c6, type: 3}
+      objectReference: {fileID: 2800000, guid: 7a15b6eb7cb5fe84cbf19ccd69aade1d, type: 3}
     - target: {fileID: 114292700102270532, guid: a1eaec952f898504b9a884f3c6f9037c,
         type: 2}
       propertyPath: Enemy
       value: 
       objectReference: {fileID: 1414139356373228, guid: fd4fa59019f5ae442899cf959c80cf25,
         type: 2}
+    - target: {fileID: 114292700102270532, guid: a1eaec952f898504b9a884f3c6f9037c,
+        type: 2}
+      propertyPath: TileTextures.Array.data[3]
+      value: 
+      objectReference: {fileID: 2800000, guid: a3becc043392baa4783bed9a3102da12, type: 3}
+    - target: {fileID: 114292700102270532, guid: a1eaec952f898504b9a884f3c6f9037c,
+        type: 2}
+      propertyPath: TileTextures.Array.data[4]
+      value: 
+      objectReference: {fileID: 2800000, guid: 10d1851b5b0ef6f4e8be489bb6f2d84a, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a1eaec952f898504b9a884f3c6f9037c, type: 2}
   m_IsPrefabParent: 0

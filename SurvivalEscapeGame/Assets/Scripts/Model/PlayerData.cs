@@ -139,7 +139,7 @@ public class PlayerData : MonoBehaviour {
                 }
             }
         }
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(10)) {
+        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
             for (int j = 0; j < t.NormIdx.Length; j++) {
                 t.Norms[t.NormIdx[j]].Set(0f, 0f, -1f);
                 this.GetCurrentTile().SetActive(true);

@@ -123,7 +123,7 @@ public class EnemyData : MonoBehaviour {
 
     private void Move() {
         if (TypeOfPerformingAction[PlayerActions.Move]) {
-            float step = MovementSpeed * Time.deltaTime;
+            float step = (MovementSpeed / TileTobeMovedTo.MovementCost) * Time.deltaTime;
             Vector3 moveTo = TileTobeMovedTo.GetPosition() - Global.SmallOffset;
             transform.position = Vector3.MoveTowards(transform.position, moveTo, step);
             if (transform.position.Equals(moveTo)) {                

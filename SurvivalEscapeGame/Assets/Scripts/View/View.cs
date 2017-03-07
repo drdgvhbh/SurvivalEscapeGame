@@ -25,6 +25,8 @@ public class View {
         View.TerrainColors.Add(TileType.Placeholder, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Placeholder], this.TileResolution));
         View.TerrainColors.Add(TileType.Grass, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Grass], this.TileResolution));
         View.TerrainColors.Add(TileType.Sand, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Sand], this.TileResolution));
+        View.TerrainColors.Add(TileType.Mountain, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Mountain], this.TileResolution));
+        View.TerrainColors.Add(TileType.Water, Global.GetColorsFromTexture2D(this.TileTextures[(int)TileType.Water], this.TileResolution));
     }
 
     public void UpdateTileView() {
