@@ -87,7 +87,7 @@ public class TerrainBuilder {
             tileNum.GetComponent<Text>().text = i.ToString();
             */
             if (Random.Range(0.0f, 100.0f) <= ItemChance[ItemList.Gem]) {
-                this.Tiles[i].AddItem(new Gem(
+                this.Tiles[i].AddItem(new Wood(
                                                 Item.IdCounter,
                                                 Random.Range(0, this.Tiles[i].GetTileDepth()),
                                                 false,

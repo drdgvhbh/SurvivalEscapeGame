@@ -30,7 +30,8 @@ public enum PlayerActions {
 public enum ItemList {
 	Shovel,
 	Gem,
-	Tent
+	Tent,
+    Wood
 }
 
 public static class Global {
@@ -46,7 +47,8 @@ public static class Global {
 	public static Dictionary<ItemList, string> ItemNames = new Dictionary<ItemList, string>() {
 		{ItemList.Shovel, "Shovel" },
 		{ItemList.Gem, "Gem" },
-		{ItemList.Tent, "Tent" }
+		{ItemList.Tent, "Tent" },
+        {ItemList.Wood, "Wood" }
 	};
 
 

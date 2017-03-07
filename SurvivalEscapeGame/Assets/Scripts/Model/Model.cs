@@ -82,7 +82,9 @@ public class Model : MonoBehaviour {
     }
 
     public void CreateActivePanel() {
-        ActiveContainer.Add(GameObject.Instantiate(ActiveSlot, ActivePanel.transform));       
+        GameObject activeSlot = GameObject.Instantiate(ActiveSlot);
+        activeSlot.transform.SetParent(ActivePanel.transform, false);
+        ActiveContainer.Add(activeSlot);       
     }
     public void CreateActivePanel(int quantity) {
         for (int i = 0; i < quantity; i++) {

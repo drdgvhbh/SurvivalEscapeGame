@@ -96,10 +96,10 @@ public class PlayerData : MonoBehaviour {
             if (i >= PlayerData.NumItemSlots) {
                 PlayerData.CraftingSlots.Add(Is);
                 PlayerData.CraftingSlots[i - PlayerData.NumItemSlots] = PlayerData.Slots[i];
-                PlayerData.Slots[i].transform.SetParent(CraftingPanel.transform);
+                PlayerData.Slots[i].transform.SetParent(CraftingPanel.transform, false);
                 PlayerData.CraftingSlots[i - PlayerData.NumItemSlots].GetComponent<SlotInput>().CraftingSlot = true;
             } else {
-                PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform);
+                PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform, false);
                 PlayerData.Slots[i].GetComponent<SlotInput>().CraftingSlot = false;
             }
         }
@@ -235,7 +235,7 @@ public class PlayerData : MonoBehaviour {
                     GameObject item = Instantiate(this.InventoryItem);
                     ItemContainer.Add(item);
                     inventory[it.GetName()].ItemObject = item;
-                    item.transform.SetParent(SlotContainer[i].transform);
+                    item.transform.SetParent(SlotContainer[i].transform, false);
                     item.transform.localPosition = Vector3.zero;
                     item.GetComponent<Image>().sprite = inventory[it.GetName()].Icon;
                     item.transform.GetChild(0).GetComponent<Text>().text = it.GetQuantity().ToString();
