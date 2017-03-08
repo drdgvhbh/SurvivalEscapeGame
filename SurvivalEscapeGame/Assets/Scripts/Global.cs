@@ -28,10 +28,14 @@ public enum PlayerActions {
 }
 
 public enum ItemList {
+    Placeholder,
 	Shovel,
 	Gem,
 	Tent,
-    Wood
+    Wood,
+    Stick,
+    Pickaxe,
+    Stone
 }
 
 public static class Global {
@@ -45,10 +49,14 @@ public static class Global {
 	public static UnityEngine.Random Random = new UnityEngine.Random();
 
 	public static Dictionary<ItemList, string> ItemNames = new Dictionary<ItemList, string>() {
-		{ItemList.Shovel, "Shovel" },
+        {ItemList.Placeholder, "Placeholder" },
+        {ItemList.Shovel, "Shovel" },
 		{ItemList.Gem, "Gem" },
 		{ItemList.Tent, "Tent" },
-        {ItemList.Wood, "Wood" }
+        {ItemList.Wood, "Wood" },
+        {ItemList.Stick, "Stick" },
+        {ItemList.Pickaxe, "PickAxe" },
+        {ItemList.Stone, "Stone" }
 	};
 
 

@@ -12,6 +12,14 @@ public class PathNode {
     //Total Cost
     private int F;
 
+    public static int GetDistanceToNode(Tile start, Tile end ) {
+        int currentRow = start.Id / MeshBuilder.Columns;
+        int currentColumn = start.Id % MeshBuilder.Columns;
+        int destRow = end.Id / MeshBuilder.Columns;
+        int destColumn = end.Id % MeshBuilder.Columns;
+        return (Mathf.Abs(destRow - currentRow) + Mathf.Abs(destColumn - currentColumn));
+    }
+
     public static PathNode GetLowestNode(List<PathNode> list) {
         int currentLowest = int.MaxValue;
         PathNode lowest = new PathNode(null, null);
@@ -33,11 +41,7 @@ public class PathNode {
                 pnTiles.Add(pn);
                 if (IsWalkable == true) {
                     pn.SetG(pn.GetParent().GetG() + pn.GetTile().MovementCost);
-                    int currentRow = pn.GetTile().Id / MeshBuilder.Columns;
-                    int currentColumn = pn.GetTile().Id % MeshBuilder.Columns;
-                    int destRow = destination.Id / MeshBuilder.Columns;
-                    int destColumn = destination.Id % MeshBuilder.Columns;
-                    pn.SetH(Mathf.Abs(destRow - currentRow + destColumn - currentColumn));
+                    pn.SetH(GetDistanceToNode(pn.GetTile(), destination));
                     //Debug.Log(" NodeID: " + baseNode.GetTile().Id + ", LookingID: " + pn.GetTile().Id + ", G: " + pn.GetG() + ", H: " + pn.GetH() + ", F: " + pn.GetF());
                 }
             }

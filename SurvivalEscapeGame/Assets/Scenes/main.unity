@@ -274,15 +274,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 5
+    m_Left: 10
     m_Right: 0
     m_Top: 13
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 48, y: 48}
-  m_Spacing: {x: 5, y: 5}
+  m_CellSize: {x: 42, y: 42}
+  m_Spacing: {x: 10, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &112231451
@@ -403,6 +403,7 @@ GameObject:
   - component: {fileID: 243137426}
   - component: {fileID: 243137425}
   - component: {fileID: 243137424}
+  - component: {fileID: 243137427}
   m_Layer: 5
   m_Name: CraftingButton
   m_TagString: Untagged
@@ -503,6 +504,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 243137422}
+--- !u!114 &243137427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 243137422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f3ae80c4f980314b9dd57eaf5e4ba8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CraftingButton: {fileID: 243137422}
+  Player: {fileID: 1899472606}
 --- !u!1 &290047268
 GameObject:
   m_ObjectHideFlags: 0
@@ -913,8 +927,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 207.85, y: 25}
-  m_SizeDelta: {x: 415.7, y: 50}
+  m_AnchoredPosition: {x: 207.85, y: 17}
+  m_SizeDelta: {x: 415.7, y: 34.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &573478880
 MonoBehaviour:
@@ -968,8 +982,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 42, y: 42}
-  m_Spacing: {x: 1, y: 0}
+  m_CellSize: {x: 30, y: 30}
+  m_Spacing: {x: 0.75, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!4 &643743304 stripped
@@ -2135,15 +2149,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 10
+    m_Left: 15
     m_Right: 0
     m_Top: 13
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 48, y: 48}
-  m_Spacing: {x: 5, y: 5}
+  m_CellSize: {x: 42, y: 42}
+  m_Spacing: {x: 10, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &1518713597
@@ -2625,6 +2639,31 @@ Prefab:
       propertyPath: CraftingPanel
       value: 
       objectReference: {fileID: 112231448}
+    - target: {fileID: 20725785553885908, guid: add6538f1cf313e409e6f3f60ee3e1b3,
+        type: 2}
+      propertyPath: m_BackGroundColor.r
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 20725785553885908, guid: add6538f1cf313e409e6f3f60ee3e1b3,
+        type: 2}
+      propertyPath: m_BackGroundColor.g
+      value: 0.06666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 20725785553885908, guid: add6538f1cf313e409e6f3f60ee3e1b3,
+        type: 2}
+      propertyPath: m_BackGroundColor.b
+      value: 0.12156863
+      objectReference: {fileID: 0}
+    - target: {fileID: 20725785553885908, guid: add6538f1cf313e409e6f3f60ee3e1b3,
+        type: 2}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20725785553885908, guid: add6538f1cf313e409e6f3f60ee3e1b3,
+        type: 2}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: add6538f1cf313e409e6f3f60ee3e1b3, type: 2}
   m_IsPrefabParent: 0
