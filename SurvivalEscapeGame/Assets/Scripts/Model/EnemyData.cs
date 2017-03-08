@@ -40,7 +40,11 @@ public class EnemyData : MonoBehaviour {
         this.transform.position = Position - Global.SmallOffset;
         Player = player;
         TileTobeMovedTo = CurrentTile;
+<<<<<<< HEAD
         MovementSpeed = 1.2f;
+=======
+        MovementSpeed = 1.0f;
+>>>>>>> ba6b476c4bf83c3d149b7ba55e6b3fc3ca69d030
         AttackDamage = 15.0f;
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
@@ -59,6 +63,10 @@ public class EnemyData : MonoBehaviour {
             TempSight.Clear();    
             */        
             DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
+            if (PathNode.GetDistanceToNode(CurrentTile, DestinationTile) > 5) {
+                return;
+            }
+                
             TileTobeMovedTo = CalculatePath();
             if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && TileTobeMovedTo.CurrentGameObject == null) {
                 TypeOfPerformingAction[PlayerActions.Move] = true;

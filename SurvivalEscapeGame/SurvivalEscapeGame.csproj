@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controller\ActiveInput.cs" />
     <Compile Include="Assets\Scripts\Controller\Controller.cs" />
+    <Compile Include="Assets\Scripts\Controller\Crafting.cs" />
     <Compile Include="Assets\Scripts\Controller\InventoryInput.cs" />
     <Compile Include="Assets\Scripts\Controller\ItemInput.cs" />
     <Compile Include="Assets\Scripts\Controller\PlayerInput.cs" />
@@ -92,10 +93,14 @@
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\Model\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\Pickaxe.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />
-    <Compile Include="Assets\Scripts\Model\Items\Gem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Item.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Gem.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Stick.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Stone.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Wood.cs" />
     <Compile Include="Assets\Scripts\Model\MeshBuilder.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
     <Compile Include="Assets\Scripts\Model\NourishmentLevels.cs" />

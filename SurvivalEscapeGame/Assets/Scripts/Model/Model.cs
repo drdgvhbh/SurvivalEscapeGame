@@ -47,18 +47,18 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-        CreateEnemy();
+        CreateEnemy(Random.Range(0, Mb.NumTiles));
 
     }
 
-    private void CreateEnemy() {
-        GameObject enemy = GameObject.Instantiate(Enemy);
-        enemy.transform.SetParent(this.gameObject.transform);
-        EnemyData ed = enemy.GetComponent<EnemyData>();
-        ed.CurrentTile = Terrain[5];
-        Terrain[5].CurrentGameObject = enemy;
-        ed.DestinationTile = Player1.GetComponent<PlayerData>().CurrentTile;
-        ed.Initialize(Player1);
+    private void CreateEnemy(int idx) {
+            GameObject enemy = GameObject.Instantiate(Enemy);
+            enemy.transform.SetParent(this.gameObject.transform);
+            EnemyData ed = enemy.GetComponent<EnemyData>();
+            ed.CurrentTile = Terrain[idx];
+            Terrain[idx].CurrentGameObject = enemy;
+            ed.DestinationTile = Player1.GetComponent<PlayerData>().CurrentTile;
+            ed.Initialize(Player1);
     }
 
     private void CreatePlayerProperties() {
