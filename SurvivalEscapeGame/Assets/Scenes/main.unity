@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.92156863}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -928,6 +928,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 409972564}
+  - component: {fileID: 409972565}
   m_Layer: 5
   m_Name: ItemDescriptions
   m_TagString: Untagged
@@ -954,6 +955,18 @@ RectTransform:
   m_AnchoredPosition: {x: 3.5, y: 14.7}
   m_SizeDelta: {x: 299.13, y: 237.8}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &409972565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 409972563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c9530e47e24bf48820281cf35b80bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DropDownMenu: {fileID: 1376045850}
 --- !u!1 &424659736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,7 +1770,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Option A
+  m_Text: option a
 --- !u!222 &685895926
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1920,7 +1933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9147924, g: 0.95601064, b: 1, a: 1}
+  m_Color: {r: 0.99264705, g: 0.99264705, b: 0.99264705, a: 0.78431374}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3340,22 +3353,8 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Option A
-      m_Image: {fileID: 0}
-    - m_Text: Option B
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
+    - m_Text: option a
+      m_Image: {fileID: 21300000, guid: e301ec0c4ca5ac54fae032bd63b7a726, type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
