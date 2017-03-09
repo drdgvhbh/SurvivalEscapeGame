@@ -38,7 +38,8 @@ public enum ItemList {
     Pickaxe,
     Stone,
     Spear,
-    Coconut
+    Coconut,
+    Fabric
 }
 
 public static class Global {
@@ -61,7 +62,8 @@ public static class Global {
         {ItemList.Pickaxe, "Pickaxe" },
         {ItemList.Stone, "Stone" },
         {ItemList.Spear, "Spear" },
-        {ItemList.Coconut, "Coconut" }
+        {ItemList.Coconut, "Coconut" },
+        {ItemList.Fabric, "Fabric" }
     };
 
 

@@ -22,6 +22,8 @@ public class PlayerData : MonoBehaviour {
     public bool IsWeaponEquipped;
     public bool IsShieldEquipped;
     public int Direction = 1;
+    public float Damage;
+    public float AttackStaminaCost;
 
     private float MaximumNourishmentStatus;
 
@@ -79,6 +81,8 @@ public class PlayerData : MonoBehaviour {
         this.position = this.GetComponent<Transform>().position;
         this.Alive = true;
         this.IsPerformingAction = false;
+        Damage = 15.0f;
+        AttackStaminaCost = 15.0f;
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
             {PlayerActions.Dig, false },
@@ -228,12 +232,15 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void DamagePlayer(float damage) {
+        float oldHealth = Health;
         this.Health = this.Health - damage;
+        GUIText.GetComponent<Text>().text = "You took " + damage + " damage! Health: " + oldHealth.ToString("F2") + "->" + Health.ToString("F2");
         if (this.Health <= 0) {
             Transform camera = this.gameObject.transform.GetChild(0);
             camera.SetParent(this.gameObject.transform.parent.gameObject.transform);
             UpdateHealth();
             Destroy(this.gameObject);
+            GUIText.GetComponent<Text>().text = "You are dead!!!";
         }
     }
 

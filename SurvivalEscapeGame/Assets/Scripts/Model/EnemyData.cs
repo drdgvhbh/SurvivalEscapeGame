@@ -17,9 +17,14 @@ public class EnemyData : MonoBehaviour {
     private bool IsAttackOnCooldown { get; set; }
     private float LerpStep { get; set; }
     private bool intialized = false;
+    public float Health;
     public int direction;
 
     private List<GameObject> TempSight = new List<GameObject>();
+    [SerializeField]
+    private GameObject HealthBarPrefab;
+
+    private GameObject HealthBar;
 
     private Dictionary<PlayerActions, bool> TypeOfPerformingAction = new Dictionary<PlayerActions, bool>() {
         { PlayerActions.Move, false },
@@ -47,11 +52,35 @@ public class EnemyData : MonoBehaviour {
         LerpStep = 0.0f;
         IsAttackOnCooldown = false;
         direction = 1;
-        intialized = true;        
+        Health = 50.0f;
+        intialized = true;
+        /*
+        HealthBar = GameObject.Instantiate(HealthBarPrefab);
+        HealthBar.transform.SetParent(GameObject.Find("Canvas").transform);
+        RectTransform CanvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();   
+        Vector2 ViewportPosition = Camera.main.WorldToViewportPoint(this.gameObject.transform.position);
+        Vector2 WorldObject_ScreenPosition = new Vector2(
+        ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
+        ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
+
+        //now you can set the position of the ui element
+        HealthBar.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
+        */
+
     }
 
     // Update is called once per frame
     private void Update() {
+        /*
+        RectTransform CanvasRect = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        Vector2 ViewportPosition = Camera.main.WorldToViewportPoint(this.gameObject.transform.position);
+        Vector2 WorldObject_ScreenPosition = new Vector2(
+        ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
+        ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
+        */
+
+        //now you can set the position of the ui element
+       // HealthBar.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
         if (!intialized || Player.gameObject == null)
             return;
         if (!IsPerformingAction) {
@@ -93,6 +122,19 @@ public class EnemyData : MonoBehaviour {
             Attack();
         }   
     }
+
+    public void DamageEnemy(float damage) {
+        float oldHealth = Health;
+        Health -= damage;
+        if (Health < 0) {
+            Player.GetComponent<PlayerInput>().GUItext.text = "Enemy took " + damage + " damage! Enemy destroyed!";
+            Player.GetComponent<PlayerData>().AddItem(new Fabric(Item.IdCounter++, 0, true, Random.Range(1, 4)));
+            Destroy(this.gameObject);
+        } else {
+            Player.GetComponent<PlayerInput>().GUItext.text = "Enemy took " + damage + " damage! Enemy Health: " + oldHealth + "->" + Health;
+        }
+    }
+
 
     private Tile CalculatePath() {
         Tile destination = DestinationTile;

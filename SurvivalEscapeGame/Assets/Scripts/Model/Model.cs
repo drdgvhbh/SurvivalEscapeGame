@@ -47,7 +47,7 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-        for (int i = 0; i < 0; i++) 
+        for (int i = 0; i < 10; i++) 
             CreateEnemy(Random.Range(0, Mb.NumTiles));
 
     }

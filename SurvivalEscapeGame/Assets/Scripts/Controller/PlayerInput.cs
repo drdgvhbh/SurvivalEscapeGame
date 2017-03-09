@@ -19,7 +19,7 @@ public class PlayerInput : MonoBehaviour {
 
     private float LerpStep = 0.0f;
 
-    private Text GUItext;
+    public Text GUItext;
 
     public Dictionary<string, Action> Actions = new Dictionary<string, Action>() {
     };
@@ -44,6 +44,7 @@ public class PlayerInput : MonoBehaviour {
         ToggleInventory();
         BuildingTent();
         EatingCoconut();
+        Attack();
     }
 
     private void Movement(bool exec) {
@@ -67,6 +68,7 @@ public class PlayerInput : MonoBehaviour {
             transform.position = Vector3.MoveTowards(transform.position, this.Destination, step);
             if (transform.position.Equals(this.Destination)) {                                   
                 this.GetPlayerData().SetCurrentTile(enter);
+                this.GetPlayerData().position = GetPlayerData().CurrentTile.GetPosition() - Global.SmallOffset;
                 GetPlayerData().CurrentTile.CurrentGameObject = this.gameObject;
                 this.GetPlayerData().PerformingAction[PlayerActions.Move] = false;
                 this.GetPlayerData().IsPerformingAction = false;
@@ -100,6 +102,52 @@ public class PlayerInput : MonoBehaviour {
                 animCtrl.SetTrigger("MoveLeft");
                
             }
+        }
+    }
+
+    protected void Attack() {
+        if (!Input.GetMouseButtonDown(1)) {
+            return;
+        }
+        if (GetPlayerData().IsPerformingAction || GetPlayerData().Stamina < GetPlayerData().AttackStaminaCost) {
+                GUItext.text = "Not enough stamina! Need " + GetPlayerData().AttackStaminaCost + " stamina!!!";
+                return;
+            }       
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 100.0f)) {
+            Animator animCtrl = this.gameObject.GetComponent<Animator>();
+            Vector2 diff = ray.origin - GetPlayerData().position;
+            if (!GetPlayerData().IsWeaponEquipped) {
+                if (diff.x > 0) {
+                    animCtrl.ResetTrigger("MoveRight");
+                    animCtrl.SetTrigger("MoveRight");
+                    animCtrl.SetTrigger("AttackNoWeaponRight");
+                } else {
+                    animCtrl.ResetTrigger("MoveLeft");
+                    animCtrl.SetTrigger("MoveLeft");
+                    animCtrl.SetTrigger("AttackNoWeaponLeft");
+                }
+            }
+            GetPlayerData().Stamina -= GetPlayerData().AttackStaminaCost;
+            Tile[] neigh = GetPlayerData().CurrentTile.GetNeighbours();
+            if (Math.Abs(diff.x) > Math.Abs(diff.y)) {
+                if (diff.x > 0 && neigh[2].CurrentGameObject != null) {
+                    neigh[2].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+
+                } else if (diff.x < 0 && neigh[1].CurrentGameObject != null) {
+                    neigh[1].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+
+                }
+            } else {
+                if (diff.y > 0 && neigh[0].CurrentGameObject != null) {
+                    neigh[0].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+
+                } else if (diff.y < 0 && neigh[3].CurrentGameObject != null) {
+                    neigh[3].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);                   
+                }
+            }
+
         }
     }
 
@@ -155,10 +203,14 @@ public class PlayerInput : MonoBehaviour {
     }
 
     public void Dig() {
-        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
+        if (GetPlayerData().CurrentTile.Type == TileType.Mountain) {
+            GUItext.text = "Cannnot use a shovel in a mountain!";
+            return;
+        }
+        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {            
             GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.DigCount + " times.";
-             ChannelingBarMask.SetActive(true);
-            Digging();
+            ChannelingBarMask.SetActive(true);
+            Digging();            
         }
     }
 

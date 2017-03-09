@@ -5,13 +5,14 @@ using UnityEngine;
 public static class NourishmentLevels {
     public static float HighMultiplier = 100.0f;
     public static float LowMultiplier = 0.01f;
+    public static float VeryLowMultiplier = 0.005f;
     private static double NourishmentThresholdN = 1.15;
     private static double HRegenerationN = 1.75;
-    private static double DecayN = 1/1.05;
+    private static double DecayN = 1/1.11;
     private static double MsN = 1.65;
     private static double HealthN = System.Math.Pow(2, 1 / 2);
-    public static double StaminaN = 2;
-    private static double SRegenerationN = 0;
+    public static double StaminaN = 2.1;
+    private static double SRegenerationN = 1 / 0.5;
 
     public static Dictionary<int, float> NourishmentThreshold = new Dictionary<int, float>() {
         { -2, (float)System.Math.Pow(NourishmentThresholdN, -2) * HighMultiplier },
@@ -63,10 +64,10 @@ public static class NourishmentLevels {
     };
 
     public static Dictionary<int, float> BaseStaminaRegeneration = new Dictionary<int, float>() {
-        { -2, (float)System.Math.Pow(SRegenerationN, -2) * LowMultiplier },
-        { -1, (float)System.Math.Pow(SRegenerationN, -1) * LowMultiplier },
-        { 0, (float)System.Math.Pow(SRegenerationN, 0) * LowMultiplier },
-        { 1, (float)System.Math.Pow(SRegenerationN, 1) * LowMultiplier },
-        { 2, (float)System.Math.Pow(SRegenerationN, 2) * LowMultiplier }
+        { -2, (float)System.Math.Pow(SRegenerationN, -2) * VeryLowMultiplier },
+        { -1, (float)System.Math.Pow(SRegenerationN, -1) * VeryLowMultiplier },
+        { 0, (float)System.Math.Pow(SRegenerationN, 0) * VeryLowMultiplier },
+        { 1, (float)System.Math.Pow(SRegenerationN, 1) * VeryLowMultiplier },
+        { 2, (float)System.Math.Pow(SRegenerationN, 2) * VeryLowMultiplier }
     };                               
 }

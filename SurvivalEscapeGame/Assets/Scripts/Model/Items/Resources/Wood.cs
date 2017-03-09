@@ -4,9 +4,10 @@ using UnityEngine;
     
 public class Wood : Item {
     public Wood(int id, int depthLevel, bool active, int quantity) : base(id, depthLevel, active, quantity) {
-        this.Name = Global.ItemNames[ItemList.Wood];
-        this.Icon = Resources.Load<Sprite>("Sprites/Items/wood");
-        this.MaximumQuantity = 5;
+        var thisTextNode = ItemDatabase.JsonNode["Items"]["Wood"];
+        this.Name = thisTextNode["Name"];
+        this.Icon = Resources.LoadAll<Sprite>(thisTextNode["Icon"])[thisTextNode["IconIndex"]];
+        this.MaximumQuantity = thisTextNode["MaximumQuantity"];
         this.Slot = -1;
     }
 

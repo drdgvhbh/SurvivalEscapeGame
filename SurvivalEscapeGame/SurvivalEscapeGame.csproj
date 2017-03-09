@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Item.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Coconut.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Fabric.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Gem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Stick.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Stone.cs" />

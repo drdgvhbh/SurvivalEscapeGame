@@ -68,8 +68,8 @@
 			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/ToolsSprites",
 			"IconIndex" : 1,
-			"StaminaCost" : 10.0,
-			"ChannelDuration" : 1.5,
+			"StaminaCost" : 5.0,
+			"ChannelDuration" : 1.25,
 			"Consumable" : false,
 			"Locations" :,
 			"UsableIn" : ["Sand", "Grass"],
@@ -190,8 +190,26 @@
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 10.0
+			"NourishmentReplenishment" : 8
+		}
+,	
+		"Fabric" : 
+		{
+			"Name" : "Fabric",
+			"Description" : "The silk of the land",
+			"MaximumQuantity" : 8,
+			"Icon" : "Sprites/Items/armor",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Enemy"],
+			"UsableIn" : ,
+			"Components" :,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
 		}
 
 	}
+
 }
