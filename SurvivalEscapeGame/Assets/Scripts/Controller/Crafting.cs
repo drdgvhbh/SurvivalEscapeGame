@@ -13,7 +13,7 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
     private PlayerData Pd;
 
     private void Start() {
-        Pd = Player.GetComponent<PlayerData>();
+        
     }
 
     public static Dictionary<ItemList, Item[]> Types = new Dictionary<ItemList, Item[]>() {
@@ -25,6 +25,8 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
     };
 
     public void OnPointerDown(PointerEventData eventData) {
+        if (Pd == null)
+            Pd = Player.GetComponent<PlayerData>();
         ItemList itemToBeCrafted = ItemList.Placeholder;        
         Dictionary<string, Item> CraftInventory = PlayerData.CraftingInventory;
         //List of Craftable Items

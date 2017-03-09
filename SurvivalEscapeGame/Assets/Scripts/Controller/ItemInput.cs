@@ -9,10 +9,11 @@ public class ItemInput : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     private Vector2 Offset;
 
     private void Awake() {
-        if (ItemInput.Tooltip == null)
-            ItemInput.Tooltip = GameObject.FindGameObjectWithTag("Tooltip");
     }
     private void Start() {
+    }
+
+    private void Update() {
     }
 
     public void OnPointerDown(PointerEventData eventData) {

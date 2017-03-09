@@ -1,16 +1,124 @@
 {
-	"items": 
+	"Items": 
 	{
-		"0" : 
+		"Gem" : 
+		{
+			"Name" : "Gem",
+			"Description" : "A very precious stone.",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/blue_gem_1",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Sand"],
+			"UsableIn" :,
+			"Components" :
+		}
+,
+		"Pickaxe" : 
+		{
+			"Name" : "Pickaxe",
+			"Description" : "A tool for mining ore in the mountains.",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/farmTools",
+			"IconIndex" : 11,
+			"StaminaCost" : 20.0,
+			"ChannelDuration" : 2.5,
+			"Consumable" : false,
+			"Locations" :,
+			"UsableIn" : ["Mountains"],
+			"Components" : "Wood <b>x</b> 1,  Stone <b>x</b> 1"
+		}
+,
+		"Placeholder" : 
+		{
+			"Name" : "Placeholder",
+			"Description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu mollis lectus. Suspendisse ultricies euismod.",
+			"MaximumQuantity" : 0,
+			"Icon" : "Sprites/Items/placeholder",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" :,
+			"UsableIn" :,
+			"Components" :
+		}
+,
+		"Shovel" : 
+		{
+			"Name" : "Shovel",
+			"Description" : "A tool for digging up random items in the ground",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/ToolsSprites",
+			"IconIndex" : 1,
+			"StaminaCost" : 10.0,
+			"ChannelDuration" : 1.5,
+			"Consumable" : false,
+			"Locations" :,
+			"UsableIn" : ["Sand", "Grass"],
+			"Components" :
+		}
+,
+		"Stick" : 
+		{
+			"Name" : "Stick",
+			"Description" : "A wooden stick. Sharp and deadly.",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/placeholder",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Sand", "Grass"],
+			"UsableIn" : ,
+			"Components" :
+		}
+,
+		"Stone" : 
+		{
+			"Name" : "Stone",
+			"Description" : "A mythical stone dated back to the First Age.",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/placeholder",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Sand", "Grass"],
+			"UsableIn" : ,
+			"Components" :
+		}
+,
+		"Tent" : 
 		{
 			"Name" : "Tent",
-			"MaximumQuantity" : "1",
-			"Slot" : -1,
+			"Description" : "A consumable structure than can be placed on the ground. When the player is on the same tile as the tent, the player will regenerate stamina based on the player's nourishment level.",
+			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/Tent",
+			"IconIndex" : 0,
 			"StaminaCost" : 20.0,
 			"ChannelDuration" : 3.0,
-			"Consumable" : true
+			"Consumable" : true,
+			"Locations" :,
+			"UsableIn" : "All",
+			"Components"
 		}
-
+,
+		"Wood" : 
+		{
+			"Name" : "Wood",
+			"Description" : "A wooden log.",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/wood",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Grass"],
+			"UsableIn" : ,
+			"Components" :
+		}
 	}	
 }

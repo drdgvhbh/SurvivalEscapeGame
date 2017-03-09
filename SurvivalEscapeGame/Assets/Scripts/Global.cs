@@ -55,7 +55,7 @@ public static class Global {
 		{ItemList.Tent, "Tent" },
         {ItemList.Wood, "Wood" },
         {ItemList.Stick, "Stick" },
-        {ItemList.Pickaxe, "PickAxe" },
+        {ItemList.Pickaxe, "Pickaxe" },
         {ItemList.Stone, "Stone" }
 	};
 

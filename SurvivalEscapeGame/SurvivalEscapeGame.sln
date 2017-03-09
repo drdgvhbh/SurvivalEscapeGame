@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurvivalEscapeGame.Plugins", "SurvivalEscapeGame.Plugins.csproj", "{94AD8A25-E367-ECB8-7311-D23552903C70}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurvivalEscapeGame", "SurvivalEscapeGame.csproj", "{EA03CE32-90DF-05F6-9134-18EC8DDFA996}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SurvivalEscapeGame.Editor", "SurvivalEscapeGame.Editor.csproj", "{BBA7DBFD-4615-537F-5495-4AD54E1E7EFF}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94AD8A25-E367-ECB8-7311-D23552903C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AD8A25-E367-ECB8-7311-D23552903C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AD8A25-E367-ECB8-7311-D23552903C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AD8A25-E367-ECB8-7311-D23552903C70}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EA03CE32-90DF-05F6-9134-18EC8DDFA996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EA03CE32-90DF-05F6-9134-18EC8DDFA996}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA03CE32-90DF-05F6-9134-18EC8DDFA996}.Release|Any CPU.ActiveCfg = Release|Any CPU

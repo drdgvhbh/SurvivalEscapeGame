@@ -1,20 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
+using SimpleJSON;
 
 public class ItemDatabase : MonoBehaviour {
-    private static string path = Application.streamingAssetsPath + "/data.json";
-    private string jsonString;
+    private string Path;
+    private string JsonString;
+    public static JSONNode JsonNode;
 
-
-	// Use this for initialization
-	void Start () {
-        jsonString = File.ReadAllText(path);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	void Awake () {
+        Path = Application.streamingAssetsPath + "/items.json";
+        JsonString = File.ReadAllText(Path);
+        JsonNode = JSON.Parse(JsonString);
 	}
 }

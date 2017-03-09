@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +8,12 @@ public class Tooltip : MonoBehaviour {
     private Item Item;
     private GameObject TooltipObj;
 
-    private void Start() {
+    private void Awake() {
         this.TooltipObj = this.gameObject;
+        ItemInput.Tooltip = this.gameObject;             
+    }
+
+    private void Start() {
         ItemInput.Tooltip.SetActive(false);
     }
 
