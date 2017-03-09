@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tent : ActionItem {
     public static Object prefab = Resources.Load("Prefabs/Tent");
@@ -32,7 +33,9 @@ public class Tent : ActionItem {
             tent.transform.position = tile.GetPosition() - Global.SmallOffset;
             tile.Structures.Add(ItemList.Tent, tent);
             pd.RemoveItem(this, 1, pd.GetInventory());
+            pd.GUIText.GetComponent<Text>().text = "Tent built";
         } else {
+            pd.GUIText.GetComponent<Text>().text = "This tile already has a tent built on it!";
             Debug.Log("Tile already has a tent built on it!");
         }
     }

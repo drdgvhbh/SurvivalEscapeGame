@@ -24,7 +24,8 @@ public enum PlayerActions {
 	Move,
 	Dig,
 	BuildTent,
-    Attack
+    Attack,
+    Eat
 }
 
 public enum ItemList {
@@ -35,7 +36,9 @@ public enum ItemList {
     Wood,
     Stick,
     Pickaxe,
-    Stone
+    Stone,
+    Spear,
+    Coconut
 }
 
 public static class Global {
@@ -56,8 +59,10 @@ public static class Global {
         {ItemList.Wood, "Wood" },
         {ItemList.Stick, "Stick" },
         {ItemList.Pickaxe, "Pickaxe" },
-        {ItemList.Stone, "Stone" }
-	};
+        {ItemList.Stone, "Stone" },
+        {ItemList.Spear, "Spear" },
+        {ItemList.Coconut, "Coconut" }
+    };
 
 
 	public static Color[][] GetColorsFromTexture2D(Texture2D texture, int tileResolution) {

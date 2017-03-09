@@ -46,7 +46,6 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        PlayerData pd = Player.GetComponent<PlayerData>();
         if (Item != null) {
             Pi.Actions[Item.GetName()]();
         }

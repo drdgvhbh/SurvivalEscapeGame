@@ -17,6 +17,7 @@ public class EnemyData : MonoBehaviour {
     private bool IsAttackOnCooldown { get; set; }
     private float LerpStep { get; set; }
     private bool intialized = false;
+    public int direction;
 
     private List<GameObject> TempSight = new List<GameObject>();
 
@@ -45,6 +46,7 @@ public class EnemyData : MonoBehaviour {
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
         IsAttackOnCooldown = false;
+        direction = 1;
         intialized = true;        
     }
 
@@ -59,13 +61,26 @@ public class EnemyData : MonoBehaviour {
             TempSight.Clear();    
             */        
             DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
-            if (PathNode.GetDistanceToNode(CurrentTile, DestinationTile) > 5) {
+            int distance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile);
+            if (distance > 5) {               
                 return;
-            }
+            } 
+
                 
             TileTobeMovedTo = CalculatePath();
             if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && TileTobeMovedTo.CurrentGameObject == null) {
                 TypeOfPerformingAction[PlayerActions.Move] = true;
+                Vector3 dest = TileTobeMovedTo.GetPosition() - Global.SmallOffset;
+                Animator animCtrl = this.gameObject.GetComponent<Animator>();
+                if ( dest.x > Position.x) {
+                    animCtrl.ResetTrigger("GoLeft");
+                    animCtrl.SetTrigger("GoRight");
+                    direction = 1;
+                } else if (dest.x < Position.x ) {
+                    animCtrl.ResetTrigger("GoRight");
+                    animCtrl.SetTrigger("GoLeft");
+                    direction = -1;
+                }
                 IsPerformingAction = true;
                 CurrentTile.CurrentGameObject = null;
                 TileTobeMovedTo.CurrentGameObject = this.gameObject;
@@ -131,10 +146,11 @@ public class EnemyData : MonoBehaviour {
             Vector3 moveTo = TileTobeMovedTo.GetPosition() - Global.SmallOffset;
             transform.position = Vector3.MoveTowards(transform.position, moveTo, step);
             if (transform.position.Equals(moveTo)) {                
-                CurrentTile = TileTobeMovedTo;                
+                CurrentTile = TileTobeMovedTo;
+                Position = CurrentTile.GetPosition();
                 TypeOfPerformingAction[PlayerActions.Move] = false;
                 IsPerformingAction = false;
-                //this.GetPlayerData().UpdateTileVisibility();
+                Player.GetComponent<PlayerData>().UpdateTileVisibility();
             }
         }
     }
@@ -143,6 +159,15 @@ public class EnemyData : MonoBehaviour {
         if (TypeOfPerformingAction[PlayerActions.Attack]) {
             if (IsAttackOnCooldown == false) {
                 Player.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
+                Animator animCtrl = this.gameObject.GetComponent<Animator>();
+                if (direction == 1) {
+                    animCtrl.SetTrigger("GoRight");
+                    animCtrl.SetTrigger("AttackRight");
+                } else {
+                    animCtrl.SetTrigger("GoLeft");
+                    animCtrl.SetTrigger("AttackLeft");
+                    direction = -1;
+                }
                 IsAttackOnCooldown = true;
             }
             float step = Mathf.Lerp(0.0f, 1.0f, LerpStep);

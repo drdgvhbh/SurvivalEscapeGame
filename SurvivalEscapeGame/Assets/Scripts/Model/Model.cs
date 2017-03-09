@@ -47,7 +47,8 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-        CreateEnemy(Random.Range(0, Mb.NumTiles));
+        for (int i = 0; i < 0; i++) 
+            CreateEnemy(Random.Range(0, Mb.NumTiles));
 
     }
 
@@ -62,9 +63,18 @@ public class Model : MonoBehaviour {
     }
 
     private void CreatePlayerProperties() {
-        Player1.transform.position = Terrain[0].GetPosition() - Global.SmallOffset;
-        Player1.GetComponent<PlayerData>().SetCurrentTile(Terrain[0]);
-        Terrain[0].CurrentGameObject = Player1;
+        bool walkable = false;
+        int idx = 0;
+        do {
+            idx = Random.Range(0, Mb.NumTiles);
+            if (Terrain[idx].IsWalkable == true) {
+                walkable = true;
+            }
+        } while (walkable == false);
+
+        Player1.transform.position = Terrain[idx].GetPosition() - Global.SmallOffset;
+        Player1.GetComponent<PlayerData>().SetCurrentTile(Terrain[idx]);
+        Terrain[idx].CurrentGameObject = Player1;
         Player1.GetComponent<PlayerData>().LateStart();
         Player1.GetComponent<PlayerInput>().SetPlayerData(Player1.GetComponent<PlayerData>());
     }

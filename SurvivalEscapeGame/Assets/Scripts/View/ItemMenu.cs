@@ -41,20 +41,42 @@ public class ItemMenu : MonoBehaviour {
             "<b>Maximum Quantity:</b> " + thisTextNode["MaximumQuantity"] + "\n"
             + "<b>Consumable:</b> " + thisTextNode["Consumable"] + "\n"
             + "<b>Locations:</b> ";
-        for (int i = 0; i < thisTextNode["Locations"].AsArray.Count; i++) {
-            if (i != thisTextNode["Locations"].AsArray.Count - 1) {
+        for (int i = 0; i < thisTextNode["Locations"].Count; i++) {
+            if (i != thisTextNode["Locations"].Count - 1) {
                 BasicString = BasicString + thisTextNode["Locations"][i] + ", ";
             } else {
-                BasicString = BasicString + thisTextNode["Locations"][i] + "\n";
+                BasicString = BasicString + thisTextNode["Locations"][i];
             }
         }
-        BasicString = BasicString            
-            + "<b>Usable In:</b> " + thisTextNode["UsableIn"] + "\n";
+        BasicString = BasicString
+            + "\n"
+            + "<b>Usable In:</b> ";
+        for (int i = 0; i < thisTextNode["UsableIn"].Count; i++) {
+            if (i != thisTextNode["UsableIn"].Count - 1) {
+                BasicString = BasicString + thisTextNode["UsableIn"][i] + ", ";
+            } else {
+                BasicString = BasicString + thisTextNode["UsableIn"][i];
+            }
+        }
+
         BasicEffects.GetComponent<Text>().text = BasicString;
         string AdvancedString =
-            "<b>Stamina Cost:</b> " + thisTextNode["StaminaCost"] + "\n" 
+            "<b>Stamina Cost:</b> " + thisTextNode["StaminaCost"] + "\n"
             + "<b>Channel Duration:</b> " + thisTextNode["ChannelDuration"] + "s\n"
-            +"<b>Crafting Components:</b> " + thisTextNode["Components"] + "\n";
+            + "<b>Crafting Components:</b> ";
+        for (int i = 0; i < thisTextNode["Components"].Count; i++) {
+            AdvancedString = AdvancedString +
+                thisTextNode["Components"][i.ToString()]["Type"]
+                + " <b>x</b> "
+                + thisTextNode["Components"][i.ToString()]["Quantity"];
+            if (i != thisTextNode["Components"].Count - 1) {
+                AdvancedString += ", ";
+            }
+        }
+        AdvancedString +=
+            "\n"
+            + "<b>Damage:</b> " + thisTextNode["Damage"] + "\n"
+            + "<b>Nourishment Replenishment:</b> " + thisTextNode["NourishmentReplenishment"] + "\n";
         AdvancedEffects.GetComponent<Text>().text = AdvancedString;
         Image.GetComponent<Image>().sprite = Resources.LoadAll<Sprite>(thisTextNode["Icon"])[thisTextNode["IconIndex"]];
     }

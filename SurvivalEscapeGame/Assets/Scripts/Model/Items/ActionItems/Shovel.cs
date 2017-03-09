@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shovel : ActionItem {
     public Shovel(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
@@ -20,11 +21,13 @@ public class Shovel : ActionItem {
     }
 
     public void Dig(PlayerData pd) {
+        pd.CurrentTile.DigCount++;
         Debug.Log("Done Digging");
+        GameObject guiTxt = pd.GUIText;
         pd.Stamina = pd.Stamina - StaminaCost;
         Tile tile = pd.GetCurrentTile();
         if (tile.GetTileDepth() == 0) {
-            Debug.Log("This tile can be dug no more.");
+            guiTxt.GetComponent<Text>().text = "This tile can be dug no more...";
             return;
         }
         tile.SetTileDepth(tile.GetTileDepth() - 1);
@@ -32,7 +35,10 @@ public class Shovel : ActionItem {
             if (it.GetDepthLevel() == tile.GetTileDepth()) {
                 tile.RemoveItem(it.GetId());
                 if (pd.AddItem(it)) {
+                    guiTxt.GetComponent<Text>().text = "Found: " + it.GetName() + "!";
                     Debug.Log("Found: " + it.GetName() + ", Player now has: " + pd.GetInventory()[it.GetName()].GetQuantity() + " " + it.GetName() + "(s).");
+                } else {
+                    guiTxt.GetComponent<Text>().text = "Nothing was found.";
                 }
             }
         }

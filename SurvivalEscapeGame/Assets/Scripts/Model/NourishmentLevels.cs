@@ -7,7 +7,7 @@ public static class NourishmentLevels {
     public static float LowMultiplier = 0.01f;
     private static double NourishmentThresholdN = 1.15;
     private static double HRegenerationN = 1.75;
-    private static double DecayN = 1/1.2;
+    private static double DecayN = 1/1.05;
     private static double MsN = 1.65;
     private static double HealthN = System.Math.Pow(2, 1 / 2);
     public static double StaminaN = 2;

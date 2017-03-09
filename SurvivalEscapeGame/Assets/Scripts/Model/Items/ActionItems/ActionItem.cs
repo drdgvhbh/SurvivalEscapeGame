@@ -12,6 +12,10 @@ public abstract class ActionItem : Item {
 
     }
 
+    public ActionItem(int id, int depthLevel, bool active, int quantity) : base(id, depthLevel, active, quantity) {
+
+    }
+
     public ActionItem(int id, bool active) : base(id, active) {
 
     }

@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4315979219000608}
   - component: {fileID: 212216487830055176}
   - component: {fileID: 114597666583257234}
+  - component: {fileID: 95274119506556662}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -41,6 +42,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &95274119506556662
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1414139356373228}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 46880a8ac37816e4489959b1c916c443, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114597666583257234
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81933766506d225458ef7521afcb4281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  direction: 0
 --- !u!212 &212216487830055176
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -84,7 +102,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f55dce2f0226e904eacaf15d6582760e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 2321881f29c62f24299e30087e08506d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0

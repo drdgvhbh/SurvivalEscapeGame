@@ -13,7 +13,8 @@
 			"Consumable" : false,
 			"Locations" : ["Sand"],
 			"UsableIn" :,
-			"Components" :
+			"Components" :,
+			"Damage"
 		}
 ,
 		"Pickaxe" : 
@@ -28,7 +29,20 @@
 			"Consumable" : false,
 			"Locations" :,
 			"UsableIn" : ["Mountains"],
-			"Components" : "Wood <b>x</b> 1,  Stone <b>x</b> 1"
+			"Components" : 
+			{
+				"0" :
+				{ 
+					"Type" :"Wood",
+					"Quantity" : 1
+				},
+				"1" :
+				{ 
+					"Type" :"Stone",
+					"Quantity" : 2
+				}
+			},
+			"Damage"
 		}
 ,
 		"Placeholder" : 
@@ -43,13 +57,14 @@
 			"Consumable" : false,
 			"Locations" :,
 			"UsableIn" :,
-			"Components" :
+			"Components" :,
+			"Damage"
 		}
 ,
 		"Shovel" : 
 		{
 			"Name" : "Shovel",
-			"Description" : "A tool for digging up random items in the ground",
+			"Description" : "A tool for digging up random items in the ground. Items can be buried very deep, so be sure to dig more than once!",
 			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/ToolsSprites",
 			"IconIndex" : 1,
@@ -58,7 +73,8 @@
 			"Consumable" : false,
 			"Locations" :,
 			"UsableIn" : ["Sand", "Grass"],
-			"Components" :
+			"Components" :,
+			"Damage"
 		}
 ,
 		"Stick" : 
@@ -66,14 +82,15 @@
 			"Name" : "Stick",
 			"Description" : "A wooden stick. Sharp and deadly.",
 			"MaximumQuantity" : 5,
-			"Icon" : "Sprites/Items/placeholder",
+			"Icon" : "Sprites/Items/stick",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
 			"ChannelDuration" : 0,
 			"Consumable" : false,
 			"Locations" : ["Sand", "Grass"],
 			"UsableIn" : ,
-			"Components" :
+			"Components" :,
+			"Damage"
 		}
 ,
 		"Stone" : 
@@ -81,14 +98,15 @@
 			"Name" : "Stone",
 			"Description" : "A mythical stone dated back to the First Age.",
 			"MaximumQuantity" : 5,
-			"Icon" : "Sprites/Items/placeholder",
+			"Icon" : "Sprites/Items/stone",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
 			"ChannelDuration" : 0,
 			"Consumable" : false,
 			"Locations" : ["Sand", "Grass"],
 			"UsableIn" : ,
-			"Components" :
+			"Components" :,
+			"Damage"
 		}
 ,
 		"Tent" : 
@@ -101,9 +119,17 @@
 			"StaminaCost" : 20.0,
 			"ChannelDuration" : 3.0,
 			"Consumable" : true,
-			"Locations" :,
-			"UsableIn" : "All",
-			"Components"
+			"Locations" : ,
+			"UsableIn" : ["All"],
+			"Components" : 			
+			{
+				"0" :
+				{ 
+					"Type" :"Fabric",
+					"Quantity" : 3
+				},
+			},
+			"Damage" :
 		}
 ,
 		"Wood" : 
@@ -117,8 +143,55 @@
 			"ChannelDuration" : 0,
 			"Consumable" : false,
 			"Locations" : ["Grass"],
+			"UsableIn" :,
+			"Components" : ,
+			"Damage" :
+		}
+,	
+		"Spear" : 
+		{
+			"Name" : "Spear",
+			"Description" : "An excellent weapon for striking fear into the hearts of your enemies.",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/spear",
+			"IconIndex" : 0,
+			"StaminaCost" : 15.0,
+			"ChannelDuration" : 0.5,
+			"Consumable" : false,
+			"Locations" :,
 			"UsableIn" : ,
 			"Components" :
+			{
+				"0" :
+				{ 
+					"Type" :"Wood",
+					"Quantity" : 2
+				},
+				"1" :
+				{ 
+					"Type" :"Silver Ore",
+					"Quantity" : 1
+				},
+			},
+			"Damage" : 15 
 		}
-	}	
+,	
+		"Coconut" : 
+		{
+			"Name" : "Coconut",
+			"Description" : "An excellent beverage and a source of potassium!",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/coconut",
+			"IconIndex" : 0,
+			"StaminaCost" : 3.0,
+			"ChannelDuration" : 0.75,
+			"Consumable" : true,
+			"Locations" : ["Sand"],
+			"UsableIn" : ["All"],
+			"Components" :,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 10.0
+		}
+
+	}
 }

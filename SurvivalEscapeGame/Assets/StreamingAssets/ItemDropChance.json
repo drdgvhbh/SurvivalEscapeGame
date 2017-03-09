@@ -1,0 +1,19 @@
+{
+	"ItemDropChance" :
+	 {
+	 	"Grass" : 
+	 	{
+	 		"Stick" : 30,
+	 		"Stone" : 25,
+	 		"Wood" : 10
+	 	}
+,
+	 	"Sand" : 
+	 	{
+	 		"Gem" : 35,
+	 		"Stick" : 25,
+	 		"Stone" : 5,
+	 		"Coconut" : 40
+	 	}
+	 }
+}

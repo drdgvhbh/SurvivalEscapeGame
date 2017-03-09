@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using SimpleJSON;
+using System.IO;
 
 public class TerrainBuilder {
     private int NumTiles;
@@ -12,6 +14,7 @@ public class TerrainBuilder {
     private Tile[] Tiles;
     private Vector3[] Normals;
     private Mesh GameGrid;
+    private JSONNode JsonNode;
 
     private static Dictionary<int, TileType> InverseTileType = new Dictionary<int, TileType>() {
         { -1, TileType.Empty},
@@ -20,20 +23,35 @@ public class TerrainBuilder {
         { 2, TileType.Sand },
         { 3, TileType.Mountain},
         { 4, TileType.Water}
-
     };
 
-    public static Dictionary<ItemList, float> ItemChance = new Dictionary<ItemList, float>() {
-        { ItemList.Gem, 100.0f}
+    private static Dictionary<TileType, string> TileTypeAsString = new Dictionary<TileType, string>() {
+        { TileType.Empty, "Empty" },
+        {  TileType.Placeholder, "Placeholder" },
+        { TileType.Grass, "Grass"  },
+        { TileType.Sand, "Sand" },
+        { TileType.Mountain, "Mountain" },
+        { TileType.Water, "Water" }
     };
 
-    public static Dictionary<TileType, Item[][]> ItemLocations = new Dictionary<TileType, Item[][]>() {
-        { TileType.Empty, new Item[0][] },
-        { TileType.Placeholder, new Item[][] {new Gem[0] }},
-        { TileType.Grass, new Item[0][]},
-        { TileType.Sand, new Item[0][]},
-        { TileType.Mountain, new Item[0][]},
-        { TileType.Water, new Item[0][]}
+    public static Dictionary<TileType, List<Item[]>> ItemLocations = new Dictionary<TileType, List<Item[]>>() {
+        { TileType.Empty, new List<Item[]>() },
+        { TileType.Placeholder, new List<Item[]>() },
+        { TileType.Grass, new List<Item[]>() {
+                {new Stick[0]},
+                {new Stone[0]},
+                {new Wood[0]}
+            }
+        },
+        { TileType.Sand, new List<Item[]>() {
+                {new Gem[0]},
+                {new Stick[0]},
+                {new Stone[0]},
+                {new Coconut[0]}
+            }
+        },
+        { TileType.Mountain, new List<Item[]>()},
+        { TileType.Water, new List<Item[]>()}
     };
 
     public static Dictionary<TileType, List<TileType>> BorderAllowances = new Dictionary<TileType, List<TileType>>() {
@@ -60,6 +78,9 @@ public class TerrainBuilder {
         this.Tiles = new Tile[this.NumTiles];
         this.Normals = norms;
         this.GameGrid = gameGrid;
+        string path = Application.streamingAssetsPath + "/ItemDropChance.json";
+        string jsonString = File.ReadAllText(path);
+        JsonNode = JSON.Parse(jsonString);
     }
 
 
@@ -86,16 +107,6 @@ public class TerrainBuilder {
             tileNum.transform.localPosition = (position - Global.SmallOffset) * 32 + new Vector3(160, -160);
             tileNum.GetComponent<Text>().text = i.ToString();
             */
-            if (Random.Range(0.0f, 100.0f) <= ItemChance[ItemList.Gem]) {
-                this.Tiles[i].AddItem(new Wood(
-                                                Item.IdCounter,
-                                                Random.Range(0, this.Tiles[i].GetTileDepth()),
-                                                false,
-                                                1
-                                                )
-                                     );
-                Item.IdCounter++;
-            }
         }
         this.FindNeighbours();
         //horrendous time complexity xd
@@ -133,6 +144,19 @@ public class TerrainBuilder {
         }
         foreach (Tile t in Tiles) {
             t.CalculateAutoTileID();
+            var thisTextNode = JsonNode["ItemDropChance"][TerrainBuilder.TileTypeAsString[t.Type]];
+            for (int i = 0; i < ItemLocations[t.Type].Count; i++) {
+                var itemName = ItemLocations[t.Type][i].GetType().GetElementType();
+                if (Random.Range(0.0f, 100.0f) <= thisTextNode[itemName.ToString()]) {
+                     var obj = (Item)System.Activator.CreateInstance(
+                         itemName, 
+                         Item.IdCounter++, 
+                         Random.Range(0, this.Tiles[i].GetTileDepth()),
+                         false,
+                         1);
+                    t.AddItem(obj);
+                }
+            }
         }
         return Tiles;
     }

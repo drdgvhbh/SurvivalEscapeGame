@@ -19,6 +19,9 @@ public class PlayerData : MonoBehaviour {
     public float MovementSpeed;
     public float StaminaRegeneration;
     public bool Alive;
+    public bool IsWeaponEquipped;
+    public bool IsShieldEquipped;
+    public int Direction = 1;
 
     private float MaximumNourishmentStatus;
 
@@ -48,6 +51,8 @@ public class PlayerData : MonoBehaviour {
     private GameObject ActivePanel;
     [SerializeField]
     private GameObject CraftingPanel;
+    [SerializeField]
+    public GameObject GUIText;
 
     private Dictionary<string, Item> Inventory;
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
@@ -78,7 +83,8 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.Move, false },
             {PlayerActions.Dig, false },
             {PlayerActions.BuildTent, false },
-            {PlayerActions.Attack, false }
+            {PlayerActions.Attack, false },
+            {PlayerActions.Eat, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.UpdateTileVisibility();
@@ -132,6 +138,12 @@ public class PlayerData : MonoBehaviour {
     }
 
     private void UpdateTileVisibilityDay() {
+        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(4)) {
+            if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
+                SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0);
+            }
+        }
         foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(3)) {
             for (int j = 0; j < t.NormIdx.Length; j++) {
                 t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
@@ -139,6 +151,10 @@ public class PlayerData : MonoBehaviour {
                 foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
                     entry.Value.SetActive(false);
                 }
+                if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
+                    SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
+                    sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 255);
+                }                
             }
         }
         foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
@@ -148,6 +164,10 @@ public class PlayerData : MonoBehaviour {
                 foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
                     entry.Value.SetActive(true);
                 }
+            }
+            if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
+                SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 255);
             }
         }
     }
@@ -195,6 +215,8 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateNourishmentStatus() {
+        if (this.NourishmentLevel == 2 && this.NourishmentStatus > NourishmentLevels.NourishmentThreshold[2])
+            this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[2];
         if (this.NourishmentLevel > -2 && this.NourishmentStatus <= 0) {
             this.NourishmentLevel--;
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] + this.NourishmentStatus;
@@ -209,7 +231,6 @@ public class PlayerData : MonoBehaviour {
         this.Health = this.Health - damage;
         if (this.Health <= 0) {
             Transform camera = this.gameObject.transform.GetChild(0);
-            Debug.Log(this.gameObject.transform.GetComponentInParent<Transform>());
             camera.SetParent(this.gameObject.transform.parent.gameObject.transform);
             UpdateHealth();
             Destroy(this.gameObject);

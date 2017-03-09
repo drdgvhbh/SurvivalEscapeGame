@@ -27,7 +27,7 @@ public class Tile {
             { TileType.Sand, TileType.Grass }
         },
         { TileType.Mountain, new List<TileType>()
-            { TileType.Mountain }
+            { TileType.Mountain, TileType.Grass }
         },
         { TileType.Water, new List<TileType>()
             { TileType.Water }
@@ -66,6 +66,7 @@ public class Tile {
     public int[] NormIdx;
     public bool IsWalkable { get; set; }
     public int MovementCost { get; set; }
+    public int DigCount;
 
     public GameObject CurrentGameObject;
 
@@ -80,6 +81,7 @@ public class Tile {
         this.Active = false;
         IsWalkable = Tile.WalkableTypes[type];
         MovementCost = Tile.MovementCostTable[type];
+        DigCount = 0;
     }
 
     public void SetTileType(TileType type) {
