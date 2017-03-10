@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickaxe : ActionItem {
+public class Pickaxe : DiggingItem {
     public static List<KeyValuePair<string, int>> CraftingComponents = new List<KeyValuePair<string, int>>() {
         { new KeyValuePair<string, int>(Global.ItemNames[ItemList.Wood], 1) },
         { new KeyValuePair<string, int>(Global.ItemNames[ItemList.Stone], 1) },

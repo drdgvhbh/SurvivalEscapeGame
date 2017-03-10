@@ -63,7 +63,7 @@ public class Model : MonoBehaviour {
             CreateEnemy(Random.Range(0, Mb.NumTiles));
         new Radar(-1, false);
         new Cocoberry(-1, false);
-        Coroutine = UpgradeEnemies(1.0f);
+        Coroutine = UpgradeEnemies(18.0f);
         StartCoroutine(Coroutine);
     }
 

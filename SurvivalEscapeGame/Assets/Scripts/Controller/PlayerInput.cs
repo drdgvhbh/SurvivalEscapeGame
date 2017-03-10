@@ -36,6 +36,7 @@ public class PlayerInput : MonoBehaviour {
     // Use this for initialization
     private void Awake() {
         Actions.Add(Global.ItemNames[ItemList.Shovel], Dig);
+        Actions.Add(Global.ItemNames[ItemList.Pickaxe], DigMountain);
         Actions.Add(Global.ItemNames[ItemList.Tent], BuildTent);
         Actions.Add(Global.ItemNames[ItemList.Coconut], EatCoconut);
         Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
@@ -254,6 +255,26 @@ public class PlayerInput : MonoBehaviour {
             ChannelingBarMask.SetActive(true);
             DigSound.Play();
             Digging();            
+        }
+    }
+
+    public void DigMountain() {
+        if (GetPlayerData().CurrentTile.Type != TileType.Mountain) {
+            GUItext.text = "Cannnot use a shovel when not in a mountain!";
+            return;
+        }
+        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
+            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.DigCount + " times.";
+            ChannelingBarMask.SetActive(true);
+            DigSound.Play();
+            Digging();
+        }
+    }
+
+    protected void DiggingMountain() {
+        if (Channeling(ItemList.Pickaxe, PlayerActions.Dig) == PlayerActions.Dig) {
+            Pickaxe p = (Pickaxe)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Pickaxe]]);
+            p.Dig(this.GetPlayerData(), this);
         }
     }
 

@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\Model\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Model\ItemDatabase.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\DiggingItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Food.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Pickaxe.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Radar.cs" />

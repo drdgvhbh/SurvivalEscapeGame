@@ -96,7 +96,11 @@ public class TerrainBuilder {
                 normIdx[j] = this.GameGrid.triangles[j + i * Global.TrianglesInASquare * Global.VertsInATri];
             }
             if (currentRow == 0 || currentColumn == 0 || currentRow == this.Rows - 1 || currentColumn == this.Columns - 1) {
-                this.Tiles[i] = new Tile(i, TileType.Sand, position, ref this.Normals, normIdx);
+                if (Random.Range(0, 5) < 3) {
+                    this.Tiles[i] = new Tile(i, TileType.Sand, position, ref this.Normals, normIdx);
+                } else {
+                    this.Tiles[i] = new Tile(i, TileType.Water, position, ref this.Normals, normIdx);
+                }
             } else {
                 this.Tiles[i] = new Tile(i, TerrainBuilder.InverseTileType[Random.Range(1, 5)], position, ref this.Normals, normIdx);
             }
