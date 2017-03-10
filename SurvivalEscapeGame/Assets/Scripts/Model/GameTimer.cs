@@ -16,6 +16,8 @@ public class GameTimer : MonoBehaviour {
     private GameObject GameOverText;
     [SerializeField]
     private GameObject Guide;
+    [SerializeField]
+    private GameObject Player;
 
     private IEnumerator Coroutine;
 
@@ -23,8 +25,8 @@ public class GameTimer : MonoBehaviour {
         while (!GetIsTimeUp()) {
             Text.text = (Timer / 60).ToString() + ":" + (Timer % 60).ToString();
             Timer--;
-            if (Timer <= 0) {
-                GameOverText.SetActive(false);
+            if (Timer <= 0 || Player.GetComponent<PlayerData>().Alive == false) {
+                GameOverText.SetActive(true);
                 Guide.SetActive(false);
                 Time.timeScale = 0.0f;
                 Text.text = (Timer / 60).ToString() + ":" + (Timer % 60).ToString();

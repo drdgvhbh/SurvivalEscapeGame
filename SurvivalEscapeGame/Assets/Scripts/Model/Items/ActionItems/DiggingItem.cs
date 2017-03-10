@@ -26,6 +26,7 @@ public abstract class DiggingItem : ActionItem {
         pd.Stamina = pd.Stamina - StaminaCost;
         Tile tile = pd.GetCurrentTile();
         if (tile.GetTileDepth() == 0) {
+            pi.ErrorSound.Play();
             guiTxt.GetComponent<Text>().text = "This tile can be dug no more...";
             return;
         }

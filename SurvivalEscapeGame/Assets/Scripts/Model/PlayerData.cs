@@ -85,7 +85,7 @@ public class PlayerData : MonoBehaviour {
         this.IsPerformingAction = false;
         IsAttackOnCooldown = false;
         Damage = 20.0f;
-        AttackStaminaCost = 12.0f;
+        AttackStaminaCost = 10.0f;
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
             {PlayerActions.Dig, false },
@@ -243,6 +243,7 @@ public class PlayerData : MonoBehaviour {
             camera.SetParent(this.gameObject.transform.parent.gameObject.transform);
             UpdateHealth();
             Destroy(this.gameObject);
+            this.Alive = false;
             GUIText.GetComponent<Text>().text = "You are dead!!!";
         }
     }

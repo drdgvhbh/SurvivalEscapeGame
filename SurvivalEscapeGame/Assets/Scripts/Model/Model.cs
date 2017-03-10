@@ -35,6 +35,7 @@ public class Model : MonoBehaviour {
     private IEnumerator UpgradeEnemies(float waitTime) {
         while (true) {
             CreateEnemy(Random.Range(0, Mb.NumTiles));
+            CreateEnemy(Random.Range(0, Mb.NumTiles));
             EnemyData.AttackDamage += 3;
             EnemyData.MovementSpeed += 0.11f;
             EnemyData.MaxHealth += 5;
@@ -59,11 +60,11 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-        for (int i = 0; i < 10; i++) 
+        for (int i = 0; i < 72; i++) 
             CreateEnemy(Random.Range(0, Mb.NumTiles));
         new Radar(-1, false);
         new Cocoberry(-1, false);
-        Coroutine = UpgradeEnemies(18.0f);
+        Coroutine = UpgradeEnemies(15.0f);
         StartCoroutine(Coroutine);
         Time.timeScale = 0;
     }

@@ -48,8 +48,8 @@ public enum ItemList {
 public static class Global {
 	public const int TrianglesInASquare = 2;
 	public const int VertsInATri = 3;
-	public const int DepthVarianceMin = 0;
-	public const int DepthVarianceMax = 3;
+	public const int DepthVarianceMin = -1;
+	public const int DepthVarianceMax = 2;
 	public static Vector3 Origin = new Vector3(0, 0, 0);
 	public static Vector3 SmallOffset = new Vector3(0, 0, 0);
 	public static Vector3 Offset = new Vector3(0, 0, 0);

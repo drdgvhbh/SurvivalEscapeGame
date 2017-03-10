@@ -2948,6 +2948,7 @@ MonoBehaviour:
   TextObj: {fileID: 831792980}
   GameOverText: {fileID: 136936721}
   Guide: {fileID: 1440950839}
+  Player: {fileID: 1899472606}
 --- !u!1 &848690166
 GameObject:
   m_ObjectHideFlags: 0
@@ -3327,7 +3328,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: You are somehow stranded on this forsaken island. Help will arrive in 10
-    minutes. Do your best to survive by then!
+    minutes. Do your best to survive till then!
 --- !u!222 &1013151973
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6213,6 +6214,7 @@ GameObject:
   - component: {fileID: 1899472614}
   - component: {fileID: 1899472607}
   - component: {fileID: 1899472616}
+  - component: {fileID: 1899472617}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6317,6 +6319,7 @@ MonoBehaviour:
   InventoryPanel: {fileID: 1207717908}
   ChannelingBarMask: {fileID: 306025253}
   GUItext: {fileID: 0}
+  ErrorSound: {fileID: 0}
   ItemPickup: {fileID: 0}
 --- !u!212 &1899472609
 SpriteRenderer:
@@ -6684,6 +6687,86 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6b93487da4f254b429f3c93ad55f191a, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &1899472617
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1899472606}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e5aa2cfafe16f3f408c3d8bc8681f748, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

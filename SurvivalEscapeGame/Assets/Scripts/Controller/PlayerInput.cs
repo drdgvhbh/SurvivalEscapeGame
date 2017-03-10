@@ -24,6 +24,7 @@ public class PlayerInput : MonoBehaviour {
 
     private AudioSource DigSound;
     private AudioSource WalkSound;
+    public AudioSource ErrorSound;
 
     private AudioSource AttackSound;
     public AudioSource ItemPickup;
@@ -50,6 +51,7 @@ public class PlayerInput : MonoBehaviour {
         AttackSound = this.GetComponents<AudioSource>()[2];
         ItemPickup = this.GetComponents<AudioSource>()[3];
         Nourish = this.GetComponents<AudioSource>()[4];
+        ErrorSound = this.GetComponents<AudioSource>()[5];
     }
 
     private void Update() {
@@ -132,6 +134,7 @@ public class PlayerInput : MonoBehaviour {
 
     protected void Attack() {
         if (GetPlayerData().Stamina < GetPlayerData().AttackStaminaCost) {
+            ErrorSound.Play();
             GUItext.text = "Not enough stamina! Need " + GetPlayerData().AttackStaminaCost + " stamina!!!";
             return;
         } else if (GetPlayerData().IsAttackOnCooldown == true) {
@@ -140,6 +143,7 @@ public class PlayerInput : MonoBehaviour {
             GUItext.text = "Attack is on cooldown! " + asdf.ToString("F2") + " seconds remain.";
             return;
         } else if (GetPlayerData().IsPerformingAction) {
+            ErrorSound.Play();
             GUItext.text = "Cannot attack while performing another action!";
             return;
         }
@@ -247,6 +251,7 @@ public class PlayerInput : MonoBehaviour {
 
     public void Dig() {
         if (GetPlayerData().CurrentTile.Type == TileType.Mountain) {
+            ErrorSound.Play();
             GUItext.text = "Cannot use a shovel in a mountain!";
             return;
         }
@@ -260,7 +265,8 @@ public class PlayerInput : MonoBehaviour {
 
     public void DigMountain() {
         if (GetPlayerData().CurrentTile.Type != TileType.Mountain) {
-            GUItext.text = "Cannnot use a shovel when not in a mountain!";
+            ErrorSound.Play();
+            GUItext.text = "Cannnot use a pickaxe when not in a mountain!";
             return;
         }
         if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
@@ -287,7 +293,7 @@ public class PlayerInput : MonoBehaviour {
 
     public void EatCocoberry() {
         if (AItemFcns(PlayerActions.Eat, ItemList.Cocoberry)) {
-            GUItext.text = "Consuming Cocobery.";
+            GUItext.text = "Consuming Cocoberry.";
             ChannelingBarMask.SetActive(true);
             EatingCocoberry();
         }
