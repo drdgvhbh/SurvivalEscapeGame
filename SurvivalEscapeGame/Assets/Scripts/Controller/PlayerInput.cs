@@ -38,6 +38,8 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Shovel], Dig);
         Actions.Add(Global.ItemNames[ItemList.Tent], BuildTent);
         Actions.Add(Global.ItemNames[ItemList.Coconut], EatCoconut);
+        Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
+        Actions.Add(Global.ItemNames[ItemList.Cocoberry], EatCocoberry);
     }
 
     private void Start() {
@@ -58,6 +60,8 @@ public class PlayerInput : MonoBehaviour {
         ToggleInventory();
         BuildingTent();
         EatingCoconut();
+        EatingBerry();
+        EatingCocoberry();
         if (Input.GetMouseButtonDown(1)) {
             Attack();
         }
@@ -257,6 +261,38 @@ public class PlayerInput : MonoBehaviour {
         if (Channeling(ItemList.Shovel, PlayerActions.Dig) == PlayerActions.Dig) {
             Shovel s = (Shovel)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Shovel]]);
             s.Dig(this.GetPlayerData(), this);
+        }
+    }
+
+    public void EatCocoberry() {
+        if (AItemFcns(PlayerActions.Eat, ItemList.Cocoberry)) {
+            GUItext.text = "Consuming Cocobery.";
+            ChannelingBarMask.SetActive(true);
+            EatingCocoberry();
+        }
+    }
+
+    protected void EatingCocoberry() {
+        if (Channeling(ItemList.Cocoberry, PlayerActions.Eat) == PlayerActions.Eat) {
+            Cocoberry cocoberry = (Cocoberry)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Cocoberry]]);
+            cocoberry.Eat(this.GetPlayerData());
+            Nourish.Play();
+        }
+    }
+
+    public void EatBerry() {
+        if (AItemFcns(PlayerActions.Eat, ItemList.Berry)) {
+            GUItext.text = "Consuming berry.";
+            ChannelingBarMask.SetActive(true);
+            EatingBerry();
+        }
+    }
+
+    protected void EatingBerry() {
+        if (Channeling(ItemList.Berry, PlayerActions.Eat) == PlayerActions.Eat) {
+            Berry berry = (Berry)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Berry]]);
+            berry.Eat(this.GetPlayerData());
+            Nourish.Play();
         }
     }
 

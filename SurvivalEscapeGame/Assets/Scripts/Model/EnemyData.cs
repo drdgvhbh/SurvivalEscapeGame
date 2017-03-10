@@ -8,16 +8,17 @@ public class EnemyData : MonoBehaviour {
     public Vector3 Position { get; set; }
     public bool IsAlive { get; set; }
     private GameObject Player { get; set; }
-    private float MovementSpeed { get; set; }
+    public static float MovementSpeed { get; set; }
     public Tile DestinationTile { get; set; }
     public Tile TileTobeMovedTo { get; set; }
     public bool IsReachable { get; set; }
-    public float AttackDamage { get; set; }
-    public float AttackCooldown { get; set; }
+    public static float AttackDamage { get; set; }
+    public static float AttackCooldown { get; set; }
     private bool IsAttackOnCooldown { get; set; }
     private float LerpStep { get; set; }
     private bool intialized = false;
     public float Health;
+    public static float MaxHealth;
     public int direction;
 
     private List<GameObject> TempSight = new List<GameObject>();
@@ -51,13 +52,14 @@ public class EnemyData : MonoBehaviour {
         this.transform.position = Position - Global.SmallOffset;
         Player = player;
         TileTobeMovedTo = CurrentTile;
-        MovementSpeed = 1.0f;
-        AttackDamage = 15.0f;
+        MovementSpeed = 0.97f;
+        AttackDamage = 12.0f;
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
         IsAttackOnCooldown = false;
         direction = 1;
-        Health = 50.0f;
+        MaxHealth = 50.0f;
+        Health = MaxHealth;
         intialized = true;
         /*
         HealthBar = GameObject.Instantiate(HealthBarPrefab);

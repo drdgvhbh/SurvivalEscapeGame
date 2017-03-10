@@ -40,7 +40,8 @@ public class TerrainBuilder {
         { TileType.Grass, new List<Item[]>() {
                 {new Stick[0]},
                 {new Stone[0]},
-                {new Wood[0]}
+                {new Wood[0]},
+                {new Berry[0]}
             }
         },
         { TileType.Sand, new List<Item[]>() {
@@ -147,11 +148,12 @@ public class TerrainBuilder {
             var thisTextNode = JsonNode["ItemDropChance"][TerrainBuilder.TileTypeAsString[t.Type]];
             for (int i = 0; i < ItemLocations[t.Type].Count; i++) {
                 var itemName = ItemLocations[t.Type][i].GetType().GetElementType();
-                if (Random.Range(0.0f, 100.0f) <= thisTextNode[itemName.ToString()]) {
-                     var obj = (Item)System.Activator.CreateInstance(
+                float rand = Random.Range(0.0f, 100.0f);
+                if (rand <= thisTextNode[itemName.ToString()]) {
+                    var obj = (Item)System.Activator.CreateInstance(
                          itemName, 
                          Item.IdCounter++, 
-                         Random.Range(0, this.Tiles[i].GetTileDepth()),
+                         Random.Range(0, t.GetTileDepth()),
                          false,
                          1);
                     t.AddItem(obj);

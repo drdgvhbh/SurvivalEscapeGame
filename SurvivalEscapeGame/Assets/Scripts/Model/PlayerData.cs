@@ -293,6 +293,7 @@ public class PlayerData : MonoBehaviour {
             tmp.ItemObject.transform.GetChild(0).GetComponent<Text>().text = tmp.GetQuantity().ToString();
             return true;
         } else {
+            GUIText.GetComponent<Text>().text = "Maximum quantity reached!";
             Debug.Log("You've reached the maximum quantity of this item!");
         }
         return false;

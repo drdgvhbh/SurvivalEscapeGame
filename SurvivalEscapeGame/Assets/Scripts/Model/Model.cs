@@ -30,6 +30,18 @@ public class Model : MonoBehaviour {
     public int TileResolution = 32;
     public Texture2D[] TileTextures;
 
+    private IEnumerator Coroutine;
+
+    private IEnumerator UpgradeEnemies(float waitTime) {
+        while (true) {
+            CreateEnemy(Random.Range(0, Mb.NumTiles));
+            EnemyData.AttackDamage += 3;
+            EnemyData.MovementSpeed += 0.11f;
+            EnemyData.MaxHealth += 5;
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+
     private void Start() {
         CreateActivePanel(NumberOfActiveSlots);
         this.Mb = this.GetComponentInChildren<MeshBuilder>();
@@ -47,10 +59,12 @@ public class Model : MonoBehaviour {
 		this.Controller.SetTileView(this.Terrain);
         this.Controller.UpdateTileView();
         this.CreatePlayerProperties();
-        for (int i = 0; i < 10; i++) 
+        for (int i = 0; i < 8; i++) 
             CreateEnemy(Random.Range(0, Mb.NumTiles));
         new Radar(-1, false);
-
+        new Cocoberry(-1, false);
+        Coroutine = UpgradeEnemies(1.0f);
+        StartCoroutine(Coroutine);
     }
 
     private void CreateEnemy(int idx) {
