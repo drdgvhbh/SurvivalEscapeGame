@@ -118,7 +118,7 @@ public class PlayerData : MonoBehaviour {
         }
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Coconut(++Item.IdCounter, 0, true, 2), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Pickaxe(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -221,12 +221,13 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateNourishmentStatus() {
-        if (this.NourishmentLevel == 2 && this.NourishmentStatus > NourishmentLevels.NourishmentThreshold[2])
+        if (this.NourishmentLevel == 2 && this.NourishmentStatus > NourishmentLevels.NourishmentThreshold[2]) {
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[2];
+        }
         if (this.NourishmentLevel > -2 && this.NourishmentStatus <= 0) {
             this.NourishmentLevel--;
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] + this.NourishmentStatus;
-        } else if (this.NourishmentLevel < 2 && this.NourishmentStatus > NourishmentLevels.NourishmentThreshold[this.NourishmentLevel + 1]) {
+        } else if (this.NourishmentLevel < 2 && this.NourishmentStatus > NourishmentLevels.NourishmentThreshold[this.NourishmentLevel]) {
             this.NourishmentLevel++;
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }

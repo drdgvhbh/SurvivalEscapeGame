@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\FPSDisplay.cs" />
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\Model\EnemyData.cs" />
+    <Compile Include="Assets\Scripts\Model\GameTimer.cs" />
     <Compile Include="Assets\Scripts\Model\ItemDatabase.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\DiggingItem.cs" />

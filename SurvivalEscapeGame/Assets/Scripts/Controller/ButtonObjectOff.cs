@@ -9,6 +9,9 @@ public class ButtonObjectOff : MonoBehaviour, IPointerDownHandler {
 
     public void OnPointerDown(PointerEventData eventData) {
         button.SetActive(false);
+        if (button.gameObject.name == "Help") {
+            Time.timeScale = 1.0f;
+        }
     }
 
     public bool IsActive() {

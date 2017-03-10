@@ -65,6 +65,7 @@ public class Model : MonoBehaviour {
         new Cocoberry(-1, false);
         Coroutine = UpgradeEnemies(18.0f);
         StartCoroutine(Coroutine);
+        Time.timeScale = 0;
     }
 
     private void CreateEnemy(int idx) {
