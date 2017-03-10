@@ -68,7 +68,7 @@
 			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/ToolsSprites",
 			"IconIndex" : 1,
-			"StaminaCost" : 5.0,
+			"StaminaCost" : 8.0,
 			"ChannelDuration" : 1.25,
 			"Consumable" : false,
 			"Locations" :,
@@ -116,7 +116,7 @@
 			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/Tent",
 			"IconIndex" : 0,
-			"StaminaCost" : 20.0,
+			"StaminaCost" : 10.0,
 			"ChannelDuration" : 3.0,
 			"Consumable" : true,
 			"Locations" : ,
@@ -206,6 +206,40 @@
 			"Locations" : ["Enemy"],
 			"UsableIn" : ,
 			"Components" :,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
+		}
+,	
+		"Radar" : 
+		{
+			"Name" : "Radar",
+			"Description" : "Scans the ground to see if there is a sacred item within a two tile radius.",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/radar",
+			"IconIndex" : 0,
+			"StaminaCost" : 3.0,
+			"ChannelDuration" : 5.0,
+			"Consumable" : false,
+			"Locations" : ,
+			"UsableIn" : ["All"],
+			"Components" : 
+			{
+				"0" :
+				{ 
+					"Type" :"Wood",
+					"Quantity" : 3
+				},
+				"1" :
+				{ 
+					"Type" :"Stone",
+					"Quantity" : 4
+				},
+				"2" :
+				{ 
+					"Type" :"Gem",
+					"Quantity" : 1
+				}
+			},
 			"Damage" : 0, 
 			"NourishmentReplenishment" : 0
 		}

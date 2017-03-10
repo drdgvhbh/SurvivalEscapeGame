@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Food.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Pickaxe.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\Radar.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Spear.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />

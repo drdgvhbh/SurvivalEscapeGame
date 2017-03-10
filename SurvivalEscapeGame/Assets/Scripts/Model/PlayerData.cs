@@ -24,6 +24,8 @@ public class PlayerData : MonoBehaviour {
     public int Direction = 1;
     public float Damage;
     public float AttackStaminaCost;
+    public bool IsAttackOnCooldown;
+    public float AttackCooldown = 0.33f;
 
     private float MaximumNourishmentStatus;
 
@@ -81,8 +83,9 @@ public class PlayerData : MonoBehaviour {
         this.position = this.GetComponent<Transform>().position;
         this.Alive = true;
         this.IsPerformingAction = false;
-        Damage = 15.0f;
-        AttackStaminaCost = 15.0f;
+        IsAttackOnCooldown = false;
+        Damage = 20.0f;
+        AttackStaminaCost = 12.0f;
         this.PerformingAction = new Dictionary<PlayerActions, bool>() {
             {PlayerActions.Move, false },
             {PlayerActions.Dig, false },
@@ -115,8 +118,7 @@ public class PlayerData : MonoBehaviour {
         }
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Wood(++Item.IdCounter, 0, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Stone(++Item.IdCounter, 0, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, 0, true, 2), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -194,7 +196,7 @@ public class PlayerData : MonoBehaviour {
     public void UpdateStamina() {
         this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
         if (CurrentTile.Structures.ContainsKey(ItemList.Tent)) {
-            this.StaminaRegeneration += 3.0f * Time.deltaTime;
+            this.StaminaRegeneration += 5.0f * Time.deltaTime;
         }
         if (this.Stamina < this.MaximumStamina) {
             this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);

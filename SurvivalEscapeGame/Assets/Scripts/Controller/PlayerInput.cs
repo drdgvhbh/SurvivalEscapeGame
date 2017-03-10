@@ -18,8 +18,17 @@ public class PlayerInput : MonoBehaviour {
     private GameObject ChannelingBarMask;
 
     private float LerpStep = 0.0f;
+    private float AttackStep = 0.0f;
 
     public Text GUItext;
+
+    private AudioSource DigSound;
+    private AudioSource WalkSound;
+
+    private AudioSource AttackSound;
+    public AudioSource ItemPickup;
+
+    private AudioSource Nourish;
 
     public Dictionary<string, Action> Actions = new Dictionary<string, Action>() {
     };
@@ -33,6 +42,11 @@ public class PlayerInput : MonoBehaviour {
 
     private void Start() {
         GUItext = GetPlayerData().GUIText.GetComponent<Text>();
+        DigSound = this.GetComponents<AudioSource>()[0];
+        WalkSound = this.GetComponents<AudioSource>()[1];
+        AttackSound = this.GetComponents<AudioSource>()[2];
+        ItemPickup = this.GetComponents<AudioSource>()[3];
+        Nourish = this.GetComponents<AudioSource>()[4];
     }
 
     private void Update() {
@@ -44,7 +58,10 @@ public class PlayerInput : MonoBehaviour {
         ToggleInventory();
         BuildingTent();
         EatingCoconut();
-        Attack();
+        if (Input.GetMouseButtonDown(1)) {
+            Attack();
+        }
+        AttackCooldown();
     }
 
     private void Movement(bool exec) {
@@ -73,6 +90,7 @@ public class PlayerInput : MonoBehaviour {
                 this.GetPlayerData().PerformingAction[PlayerActions.Move] = false;
                 this.GetPlayerData().IsPerformingAction = false;
                 this.GetPlayerData().UpdateTileVisibility();
+                WalkSound.loop = false;
             }
         }
     }
@@ -85,6 +103,8 @@ public class PlayerInput : MonoBehaviour {
             this.GetPlayerData().IsPerformingAction = true;
             this.GetPlayerData().CurrentTile.CurrentGameObject = null;
             enter.CurrentGameObject = this.gameObject;
+            WalkSound.Play();
+            WalkSound.loop = true;
         }
         Animator animCtrl = this.gameObject.GetComponent<Animator>();
             
@@ -106,13 +126,20 @@ public class PlayerInput : MonoBehaviour {
     }
 
     protected void Attack() {
-        if (!Input.GetMouseButtonDown(1)) {
+        if (GetPlayerData().Stamina < GetPlayerData().AttackStaminaCost) {
+            GUItext.text = "Not enough stamina! Need " + GetPlayerData().AttackStaminaCost + " stamina!!!";
+            return;
+        } else if (GetPlayerData().IsAttackOnCooldown == true) {
+            float multi = Mathf.Lerp(0.0f, 1.0f, AttackStep);
+            float asdf = AttackStep - (AttackStep * multi);
+            GUItext.text = "Attack is on cooldown! " + asdf.ToString("F2") + " seconds remain.";
+            return;
+        } else if (GetPlayerData().IsPerformingAction) {
+            GUItext.text = "Cannot attack while performing another action!";
             return;
         }
-        if (GetPlayerData().IsPerformingAction || GetPlayerData().Stamina < GetPlayerData().AttackStaminaCost) {
-                GUItext.text = "Not enough stamina! Need " + GetPlayerData().AttackStaminaCost + " stamina!!!";
-                return;
-            }       
+        AttackSound.Play();
+        GetPlayerData().IsAttackOnCooldown = true;
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100.0f)) {
@@ -148,6 +175,17 @@ public class PlayerInput : MonoBehaviour {
                 }
             }
 
+        }
+    }
+
+    protected void AttackCooldown() {
+        if (GetPlayerData().IsAttackOnCooldown) {
+            float step = Mathf.Lerp(0.0f, 1.0f, AttackStep);
+            AttackStep += Time.deltaTime / GetPlayerData().AttackCooldown;
+            if (step >= 1.0f) {
+                GetPlayerData().IsAttackOnCooldown = false;
+                AttackStep = 0.0f;
+            }
         }
     }
 
@@ -210,6 +248,7 @@ public class PlayerInput : MonoBehaviour {
         if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {            
             GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.DigCount + " times.";
             ChannelingBarMask.SetActive(true);
+            DigSound.Play();
             Digging();            
         }
     }
@@ -217,7 +256,7 @@ public class PlayerInput : MonoBehaviour {
     protected void Digging() {
         if (Channeling(ItemList.Shovel, PlayerActions.Dig) == PlayerActions.Dig) {
             Shovel s = (Shovel)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Shovel]]);
-            s.Dig(this.GetPlayerData());
+            s.Dig(this.GetPlayerData(), this);
         }
     }
 
@@ -233,6 +272,7 @@ public class PlayerInput : MonoBehaviour {
         if (Channeling(ItemList.Coconut, PlayerActions.Eat) == PlayerActions.Eat) {
             Coconut coco = (Coconut)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Coconut]]);
             coco.Eat(this.GetPlayerData());
+            Nourish.Play();
         }
     }
 

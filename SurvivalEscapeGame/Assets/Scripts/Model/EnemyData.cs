@@ -26,6 +26,10 @@ public class EnemyData : MonoBehaviour {
 
     private GameObject HealthBar;
 
+    private AudioSource AttackSound;
+    private AudioSource PainSound;
+    private AudioSource DeathSound;
+
     private Dictionary<PlayerActions, bool> TypeOfPerformingAction = new Dictionary<PlayerActions, bool>() {
         { PlayerActions.Move, false },
         { PlayerActions.Attack, false }
@@ -37,7 +41,8 @@ public class EnemyData : MonoBehaviour {
     }
 
     private void Start() {
-
+        AttackSound = this.GetComponents<AudioSource>()[1];
+        DeathSound = this.GetComponents<AudioSource>()[2];
     }
 
     public void Initialize(GameObject player) {
@@ -129,9 +134,11 @@ public class EnemyData : MonoBehaviour {
         if (Health < 0) {
             Player.GetComponent<PlayerInput>().GUItext.text = "Enemy took " + damage + " damage! Enemy destroyed!";
             Player.GetComponent<PlayerData>().AddItem(new Fabric(Item.IdCounter++, 0, true, Random.Range(1, 4)));
+            AudioSource.PlayClipAtPoint(DeathSound.clip, CurrentTile.GetPosition(), 10.0f);            
             Destroy(this.gameObject);
         } else {
             Player.GetComponent<PlayerInput>().GUItext.text = "Enemy took " + damage + " damage! Enemy Health: " + oldHealth + "->" + Health;
+            //PainSound.Play();
         }
     }
 
@@ -200,6 +207,7 @@ public class EnemyData : MonoBehaviour {
     private void Attack() {
         if (TypeOfPerformingAction[PlayerActions.Attack]) {
             if (IsAttackOnCooldown == false) {
+                AttackSound.Play();
                 Player.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
                 Animator animCtrl = this.gameObject.GetComponent<Animator>();
                 if (direction == 1) {

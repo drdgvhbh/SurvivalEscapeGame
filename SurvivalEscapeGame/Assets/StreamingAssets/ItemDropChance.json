@@ -3,17 +3,17 @@
 	 {
 	 	"Grass" : 
 	 	{
-	 		"Stick" : 30,
-	 		"Stone" : 25,
-	 		"Wood" : 10
+	 		"Stick" : 40,
+	 		"Stone" : 30,
+	 		"Wood" : 15
 	 	}
 ,
 	 	"Sand" : 
 	 	{
-	 		"Gem" : 35,
-	 		"Stick" : 25,
-	 		"Stone" : 5,
-	 		"Coconut" : 40
+	 		"Gem" : 40,
+	 		"Stick" : 30,
+	 		"Stone" : 15,
+	 		"Coconut" : 45
 	 	}
 	 }
 }

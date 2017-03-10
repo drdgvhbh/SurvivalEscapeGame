@@ -18,12 +18,14 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
 
     public static Dictionary<ItemList, Item[]> Types = new Dictionary<ItemList, Item[]>() {
             {ItemList.Pickaxe, new Pickaxe[0] },
-            {ItemList.Tent, new Tent[0] }
+            {ItemList.Tent, new Tent[0] },
+            {ItemList.Radar, new Radar[0] }
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
         {ItemList.Pickaxe, Pickaxe.CraftingComponents },
-        {ItemList.Tent, Tent.CraftingComponents }
+        {ItemList.Tent, Tent.CraftingComponents },
+        {ItemList.Radar, Radar.CraftingComponents }
     };
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -44,6 +46,7 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
                 }
             }
             if (canCraft) {
+                this.GetComponent<AudioSource>().Play();
                 itemToBeCrafted = Craftable.Key;
                 foreach (Item it in ItemsToBeRemoved) {
                     Pd.RemoveItem(it, it.GetQuantity(), PlayerData.CraftingInventory);

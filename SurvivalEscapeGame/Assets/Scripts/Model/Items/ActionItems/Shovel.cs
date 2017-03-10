@@ -21,7 +21,7 @@ public class Shovel : ActionItem {
     public Shovel(Shovel s) : base(s) {
     }
 
-    public void Dig(PlayerData pd) {
+    public void Dig(PlayerData pd, PlayerInput pi) {
         pd.CurrentTile.DigCount++;
         Debug.Log("Done Digging");
         GameObject guiTxt = pd.GUIText;
@@ -38,6 +38,7 @@ public class Shovel : ActionItem {
                 if (pd.AddItem(it)) {
                     guiTxt.GetComponent<Text>().text = "Found: " + it.GetName() + "!";
                     Debug.Log("Found: " + it.GetName() + ", Player now has: " + pd.GetInventory()[it.GetName()].GetQuantity() + " " + it.GetName() + "(s).");
+                    pi.ItemPickup.Play();
                 } else {
                     guiTxt.GetComponent<Text>().text = "Nothing was found.";
                 }
