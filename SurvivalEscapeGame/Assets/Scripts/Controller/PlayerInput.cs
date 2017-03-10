@@ -247,7 +247,7 @@ public class PlayerInput : MonoBehaviour {
 
     public void Dig() {
         if (GetPlayerData().CurrentTile.Type == TileType.Mountain) {
-            GUItext.text = "Cannnot use a shovel in a mountain!";
+            GUItext.text = "Cannot use a shovel in a mountain!";
             return;
         }
         if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {            

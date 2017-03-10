@@ -118,7 +118,7 @@ public class PlayerData : MonoBehaviour {
         }
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Pickaxe(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
