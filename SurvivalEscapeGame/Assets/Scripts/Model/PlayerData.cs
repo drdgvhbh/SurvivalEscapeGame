@@ -3,8 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using SimpleJSON;
 
 public class PlayerData : MonoBehaviour {
+    private static JSONNode DataNode;
+    public static JSONNode PlayerNode {
+        get {
+            if (DataNode == null) {
+                string jsonString = System.IO.File.ReadAllText(Application.streamingAssetsPath + "/PlayerData.json");
+                DataNode = JSON.Parse(jsonString);
+            }
+            return DataNode;
+        }
+    }
     public Tile CurrentTile;
     public Vector3 position;
     public bool IsPerformingAction;
@@ -26,6 +38,7 @@ public class PlayerData : MonoBehaviour {
     public float AttackStaminaCost;
     public bool IsAttackOnCooldown;
     public float AttackCooldown = 0.33f;
+    public int VisionRange { get; private set; }
 
     private float MaximumNourishmentStatus;
 
@@ -58,15 +71,30 @@ public class PlayerData : MonoBehaviour {
     [SerializeField]
     public GameObject GUIText;
 
+    [SerializeField]
+    private GameObject HealthText;
+
+    [SerializeField]
+    private GameObject StaminaText;
+
+    [SerializeField]
+    private GameObject NourishmentTextStatus;
+
     private Dictionary<string, Item> Inventory;
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
     public static List<GameObject> Slots = new List<GameObject>();
     public static List<GameObject> CraftingSlots = new List<GameObject>();
     public static List<GameObject> Items = new List<GameObject>();
     public static List<GameObject> CraftingItems = new List<GameObject>();
+    private HashSet<Tile> DiscoveredTiles;
+
+    [SerializeField]
+    private GameObject GameGrid;
 
     // Use this for initialization
-    private void Start() {
+    private void Awake() {
+        DiscoveredTiles = new HashSet<Tile>();
+        VisionRange = PlayerNode["VisionRange"];
     }
 
     public void LateStart() {
@@ -94,7 +122,7 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.Eat, false }
         };
         this.Inventory = new Dictionary<string, Item>();
-        this.UpdateTileVisibility();
+        this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / this.MaximumHealth;
         this.MaximumNourishmentStatus = 0f;
         for (int i = -2; i <= 2; i++) {
@@ -130,68 +158,7 @@ public class PlayerData : MonoBehaviour {
         this.ApplyNourishmentDecay();
         this.UpdateNourishmentStatus();
         this.UpdateStamina();
-    }
-
-    public void UpdateTileVisibility() {
-
-        if (this.GetComponentInParent<Model>().IsDay()) {
-            this.UpdateTileVisibilityDay();
-        } else {
-            this.UpdateTileVisibilityNight();
-        }
-        Model m = this.GetComponentInParent<Model>();
-        m.GetGameGrid().SetNormals(m.GetMeshBuilder().Norms.ToList());
-    }
-
-    private void UpdateTileVisibilityDay() {
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(4)) {
-            if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
-                SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
-                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0);
-            }
-        }
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(3)) {
-            for (int j = 0; j < t.NormIdx.Length; j++) {
-                t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
-                t.SetActive(false);
-                foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
-                    entry.Value.SetActive(false);
-                }
-                if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
-                    SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
-                    sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 255);
-                }                
-            }
-        }
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
-            for (int j = 0; j < t.NormIdx.Length; j++) {
-                t.Norms[t.NormIdx[j]].Set(0f, 0f, -1f);
-                this.GetCurrentTile().SetActive(true);
-                foreach (KeyValuePair<ItemList, GameObject> entry in t.Structures) {
-                    entry.Value.SetActive(true);
-                }
-            }
-            if (t.CurrentGameObject != null && t.CurrentGameObject != this.gameObject) {
-                SpriteRenderer sr = t.CurrentGameObject.GetComponent<SpriteRenderer>();
-                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 255);
-            }
-        }
-    }
-
-    private void UpdateTileVisibilityNight() {
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(2)) {
-            for (int j = 0; j < t.NormIdx.Length; j++) {
-                t.Norms[t.NormIdx[j]].Set(0f, 0f, 0f);
-                t.SetActive(false);
-            }
-        }
-        foreach (Tile t in this.GetCurrentTile().GetExtendedNeighbours(1)) {
-            for (int j = 0; j < t.NormIdx.Length; j++) {
-                t.Norms[t.NormIdx[j]].Set(0f, 0f, -1f);
-                this.GetCurrentTile().SetActive(true);
-            }
-        }
-    }
+    }   
 
     public void UpdateStamina() {
         this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
@@ -202,6 +169,8 @@ public class PlayerData : MonoBehaviour {
             this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);
         }
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
+        StaminaText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Stamina) + " / " + MaximumStamina;
+
     }
 
     public void UpdateHealth() {
@@ -209,6 +178,7 @@ public class PlayerData : MonoBehaviour {
             this.Health = System.Math.Min(MaximumHealth, this.Health + this.HealthRegeneration);
         }
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
+        HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth;
     }
 
     public void ApplyNourishmentDecay() {
@@ -217,7 +187,7 @@ public class PlayerData : MonoBehaviour {
         } else if (this.NourishmentLevel == -2) {
             this.NourishmentStatus = 0;
         }
-        NourishmentText.GetComponent<Text>().text = this.NourishmentLevel.ToString();
+        NourishmentText.GetComponent<TextMeshProUGUI>().text = this.NourishmentLevel.ToString();
     }
 
     public void UpdateNourishmentStatus() {
@@ -232,6 +202,7 @@ public class PlayerData : MonoBehaviour {
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }
         this.NourishmentBar.GetComponent<Image>().fillAmount = this.NourishmentStatus / NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
+        NourishmentTextStatus.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(NourishmentStatus) + " / " + NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
     }
 
     public void DamagePlayer(float damage) {
@@ -361,5 +332,85 @@ public class PlayerData : MonoBehaviour {
 
     public Dictionary<string, Item> GetInventory() {
         return this.Inventory;
+    }
+
+    public void CalculateCurrentTIle() {
+        int oldIdx = CurrentTile.Index;
+        int idx = TerrainData.GetIndexFromPosition(this.transform.position, GameGrid.GetComponent<Grid>());
+        Tile[] Tiles = GameGrid.GetComponent<TerrainData>().Tiles;
+        if (Tiles[idx].IsWalkable) {
+            CurrentTile = Tiles[idx];
+            if (idx != oldIdx) {
+                this.GetComponent<PlayerInput>().Move();
+                Tiles[oldIdx].CurrentGameObject = null;
+                Tiles[idx].CurrentGameObject = this.gameObject;
+            }
+        }
+    }
+
+    public void DiscoverTiles() {
+        GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
+        foreach (Tile t in GetRevealedTiles()) {
+            if (t.CurrentGameObject != null ) {
+                t.CurrentGameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
+            }
+        }
+    }
+
+    private HashSet<Tile> GetRevealedTiles() {
+        int size = VisionRange;
+        if (size < 0)
+            return new HashSet<Tile>();
+        HashSet<Tile> RevealedTiles = new HashSet<Tile>();
+        CurrentTile.IsDiscovered = true;
+        DiscoveredTiles.Add(CurrentTile);
+        RevealedTiles.Add(CurrentTile);
+        CurrentTile.IsRevealed = true;
+        HashSet<Tile> temp = new HashSet<Tile>();
+        for (int i = 0; i < size; i++) {
+            temp = new HashSet<Tile>(RevealedTiles);
+            foreach (Tile t in temp) {
+                Tile left = AddDiscoveredTile(t, Tile.Sides.Left, RevealedTiles);
+                Tile right = AddDiscoveredTile(t, Tile.Sides.Right, RevealedTiles);
+                Tile top = AddDiscoveredTile(t, Tile.Sides.Top, RevealedTiles);
+                Tile bottom = AddDiscoveredTile(t, Tile.Sides.Bottom, RevealedTiles);
+
+                if (left != null) {
+                    AddDiscoveredTile(left, Tile.Sides.Bottom, RevealedTiles);
+                } else if (bottom != null) {
+                    AddDiscoveredTile(bottom, Tile.Sides.Left, RevealedTiles);
+                }
+
+                if (bottom != null) {
+                    AddDiscoveredTile(bottom, Tile.Sides.Right, RevealedTiles);
+                } else if (right != null) {
+                    AddDiscoveredTile(right, Tile.Sides.Bottom, RevealedTiles);
+                }
+
+                if (right != null) {
+                    AddDiscoveredTile(right, Tile.Sides.Top, RevealedTiles);
+                } else if (top != null) {
+                    AddDiscoveredTile(top, Tile.Sides.Right, RevealedTiles);
+                }
+
+                if (top != null) {
+                    AddDiscoveredTile(top, Tile.Sides.Left, RevealedTiles);
+                } else if (left != null) {
+                    AddDiscoveredTile(left, Tile.Sides.Top, RevealedTiles);
+                }
+            }
+        }
+        return RevealedTiles;
+    }
+
+    private Tile AddDiscoveredTile(Tile t, Tile.Sides side, HashSet<Tile> revealed) {
+        if (t != null && t.Neighbours.ContainsKey(side)) {
+            DiscoveredTiles.Add(t.Neighbours[side]);
+            revealed.Add(t.Neighbours[side]);
+            t.Neighbours[side].IsDiscovered = true;
+            t.Neighbours[side].IsRevealed = true;
+            return t.Neighbours[side];
+        }
+        return null;
     }
 }

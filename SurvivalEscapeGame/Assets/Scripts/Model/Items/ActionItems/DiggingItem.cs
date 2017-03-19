@@ -20,19 +20,19 @@ public abstract class DiggingItem : ActionItem {
     }
 
     public void Dig(PlayerData pd, PlayerInput pi) {
-        pd.CurrentTile.DigCount++;
+        pd.CurrentTile.NumDigs++;
         Debug.Log("Done Digging");
         GameObject guiTxt = pd.GUIText;
         pd.Stamina = pd.Stamina - StaminaCost;
         Tile tile = pd.GetCurrentTile();
-        if (tile.GetTileDepth() == 0) {
+        if (tile.TileDepth == 0) {
             pi.ErrorSound.Play();
             guiTxt.GetComponent<Text>().text = "This tile can be dug no more...";
             return;
         }
-        tile.SetTileDepth(tile.GetTileDepth() - 1);
-        foreach (Item it in tile.GetItems()) {
-            if (it.GetDepthLevel() == tile.GetTileDepth()) {
+        tile.TileDepth = tile.TileDepth - 1;
+        foreach (Item it in tile.Items) {
+            if (it.GetDepthLevel() == tile.TileDepth) {
                 tile.RemoveItem(it.GetId());
                 if (pd.AddItem(it)) {
                     guiTxt.GetComponent<Text>().text = "Found: " + it.GetName() + "!";

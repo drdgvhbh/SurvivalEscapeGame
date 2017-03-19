@@ -8,7 +8,7 @@ public class PlayerInput : MonoBehaviour {
     public Vector3 Destination = new Vector3();
     [SerializeField]
     private PlayerData PlayerData;
-    private int NeighbourIndex;
+    private Tile.Sides NeighbourIndex;
     [SerializeField]
     private GameObject InventoryPanel;
 
@@ -30,6 +30,10 @@ public class PlayerInput : MonoBehaviour {
     public AudioSource ItemPickup;
 
     private AudioSource Nourish;
+
+    private Tile.Sides Direction;
+
+    private Tile DestinationTile;
 
     public Dictionary<string, Action> Actions = new Dictionary<string, Action>() {
     };
@@ -58,7 +62,7 @@ public class PlayerInput : MonoBehaviour {
         // Movement
         if (this.PlayerData == null)
             return;
-        this.Movement(this.GetPlayerData().PerformingAction[PlayerActions.Move]);
+        this.Movement();
         Digging();
         ToggleInventory();
         BuildingTent();
@@ -71,63 +75,63 @@ public class PlayerInput : MonoBehaviour {
         AttackCooldown();
     }
 
-    private void Movement(bool exec) {
-        if (!exec && !this.GetPlayerData().IsPerformingAction) {
+    private void Movement() {
+        if (!this.GetPlayerData().IsPerformingAction) {
+            WalkSound.loop = true;
+            DestinationTile = PlayerData.CurrentTile;
             if (Input.GetAxisRaw("Vertical") > 0) {
-                this.NeighbourIndex = (int)Sides.Top;
-                this.Move(GetPlayerData().Direction);
+                Direction = Tile.Sides.Top;
+                if (PlayerData.CurrentTile.Neighbours.ContainsKey(Tile.Sides.Top))
+                    DestinationTile = PlayerData.CurrentTile.Neighbours[Tile.Sides.Top];
             } else if (Input.GetAxisRaw("Vertical") < 0) {
-                this.NeighbourIndex = (int)Sides.Bottom;
-                this.Move(GetPlayerData().Direction);
+                Direction = Tile.Sides.Bottom;
+                if (PlayerData.CurrentTile.Neighbours.ContainsKey(Tile.Sides.Bottom))
+                    DestinationTile = PlayerData.CurrentTile.Neighbours[Tile.Sides.Bottom];
             } else if (Input.GetAxisRaw("Horizontal") > 0) {
-                this.NeighbourIndex = (int)Sides.Right;
-                this.Move(1);
+                Direction = Tile.Sides.Right;
+                if (PlayerData.CurrentTile.Neighbours.ContainsKey(Tile.Sides.Right))
+                    DestinationTile = PlayerData.CurrentTile.Neighbours[Tile.Sides.Right];
             } else if (Input.GetAxisRaw("Horizontal") < 0) {
-                this.NeighbourIndex = (int)Sides.Left;
-                this.Move(-1);
-            }
-        } else if (exec) {
-            Tile enter = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex];
-            float step = (this.GetPlayerData().MovementSpeed / enter.MovementCost) * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, this.Destination, step);
-            if (transform.position.Equals(this.Destination)) {                                   
-                this.GetPlayerData().SetCurrentTile(enter);
-                this.GetPlayerData().position = GetPlayerData().CurrentTile.GetPosition() - Global.SmallOffset;
-                GetPlayerData().CurrentTile.CurrentGameObject = this.gameObject;
-                this.GetPlayerData().PerformingAction[PlayerActions.Move] = false;
-                this.GetPlayerData().IsPerformingAction = false;
-                this.GetPlayerData().UpdateTileVisibility();
+                Direction = Tile.Sides.Left;
+                if (PlayerData.CurrentTile.Neighbours.ContainsKey(Tile.Sides.Left))
+                    DestinationTile = PlayerData.CurrentTile.Neighbours[Tile.Sides.Left];
+            } else {
                 WalkSound.loop = false;
+                return;
             }
+            if (!WalkSound.isPlaying)
+                WalkSound.Play();
+            float step = Mathf.Abs(PlayerData.MovementSpeed / PlayerData.CurrentTile.MovementCost) * Time.deltaTime;
+
+            if (DestinationTile != PlayerData.CurrentTile && DestinationTile.CurrentGameObject == this.gameObject) {
+                DestinationTile.CurrentGameObject = null;
+            }            
+
+            if (DestinationTile.IsWalkable && (DestinationTile.CurrentGameObject == null || DestinationTile.CurrentGameObject == this.gameObject)) {
+                transform.position = Vector3.MoveTowards(transform.position, DestinationTile.Position, step);
+            } else if (Vector3.Distance(DestinationTile.Position, PlayerData.CurrentTile.Position) > 0.5) {
+                transform.position = Vector3.MoveTowards(transform.position, PlayerData.CurrentTile.Position, step);
+            }
+            PlayerData.DiscoverTiles();
+            PlayerData.CalculateCurrentTIle();
         }
     }
 
-    protected void Move(int direction) {
-        Tile enter = this.GetPlayerData().GetCurrentTile().GetNeighbours()[this.NeighbourIndex];
-        if (enter != null && enter.CurrentGameObject == null && enter.IsWalkable == true) {
-            this.Destination = enter.GetPosition() - Global.SmallOffset;
-            this.GetPlayerData().PerformingAction[PlayerActions.Move] = true;
-            this.GetPlayerData().IsPerformingAction = true;
-            this.GetPlayerData().CurrentTile.CurrentGameObject = null;
-            enter.CurrentGameObject = this.gameObject;
-            WalkSound.Play();
-            WalkSound.loop = true;
-        }
+    public void Move() {
         Animator animCtrl = this.gameObject.GetComponent<Animator>();
-            
-            if (direction == 1) {
+        if ((int)Direction != 2) {
             GetPlayerData().Direction = 1;
             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
                 animCtrl.ResetTrigger("MoveLeft");
                 animCtrl.SetTrigger("MoveRight");
-               
+
             }
-        } else if (direction == -1) {
+        } else if ((int)Direction != 4) {
             GetPlayerData().Direction = -1;
             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
                 animCtrl.ResetTrigger("MoveRight");
                 animCtrl.SetTrigger("MoveLeft");
-               
+
             }
         }
     }
@@ -166,21 +170,21 @@ public class PlayerInput : MonoBehaviour {
                 }
             }
             GetPlayerData().Stamina -= GetPlayerData().AttackStaminaCost;
-            Tile[] neigh = GetPlayerData().CurrentTile.GetNeighbours();
+            Dictionary<Tile.Sides, Tile> neigh = GetPlayerData().CurrentTile.Neighbours;
             if (Math.Abs(diff.x) > Math.Abs(diff.y)) {
-                if (diff.x > 0 && neigh[2].CurrentGameObject != null) {
-                    neigh[2].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+                if (diff.x > 0 && neigh.ContainsKey(Tile.Sides.Right) && neigh[Tile.Sides.Right].CurrentGameObject != null) {
+                    neigh[Tile.Sides.Right].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
 
-                } else if (diff.x < 0 && neigh[1].CurrentGameObject != null) {
-                    neigh[1].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+                } else if (diff.x < 0 && neigh.ContainsKey(Tile.Sides.Left) && neigh[Tile.Sides.Left].CurrentGameObject != null) {
+                    neigh[Tile.Sides.Left].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
 
                 }
             } else {
-                if (diff.y > 0 && neigh[0].CurrentGameObject != null) {
-                    neigh[0].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+                if (diff.y > 0 && neigh.ContainsKey(Tile.Sides.Top) && neigh[Tile.Sides.Top].CurrentGameObject != null) {
+                    neigh[Tile.Sides.Top].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
 
-                } else if (diff.y < 0 && neigh[3].CurrentGameObject != null) {
-                    neigh[3].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);                   
+                } else if (diff.y < 0 && neigh.ContainsKey(Tile.Sides.Bottom) && neigh[Tile.Sides.Bottom].CurrentGameObject != null) {
+                    neigh[Tile.Sides.Bottom].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
                 }
             }
 
@@ -250,27 +254,27 @@ public class PlayerInput : MonoBehaviour {
     }
 
     public void Dig() {
-        if (GetPlayerData().CurrentTile.Type == TileType.Mountain) {
+        if (GetPlayerData().CurrentTile.Id == (int)TileType.Mountain) {
             ErrorSound.Play();
             GUItext.text = "Cannot use a shovel in a mountain!";
             return;
         }
-        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {            
-            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.DigCount + " times.";
+        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
+            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.NumDigs + " times.";
             ChannelingBarMask.SetActive(true);
             DigSound.Play();
-            Digging();            
+            Digging();
         }
     }
 
     public void DigMountain() {
-        if (GetPlayerData().CurrentTile.Type != TileType.Mountain) {
+        if (GetPlayerData().CurrentTile.Id != (int)TileType.Mountain) {
             ErrorSound.Play();
             GUItext.text = "Cannnot use a pickaxe when not in a mountain!";
             return;
         }
         if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
-            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.DigCount + " times.";
+            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.NumDigs + " times.";
             ChannelingBarMask.SetActive(true);
             DigSound.Play();
             Digging();

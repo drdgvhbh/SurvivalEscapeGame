@@ -42,7 +42,7 @@ public class Tent : ActionItem {
         if (!tile.Structures.ContainsKey(ItemList.Tent)){
             pd.Stamina = pd.Stamina - StaminaCost;
             GameObject tent = (GameObject)GameObject.Instantiate(prefab);
-            tent.transform.position = tile.GetPosition() - Global.SmallOffset;
+            tent.transform.position = tile.Position;
             tile.Structures.Add(ItemList.Tent, tent);
             pd.RemoveItem(this, 1, pd.GetInventory());
             pd.GUIText.GetComponent<Text>().text = "Tent built";

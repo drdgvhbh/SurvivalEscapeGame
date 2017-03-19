@@ -50,9 +50,6 @@ public static class Global {
 	public const int VertsInATri = 3;
 	public const int DepthVarianceMin = -1;
 	public const int DepthVarianceMax = 2;
-	public static Vector3 Origin = new Vector3(0, 0, 0);
-	public static Vector3 SmallOffset = new Vector3(0, 0, 0);
-	public static Vector3 Offset = new Vector3(0, 0, 0);
 	public static UnityEngine.Random Random = new UnityEngine.Random();
 
 	public static Dictionary<ItemList, string> ItemNames = new Dictionary<ItemList, string>() {

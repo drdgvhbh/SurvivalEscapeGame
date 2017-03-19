@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Model : MonoBehaviour {
 	private Mesh GameGrid;
-	private MeshBuilder Mb;
-	private TerrainBuilder Tb;
-	private Controller Controller;
-	private View View;
 	private Tile[] Terrain;
     private bool Day;
 
@@ -30,12 +26,17 @@ public class Model : MonoBehaviour {
     public int TileResolution = 32;
     public Texture2D[] TileTextures;
 
+    [SerializeField]
+    private GameObject GameGridObj;
+    private Grid Mb;
+
+
     private IEnumerator Coroutine;
 
     private IEnumerator UpgradeEnemies(float waitTime) {
         while (true) {
-            CreateEnemy(Random.Range(0, Mb.NumTiles));
-            CreateEnemy(Random.Range(0, Mb.NumTiles));
+            //CreateEnemy(Random.Range(0, Mb.NumTiles));
+            //CreateEnemy(Random.Range(0, Mb.NumTiles));
             EnemyData.AttackDamage += 3;
             EnemyData.MovementSpeed += 0.11f;
             EnemyData.MaxHealth += 5;
@@ -43,30 +44,24 @@ public class Model : MonoBehaviour {
         }
     }
 
+    private void Awake() {
+
+    }
     private void Start() {
         CreateActivePanel(NumberOfActiveSlots);
-        this.Mb = this.GetComponentInChildren<MeshBuilder>();
-		this.GameGrid = Mb.GetGameGrid();
+        Mb = GameGridObj.GetComponent<Grid>();
+        this.GameGrid = GameGridObj.GetComponent<Mesh>();
         this.Day = true;
-        Global.SmallOffset = new Vector3(-this.Mb.TileSize / 2.0f, this.Mb.TileSize / 2.0f);
-        Global.Offset = Global.SmallOffset +
-                        new Vector3((int)(-this.Mb.TileSize * MeshBuilder.Columns / 2.0f), (int)(this.Mb.TileSize * MeshBuilder.Rows / 2.0f));
-        this.Mb.transform.localPosition = this.Mb.transform.localPosition + Global.Offset;
-        this.Tb = new TerrainBuilder(Mb.NumTiles, MeshBuilder.Rows, MeshBuilder.Columns, this.Mb.TileSize, ref this.Mb.Norms, this.GameGrid);
-		this.Terrain = Tb.CreateTerrain();
-		this.Controller = new Controller(this);
-		this.View = new View(this.TileResolution, this.Mb, TileTextures);
-		this.Controller.SetView(this.View);
-		this.Controller.SetTileView(this.Terrain);
-        this.Controller.UpdateTileView();
+        Terrain = GameGridObj.GetComponent<TerrainData>().Tiles;
         this.CreatePlayerProperties();
-        for (int i = 0; i < 72; i++) 
+        for (int i = 0; i < 1; i++) 
             CreateEnemy(Random.Range(0, Mb.NumTiles));
         new Radar(-1, false);
         new Cocoberry(-1, false);
         Coroutine = UpgradeEnemies(15.0f);
         StartCoroutine(Coroutine);
         Time.timeScale = 0;
+        Player1.GetComponent<PlayerData>().DiscoverTiles();
     }
 
     private void CreateEnemy(int idx) {
@@ -76,7 +71,7 @@ public class Model : MonoBehaviour {
             ed.CurrentTile = Terrain[idx];
             Terrain[idx].CurrentGameObject = enemy;
             ed.DestinationTile = Player1.GetComponent<PlayerData>().CurrentTile;
-            ed.Initialize(Player1);
+            ed.Initialize(Player1, Mb);
     }
 
     private void CreatePlayerProperties() {
@@ -89,19 +84,16 @@ public class Model : MonoBehaviour {
             }
         } while (walkable == false);
 
-        Player1.transform.position = Terrain[idx].GetPosition() - Global.SmallOffset;
+        Player1.transform.position = Terrain[idx].Position;
         Player1.GetComponent<PlayerData>().SetCurrentTile(Terrain[idx]);
         Terrain[idx].CurrentGameObject = Player1;
         Player1.GetComponent<PlayerData>().LateStart();
         Player1.GetComponent<PlayerInput>().SetPlayerData(Player1.GetComponent<PlayerData>());
+        Player1.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
     }
 
     public Mesh GetGameGrid() {
         return this.GameGrid;
-    }
-
-    public MeshBuilder GetMeshBuilder() {
-        return this.Mb;
     }
 
     public bool IsDay() {

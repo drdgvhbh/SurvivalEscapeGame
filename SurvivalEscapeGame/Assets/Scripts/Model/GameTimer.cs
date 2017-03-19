@@ -25,7 +25,7 @@ public class GameTimer : MonoBehaviour {
         while (!GetIsTimeUp()) {
             Text.text = (Timer / 60).ToString() + ":" + (Timer % 60).ToString();
             Timer--;
-            if (Timer <= 0 || Player.GetComponent<PlayerData>().Alive == false) {
+            if (Player.gameObject != null && Timer <= 0 || Player.GetComponent<PlayerData>().Alive == false) {
                 GameOverText.SetActive(true);
                 Guide.SetActive(false);
                 Time.timeScale = 0.0f;
