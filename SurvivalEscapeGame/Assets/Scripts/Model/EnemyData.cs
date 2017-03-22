@@ -56,7 +56,8 @@ public class EnemyData : MonoBehaviour {
         Player = player;
         TileTobeMovedTo = CurrentTile;
         MovementSpeed = 0.97f;
-        AttackDamage = 12.0f;
+        AttackDamage = 0.0f;
+        //AttackDamage = 12.0f;
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
         IsAttackOnCooldown = false;
@@ -74,44 +75,61 @@ public class EnemyData : MonoBehaviour {
         Attack();
     }
 
+    private void DoThings() {
+        if (!intialized) {
+            return;
+        }
+        if (!IsPerformingAction && Player != null) {
+            DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
+            int distance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
+          //  Debug.Log(distance);            
+            if (distance > 4) {
+                /*Debug.Log(CurrentTile.WalkableNeighbours.Count + ", " + CurrentTile.Neighbours.Count);
+                foreach (KeyValuePair<Tile.Sides, Tile> t in CurrentTile.Neighbours) {
+                    Debug.Log(t.Value.IsWalkable);
+                }
+                */
+                if (CurrentTile.WalkableNeighbours.Count > 0) {
+                    DestinationTile = CurrentTile.WalkableNeighbours[Random.Range(0, CurrentTile.WalkableNeighbours.Count)];
+                    if (DestinationTile.WalkableNeighbours.Count > 0) {
+                        do {
+                            DestinationTile = DestinationTile.WalkableNeighbours[Random.Range(0, DestinationTile.WalkableNeighbours.Count)];
+                        } while (DestinationTile == CurrentTile);
+                    }
+                  //  Debug.Log(CurrentTile.Index + ", " + DestinationTile.Index + ", " + Player.GetComponent<PlayerData>().CurrentTile.Index);
+                } else {
+                    return;
+                }
+            }
+            //Debug.Log("???????");
+            TileTobeMovedTo = CalculatePath();
+            if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && (TileTobeMovedTo.CurrentGameObject == null || TileTobeMovedTo.CurrentGameObject == this.gameObject)) {
+                TypeOfPerformingAction[PlayerActions.Move] = true;
+                Vector3 dest = TileTobeMovedTo.Position;
+                Animator animCtrl = this.gameObject.GetComponent<Animator>();
+                if (dest.x > Position.x) {
+                    animCtrl.ResetTrigger("GoLeft");
+                    animCtrl.SetTrigger("GoRight");
+                    direction = 1;
+                } else if (dest.x < Position.x) {
+                    animCtrl.ResetTrigger("GoRight");
+                    animCtrl.SetTrigger("GoLeft");
+                    direction = -1;
+                }
+                IsPerformingAction = true;
+                CurrentTile.CurrentGameObject = null;
+                TileTobeMovedTo.CurrentGameObject = this.gameObject;
+            } else if (CurrentTile.IsAdjacent(Player.GetComponent<PlayerData>().CurrentTile)) {
+                TypeOfPerformingAction[PlayerActions.Attack] = true;
+                IsPerformingAction = true;
+                Player.GetComponent<PlayerData>().DiscoverTiles();
+            }
+        } 
+    }
+
     private IEnumerator Actions(float waitTime) {
         while (true) {
-            if (!intialized )
-                yield return new WaitForSeconds(waitTime);
-            if (!IsPerformingAction && Player != null) {
-                DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
-                int distance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
-                //Debug.Log(distance);
-                if (distance > 5) {
-                    yield return new WaitForSeconds(waitTime);
-                }
-
-
-                TileTobeMovedTo = CalculatePath();
-                if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && (TileTobeMovedTo.CurrentGameObject == null || TileTobeMovedTo.CurrentGameObject == this.gameObject)) {
-                    TypeOfPerformingAction[PlayerActions.Move] = true;
-                    Vector3 dest = TileTobeMovedTo.Position;
-                    Animator animCtrl = this.gameObject.GetComponent<Animator>();
-                    if (dest.x > Position.x) {
-                        animCtrl.ResetTrigger("GoLeft");
-                        animCtrl.SetTrigger("GoRight");
-                        direction = 1;
-                    } else if (dest.x < Position.x) {
-                        animCtrl.ResetTrigger("GoRight");
-                        animCtrl.SetTrigger("GoLeft");
-                        direction = -1;
-                    }
-                    IsPerformingAction = true;
-                    CurrentTile.CurrentGameObject = null;
-                    TileTobeMovedTo.CurrentGameObject = this.gameObject;
-                } else if (CurrentTile.IsAdjacent(DestinationTile)) {
-                    TypeOfPerformingAction[PlayerActions.Attack] = true;
-                    IsPerformingAction = true;
-                    Player.GetComponent<PlayerData>().DiscoverTiles();
-                }
-            } else {
-
-            }
+            DoThings();
             yield return new WaitForSeconds(waitTime);
         }
     }
@@ -156,25 +174,26 @@ public class EnemyData : MonoBehaviour {
             closedList.Add(lowest);
             closedList = closedList.Union(PathNode.GetTilesAsList(lowest.GetTile().Neighbours, lowest, false, destination, openList, GameGrid)).ToList();
             openList = openList.Union(PathNode.GetTilesAsList(lowest.GetTile().Neighbours, lowest, true, destination, closedList, GameGrid)).ToList();
-          
+
             if (lowest.GetTile() == destination) {
-                IsDestinationFound = true;                
-            }
+                IsDestinationFound = true;
+            } 
             MoveToNode = lowest;            
         }
         while (MoveToNode.GetParent() != null && MoveToNode.GetParent().GetTile() != CurrentTile) {
             //Debug.DrawLine(MoveToNode.GetTile().Position, MoveToNode.GetParent().GetTile().Position, Color.yellow);
             MoveToNode = (MoveToNode.GetParent());
 
-            Object prefab = Resources.Load("Prefabs/Placeholder");
+            /*Object prefab = Resources.Load("Prefabs/Placeholder");
             GameObject tent = (GameObject)GameObject.Instantiate(prefab);
             TempSight.Add(tent);
             tent.transform.position = MoveToNode.GetTile().Position;
-            
-                     
+            */                   
         }
         if (openList.Count < 0) {
             IsReachable = false;
+            GameObject.Destroy(this.gameObject);
+            
         } else {
             IsReachable = true;
         }
@@ -186,7 +205,7 @@ public class EnemyData : MonoBehaviour {
 
     private void Move() {
         if (TypeOfPerformingAction[PlayerActions.Move]) {
-            float step = (MovementSpeed / TileTobeMovedTo.MovementCost) * Time.deltaTime;
+            float step = Mathf.Abs(MovementSpeed / TileTobeMovedTo.MovementCost) * Time.deltaTime;
             Vector3 moveTo = TileTobeMovedTo.Position;
             transform.position = Vector3.MoveTowards(transform.position, moveTo, step);
             if (transform.position.Equals(moveTo)) {                

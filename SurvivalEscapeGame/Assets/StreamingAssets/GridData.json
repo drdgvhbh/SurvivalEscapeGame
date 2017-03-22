@@ -1,8 +1,8 @@
 {
 	"Properties" : 
 	{
-		"NumRows" : 64,
-		"NumColumns" : 64,
+		"NumRows" : 16,
+		"NumColumns" : 16,
 		"TileSize" : 1.0
 	}
 }

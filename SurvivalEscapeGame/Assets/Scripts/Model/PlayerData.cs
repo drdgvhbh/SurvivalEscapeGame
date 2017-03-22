@@ -95,6 +95,21 @@ public class PlayerData : MonoBehaviour {
     private void Awake() {
         DiscoveredTiles = new HashSet<Tile>();
         VisionRange = PlayerNode["VisionRange"];
+        for (int i = 0; i < PlayerData.NumItemSlots + PlayerData.NumCraftingSlots; i++) {
+            GameObject Is = Instantiate(InventorySlot);
+            PlayerData.Slots.Add(Is);
+            PlayerData.Slots[i].AddComponent<SlotInput>();
+            PlayerData.Slots[i].GetComponent<SlotInput>().SlotID = i;
+            if (i >= PlayerData.NumItemSlots) {
+                PlayerData.CraftingSlots.Add(Is);
+                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots] = PlayerData.Slots[i];
+                PlayerData.Slots[i].transform.SetParent(CraftingPanel.transform, false);
+                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots].GetComponent<SlotInput>().CraftingSlot = true;
+            } else {
+                PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform, false);
+                PlayerData.Slots[i].GetComponent<SlotInput>().CraftingSlot = false;
+            }
+        }
     }
 
     public void LateStart() {
@@ -119,7 +134,8 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.Dig, false },
             {PlayerActions.BuildTent, false },
             {PlayerActions.Attack, false },
-            {PlayerActions.Eat, false }
+            {PlayerActions.Eat, false },
+            {PlayerActions.BuildGranary, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
@@ -129,24 +145,11 @@ public class PlayerData : MonoBehaviour {
             this.MaximumNourishmentStatus += NourishmentLevels.NourishmentThreshold[i];
         }
         SlotInput.Pd = this;
-        for (int i = 0; i < PlayerData.NumItemSlots + PlayerData.NumCraftingSlots; i++) {
-            GameObject Is = Instantiate(InventorySlot);
-            PlayerData.Slots.Add(Is);
-            PlayerData.Slots[i].AddComponent<SlotInput>();
-            PlayerData.Slots[i].GetComponent<SlotInput>().SlotID = i;
-            if (i >= PlayerData.NumItemSlots) {
-                PlayerData.CraftingSlots.Add(Is);
-                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots] = PlayerData.Slots[i];
-                PlayerData.Slots[i].transform.SetParent(CraftingPanel.transform, false);
-                PlayerData.CraftingSlots[i - PlayerData.NumItemSlots].GetComponent<SlotInput>().CraftingSlot = true;
-            } else {
-                PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform, false);
-                PlayerData.Slots[i].GetComponent<SlotInput>().CraftingSlot = false;
-            }
-        }
+
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -162,7 +165,7 @@ public class PlayerData : MonoBehaviour {
 
     public void UpdateStamina() {
         this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
-        if (CurrentTile.Structures.ContainsKey(ItemList.Tent)) {
+        if (CurrentTile.Structure.Key == ItemList.Tent) {
             this.StaminaRegeneration += 5.0f * Time.deltaTime;
         }
         if (this.Stamina < this.MaximumStamina) {

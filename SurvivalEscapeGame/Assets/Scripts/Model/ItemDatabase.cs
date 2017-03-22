@@ -8,7 +8,7 @@ public class ItemDatabase : MonoBehaviour {
     public static JSONNode JsonNode;
 
 	void Awake () {
-        Path = Application.streamingAssetsPath + "/items.json";
+        Path = Application.streamingAssetsPath + "/ItemData.json";
         JsonString = File.ReadAllText(Path);
         JsonNode = JSON.Parse(JsonString);
 	}

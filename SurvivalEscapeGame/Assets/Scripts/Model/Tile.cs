@@ -35,6 +35,7 @@ public class Tile  {
     public int MovementCost { get; private set; }
 
     public Dictionary<Sides, Tile> Neighbours { get; set; }
+    public List<Tile> WalkableNeighbours { get; set; }
     public int AutoTileId { get; set; }
     public Vector3 Position { get; private set; }
     public List<Item> Items;
@@ -46,7 +47,7 @@ public class Tile  {
 
     public GameObject CurrentGameObject { get; set; }
 
-    public Dictionary<ItemList, GameObject> Structures { get; private set; }
+    public KeyValuePair<ItemList, GameObject> Structure { get; set; }
 
     public Tile(TileType type, int idx, Vector3 pos) : this((int)type, idx, pos) {
     }
@@ -61,7 +62,7 @@ public class Tile  {
         this.Position = position;
         NumDigs = 0;
         Items = new List<Item>();
-        Structures = new Dictionary<ItemList, GameObject>();
+        WalkableNeighbours = new List<Tile>();
     }
 
     public void SetTileType(int type) {
@@ -74,6 +75,7 @@ public class Tile  {
         IsWalkable = TileType["IsWalkable"];
         MovementCost = TileType["MovementCost"];
         AutoTileId = -1;
+        //remember to fix neighbours later
     }
 
     public bool AddNeighbour(Sides s, Tile t) {
@@ -82,6 +84,14 @@ public class Tile  {
         Neighbours.Add(s, t);
         return true;
     }
+
+    public void SetWalkableNeighbours() {
+        foreach (KeyValuePair<Tile.Sides, Tile> t in Neighbours) {
+            if (t.Value.IsWalkable) {
+                WalkableNeighbours.Add(t.Value);
+            }
+        }
+    } 
 
     public bool IsAdjacent(Tile t) {
         return Neighbours.ContainsValue(t);

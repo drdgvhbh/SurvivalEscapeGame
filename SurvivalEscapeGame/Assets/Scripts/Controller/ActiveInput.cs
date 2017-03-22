@@ -47,7 +47,12 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
 
     public void OnPointerDown(PointerEventData eventData) {
         if (Item != null) {
-            Pi.Actions[Item.GetName()]();
+            try {
+                Pi.Actions[Item.GetName()]();
+            }
+            catch (KeyNotFoundException e) {
+                Debug.Log("No implementation for usage of the item " + Item.GetName() + "!");
+            }
         }
 
     }

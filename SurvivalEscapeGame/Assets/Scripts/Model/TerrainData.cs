@@ -171,6 +171,7 @@ public class TerrainData : MonoBehaviour {
         }
         for (int i = 0; i < Tiles.Length; i++) {
             Tiles[i].CalculateAutoTileID();
+            Tiles[i].SetWalkableNeighbours();
         }
 
     }

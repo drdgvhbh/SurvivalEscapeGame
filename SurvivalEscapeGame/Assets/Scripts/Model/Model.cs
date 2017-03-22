@@ -37,9 +37,9 @@ public class Model : MonoBehaviour {
         while (true) {
             //CreateEnemy(Random.Range(0, Mb.NumTiles));
             //CreateEnemy(Random.Range(0, Mb.NumTiles));
-            EnemyData.AttackDamage += 3;
-            EnemyData.MovementSpeed += 0.11f;
-            EnemyData.MaxHealth += 5;
+            //EnemyData.AttackDamage += 3;
+            //EnemyData.MovementSpeed += 0.11f;
+            //EnemyData.MaxHealth += 5;
             yield return new WaitForSeconds(waitTime);
         }
     }

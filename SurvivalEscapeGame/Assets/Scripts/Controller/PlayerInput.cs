@@ -46,6 +46,7 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Coconut], EatCoconut);
         Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
         Actions.Add(Global.ItemNames[ItemList.Cocoberry], EatCocoberry);
+        Actions.Add(Global.ItemNames[ItemList.Granary], BuildGranary);
     }
 
     private void Start() {
@@ -66,6 +67,7 @@ public class PlayerInput : MonoBehaviour {
         Digging();
         ToggleInventory();
         BuildingTent();
+        BuildingGranary();
         EatingCoconut();
         EatingBerry();
         EatingCocoberry();
@@ -249,9 +251,26 @@ public class PlayerInput : MonoBehaviour {
     protected void BuildingTent() {
         if (Channeling(ItemList.Tent, PlayerActions.BuildTent) == PlayerActions.BuildTent) {
             Tent ai = (Tent)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Tent]]);
-            ai.BuildTent(this.GetPlayerData());
+            ai.BuildStructure(ItemList.Tent, this.GetPlayerData());
         }
     }
+
+    public void BuildGranary() {
+        if (AItemFcns(PlayerActions.BuildGranary, ItemList.Granary)) {
+            GUItext.text = "Building Granary.";
+            Debug.Log("Building Granary");
+            ChannelingBarMask.SetActive(true);
+            BuildingGranary();
+        }
+    }
+
+    protected void BuildingGranary() {
+        if (Channeling(ItemList.Granary, PlayerActions.BuildGranary) == PlayerActions.BuildGranary) {
+            Granary ai = (Granary)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Granary]]);
+            ai.BuildStructure(ItemList.Granary, this.GetPlayerData());
+        }
+    }
+
 
     public void Dig() {
         if (GetPlayerData().CurrentTile.Id == (int)TileType.Mountain) {

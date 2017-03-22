@@ -20,14 +20,16 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
             {ItemList.Pickaxe, new Pickaxe[0] },
             {ItemList.Tent, new Tent[0] },
             {ItemList.Radar, new Radar[0] },
-            {ItemList.Cocoberry, new Cocoberry[0] }
+            {ItemList.Cocoberry, new Cocoberry[0] },
+            {ItemList.Granary, new Granary[0] }
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
         {ItemList.Pickaxe, Pickaxe.CraftingComponents },
         {ItemList.Tent, Tent.CraftingComponents },
         {ItemList.Radar, Radar.CraftingComponents },
-        {ItemList.Cocoberry, Cocoberry.CraftingComponents }
+        {ItemList.Cocoberry, Cocoberry.CraftingComponents },
+        {ItemList.Granary, Granary.CraftingComponents }
     };
 
     public void OnPointerDown(PointerEventData eventData) {

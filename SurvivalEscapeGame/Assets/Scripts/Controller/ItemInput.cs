@@ -8,14 +8,6 @@ public class ItemInput : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     public Transform OriginalParent { get; private set; }
     private Vector2 Offset;
 
-    private void Awake() {
-    }
-    private void Start() {
-    }
-
-    private void Update() {
-    }
-
     public void OnPointerDown(PointerEventData eventData) {
         if (this.Item == null)
             return;

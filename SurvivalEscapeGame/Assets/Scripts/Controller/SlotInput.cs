@@ -8,6 +8,7 @@ public class SlotInput : MonoBehaviour, IDropHandler {
     public int SlotID { get; set; }
     public Item StoredItem { get; set; }
     public bool CraftingSlot { get; set; }
+    public bool IsStructureSlot { get; set; }
 
     public static PlayerData Pd;
 
@@ -19,12 +20,13 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         SlotInput otherSlot = droppedItem.GetComponent<ItemInput>().OriginalParent.GetComponent<SlotInput>();
         if (otherSlot == this)
             return;
-        if (!CraftingSlot && !otherSlot.CraftingSlot || CraftingSlot && otherSlot.CraftingSlot) {
+        if (!CraftingSlot && !otherSlot.CraftingSlot && !IsStructureSlot && !otherSlot.IsStructureSlot 
+            || CraftingSlot && otherSlot.CraftingSlot || IsStructureSlot && otherSlot.IsStructureSlot) {
             SlotToSlot(droppedItem, otherSlot);
-        } else if (CraftingSlot && !otherSlot.CraftingSlot) {
+        } else if (CraftingSlot && !otherSlot.CraftingSlot && !otherSlot.IsStructureSlot) {
             SlotCraftTransfer(droppedItem, otherSlot, PlayerData.CraftingInventory, PlayerData.NumCraftingSlots,
                 PlayerData.CraftingSlots, PlayerData.CraftingItems, Pd.GetInventory());
-        } else {
+        } else if (!CraftingSlot && otherSlot.CraftingSlot && !otherSlot.IsStructureSlot) {
             SlotCraftTransfer(droppedItem, otherSlot, Pd.GetInventory(), PlayerData.NumItemSlots,
                 PlayerData.Slots, PlayerData.Items, PlayerData.CraftingInventory);
         }
