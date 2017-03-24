@@ -30,11 +30,16 @@ public abstract class BuildingItem : ActionItem {
             GameObject structure = (GameObject)GameObject.Instantiate(prefab);
             structure.transform.position = tile.Position;
             tile.Structure = new KeyValuePair<ItemList, GameObject>(it, structure);
+            AddData(structure);
             pd.RemoveItem(this, 1, pd.GetInventory());
             pd.GUIText.GetComponent<Text>().text = it + " built.";
         } else {
-            pd.GUIText.GetComponent<Text>().text = "This tile already has a " + it + " built on it!";
-            Debug.Log("This tile already has a " + it + " built on it!");
+            pd.GUIText.GetComponent<Text>().text = "This tile already has a structure built on it!";
+            Debug.Log("This tile already has a structure built on it!");
         }
+    }
+
+    public virtual void AddData(GameObject obj) {
+
     }
 }

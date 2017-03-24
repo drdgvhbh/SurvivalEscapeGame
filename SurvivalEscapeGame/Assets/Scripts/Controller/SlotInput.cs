@@ -9,19 +9,33 @@ public class SlotInput : MonoBehaviour, IDropHandler {
     public Item StoredItem { get; set; }
     public bool CraftingSlot { get; set; }
     public bool IsStructureSlot { get; set; }
+    public GameObject AssociatedStructure { get; set; }
+
+    public bool IsLocked { get; set; }
 
     public static PlayerData Pd;
 
-    public void OnDrop(PointerEventData eventData) {        
+    [SerializeField]
+    private GameObject RedX;
+
+    private GameObject ActiveRedX;
+
+
+    protected void Awake() {
+
+    } 
+
+    public void OnDrop(PointerEventData eventData) {
         if (PlayerData.Slots[SlotID] == null)
             return;
-        Debug.Assert(PlayerData.Slots[SlotID].transform.childCount == 0 || PlayerData.Slots[SlotID].transform.childCount == 1);
         ItemInput droppedItem = eventData.pointerDrag.GetComponent<ItemInput>();
         SlotInput otherSlot = droppedItem.GetComponent<ItemInput>().OriginalParent.GetComponent<SlotInput>();
-        if (otherSlot == this)
+        if (otherSlot == this || IsLocked || otherSlot.IsLocked)
             return;
-        if (!CraftingSlot && !otherSlot.CraftingSlot && !IsStructureSlot && !otherSlot.IsStructureSlot 
-            || CraftingSlot && otherSlot.CraftingSlot || IsStructureSlot && otherSlot.IsStructureSlot) {
+        Debug.Assert(PlayerData.Slots[SlotID].transform.childCount == 0 || PlayerData.Slots[SlotID].transform.childCount == 1);
+        if (!CraftingSlot && !otherSlot.CraftingSlot && !IsStructureSlot && !otherSlot.IsStructureSlot
+            || CraftingSlot && otherSlot.CraftingSlot
+            || IsStructureSlot && otherSlot.IsStructureSlot) {
             SlotToSlot(droppedItem, otherSlot);
         } else if (CraftingSlot && !otherSlot.CraftingSlot && !otherSlot.IsStructureSlot) {
             SlotCraftTransfer(droppedItem, otherSlot, PlayerData.CraftingInventory, PlayerData.NumCraftingSlots,
@@ -29,8 +43,15 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         } else if (!CraftingSlot && otherSlot.CraftingSlot && !otherSlot.IsStructureSlot) {
             SlotCraftTransfer(droppedItem, otherSlot, Pd.GetInventory(), PlayerData.NumItemSlots,
                 PlayerData.Slots, PlayerData.Items, PlayerData.CraftingInventory);
-        }
-
+        } else if (Pd.CurrentTile.Structure.Value != null) {
+            Dictionary<String, Item> structureInventory = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().Inventory;
+            List<GameObject> itContainer = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().ItemContainer;
+            if (IsStructureSlot && !otherSlot.IsStructureSlot) {         
+                 SlotStructureTransfer(droppedItem, otherSlot, structureInventory, PlayerData.NumStructSlots, PlayerData.StructureSlots, itContainer, Pd.GetInventory());
+            } else if (!IsStructureSlot && otherSlot.IsStructureSlot) {
+                SlotStructureTransfer(droppedItem, otherSlot, Pd.GetInventory(), PlayerData.NumItemSlots, PlayerData.Slots, PlayerData.Items, structureInventory);
+            }
+        } 
     }
 
     protected void SlotCraftTransfer(ItemInput droppedItem, SlotInput otherSlot, Dictionary<string, Item> InventoryAdd, int numSlots,
@@ -51,6 +72,23 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         Pd.RemoveItem(it, 1, InventoryRemove);
     }
 
+    protected void SlotStructureTransfer(ItemInput droppedItem, SlotInput otherSlot, Dictionary<string, Item> InventoryAdd, int numSlots,
+        List<GameObject> slotsContainer, List<GameObject> itemsContainer, Dictionary<string, Item> InventoryRemove) {
+        SlotCraftTransfer(droppedItem, otherSlot, InventoryAdd, numSlots,
+            slotsContainer, itemsContainer, InventoryRemove);
+        if (Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData 
+            && InventoryRemove == Pd.GetInventory()) {
+            GranaryData gD = (GranaryData)Pd.CurrentTile.Structure.Value.GetComponent<StructureData>();
+            GameObject asdf = itemsContainer.Find(g => g.GetComponent<ItemInput>().Item.GetName().Equals(droppedItem.Item.GetName()));
+            gD.StartCoroutine(gD.MutliplyItem(asdf.gameObject.transform.parent.GetComponent<SlotInput>()));
+            if (InventoryRemove == Pd.GetInventory()
+                    && InventoryAdd[droppedItem.Item.GetName()].GetQuantity() == 1
+                    && Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData) {
+            }
+        }
+
+    }
+
     protected void SlotToSlot(ItemInput droppedItem, SlotInput otherSlot) {
         if (PlayerData.Slots[this.SlotID].transform.childCount == 1) {
             otherSlot.StoredItem = this.StoredItem;
@@ -66,5 +104,24 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         droppedItem.transform.localPosition = Vector2.zero;
         this.StoredItem = droppedItem.GetComponent<ItemInput>().Item;
         this.StoredItem.Slot = this.SlotID;
+    }
+
+    public bool LockSlot() {
+        if (IsLocked)
+            return false;
+        IsLocked = true;
+        Debug.Assert(ActiveRedX == null, "This slot isn't locked yet but it has a red X.");
+        ActiveRedX = GameObject.Instantiate(RedX);
+        ActiveRedX.transform.SetParent(transform, false);
+        return true;
+    }
+
+    public bool UnlockSlot() {
+        if (!IsLocked)
+            return false;
+        Debug.Assert(ActiveRedX != null, "This slot is locked yet but it doesnt have a red X.");
+        IsLocked = false;
+        GameObject.Destroy(ActiveRedX);
+        return true;
     }
 }

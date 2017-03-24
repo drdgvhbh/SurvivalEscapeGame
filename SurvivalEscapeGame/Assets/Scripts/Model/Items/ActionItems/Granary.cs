@@ -26,6 +26,10 @@ public class Granary : BuildingItem {
 
     }
 
+    public override void AddData(GameObject obj) {
+        obj.AddComponent<GranaryData>();
+    }
+
     public Granary(int id, int depthLevel, bool active, int quantity) : this(id, depthLevel, active) {
     }
 

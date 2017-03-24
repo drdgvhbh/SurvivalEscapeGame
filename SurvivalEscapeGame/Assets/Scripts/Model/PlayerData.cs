@@ -58,6 +58,7 @@ public class PlayerData : MonoBehaviour {
 
     public const int NumItemSlots = 16;
     public const int NumCraftingSlots = 6;
+    public static int NumStructSlots = 8;
     [SerializeField]
     private GameObject SlotPanel;
     [SerializeField]
@@ -68,6 +69,10 @@ public class PlayerData : MonoBehaviour {
     private GameObject ActivePanel;
     [SerializeField]
     private GameObject CraftingPanel;
+
+    [SerializeField]
+    private GameObject StructurePanel;
+
     [SerializeField]
     public GameObject GUIText;
 
@@ -84,6 +89,7 @@ public class PlayerData : MonoBehaviour {
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
     public static List<GameObject> Slots = new List<GameObject>();
     public static List<GameObject> CraftingSlots = new List<GameObject>();
+    public static List<GameObject> StructureSlots = new List<GameObject>();
     public static List<GameObject> Items = new List<GameObject>();
     public static List<GameObject> CraftingItems = new List<GameObject>();
     private HashSet<Tile> DiscoveredTiles;
@@ -98,7 +104,6 @@ public class PlayerData : MonoBehaviour {
         for (int i = 0; i < PlayerData.NumItemSlots + PlayerData.NumCraftingSlots; i++) {
             GameObject Is = Instantiate(InventorySlot);
             PlayerData.Slots.Add(Is);
-            PlayerData.Slots[i].AddComponent<SlotInput>();
             PlayerData.Slots[i].GetComponent<SlotInput>().SlotID = i;
             if (i >= PlayerData.NumItemSlots) {
                 PlayerData.CraftingSlots.Add(Is);
@@ -109,6 +114,17 @@ public class PlayerData : MonoBehaviour {
                 PlayerData.Slots[i].transform.SetParent(this.SlotPanel.transform, false);
                 PlayerData.Slots[i].GetComponent<SlotInput>().CraftingSlot = false;
             }
+        }
+        for (int i = 0; i < PlayerData.NumStructSlots; i++) {
+            GameObject Is = Instantiate(InventorySlot);
+            PlayerData.Slots.Add(Is);
+            int idx = i + PlayerData.NumItemSlots + PlayerData.NumCraftingSlots;
+            SlotInput sI = PlayerData.Slots[idx].GetComponent<SlotInput>();
+            sI.SlotID = idx;
+            sI.CraftingSlot = false;
+            sI.IsStructureSlot = true;
+            StructureSlots.Add(Is);
+            StructureSlots[i].transform.SetParent(StructurePanel.transform, false);
         }
     }
 
@@ -148,6 +164,10 @@ public class PlayerData : MonoBehaviour {
 
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
@@ -222,6 +242,7 @@ public class PlayerData : MonoBehaviour {
         }
     }
 
+
     public bool AddItem(Item it) {
         return AddItem(it, this.GetInventory(), NumItemSlots, Slots, Items);
     }
@@ -243,13 +264,21 @@ public class PlayerData : MonoBehaviour {
                     GameObject item = Instantiate(this.InventoryItem);
                     ItemContainer.Add(item);
                     inventory[it.GetName()].ItemObject = item;
+                    if (SlotContainer[i].GetComponent<SlotInput>().IsStructureSlot) {
+                        item.transform.localScale = new Vector3(1.6f, 1.6f, 1.6f);
+                    } else {
+                        item.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
                     item.transform.SetParent(SlotContainer[i].transform, false);
                     item.transform.localPosition = Vector3.zero;
+
                     item.GetComponent<Image>().sprite = inventory[it.GetName()].Icon;
-                    item.transform.GetChild(0).GetComponent<Text>().text = it.GetQuantity().ToString();
+                    item.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = it.GetQuantity().ToString();
                     item.GetComponent<ItemInput>().Item = it;
                     if (SlotContainer[i].GetComponent<SlotInput>().CraftingSlot) {
-                        it.Slot = i + NumItemSlots;
+                        it.Slot = i + PlayerData.NumItemSlots;
+                    } else if (SlotContainer[i].GetComponent<SlotInput>().IsStructureSlot) {
+                        it.Slot = i + PlayerData.NumItemSlots + PlayerData.NumCraftingSlots;
                     } else {
                         it.Slot = i;
                     }
@@ -266,7 +295,7 @@ public class PlayerData : MonoBehaviour {
                 < inventory[it.GetName()].MaximumQuantity) || ignoreContains) {
             Item tmp = inventory[it.GetName()];
             tmp.SetQuantity(tmp.GetQuantity() + 1);
-            tmp.ItemObject.transform.GetChild(0).GetComponent<Text>().text = tmp.GetQuantity().ToString();
+            tmp.ItemObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tmp.GetQuantity().ToString();
             return true;
         } else {
             GUIText.GetComponent<Text>().text = "Maximum quantity reached!";
@@ -299,7 +328,7 @@ public class PlayerData : MonoBehaviour {
         if (inventory.ContainsKey(it.GetName())) {
             Item itInvent = inventory[it.GetName()];
             itInvent.SetQuantity(itInvent.GetQuantity() - quantity);
-            itInvent.ItemObject.transform.GetChild(0).GetComponent<Text>().text = itInvent.GetQuantity().ToString();
+            itInvent.ItemObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = itInvent.GetQuantity().ToString();
             if (itInvent.GetQuantity() <= 0) {
                 inventory.Remove(it.GetName());
                 Destroy(it.ItemObject);

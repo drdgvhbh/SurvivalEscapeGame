@@ -125,8 +125,10 @@
     <Compile Include="Assets\Scripts\Model\NourishmentLevels.cs" />
     <Compile Include="Assets\Scripts\Model\PathNode.cs" />
     <Compile Include="Assets\Scripts\Model\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\Model\StructureData.cs" />
     <Compile Include="Assets\Scripts\Model\TerrainData.cs" />
     <Compile Include="Assets\Scripts\Model\Tile.cs" />
+    <Compile Include="Assets\Scripts\View\GraphicIgnoreRaycast.cs" />
     <Compile Include="Assets\Scripts\View\ItemMenu.cs" />
     <Compile Include="Assets\Scripts\View\PlayerFogOfWar.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark01.cs" />
