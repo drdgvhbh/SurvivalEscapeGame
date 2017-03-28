@@ -19,12 +19,12 @@ public class StructureInput : MonoBehaviour, IPointerDownHandler {
     [SerializeField]
     private GameObject ToggleCrafting;
 
-    private void Awake() {
+    protected void Awake() {
         this.Pi = GameObject.Find("Player").GetComponent<PlayerInput>();
         this.Pd = GameObject.Find("Player").GetComponent<PlayerData>();
     }
 
-    private void Start() {
+    protected void Start() {
 
     }
 
@@ -32,6 +32,7 @@ public class StructureInput : MonoBehaviour, IPointerDownHandler {
         if (Pd.CurrentTile.Structure.Value == null) {
             this.GetComponent<Image>().color = new Color32(100, 100, 100, 255);
             StructurePanel.SetActive(false);
+            DestroyStructureSlotChildren();
         } else {
             this.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
             if (Input.GetKeyDown(Hotkey)) {
@@ -52,7 +53,29 @@ public class StructureInput : MonoBehaviour, IPointerDownHandler {
         GameObject structure = Pd.CurrentTile.Structure.Value;
         if (Pd.CurrentTile.Structure.Value == null)
             return;
+        Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().ItemContainer = new List<GameObject>();
+        List<GameObject> itemContainer = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().ItemContainer;
+        for (int i = 0; i < itemContainer.Count; i++) {
+            itemContainer[i] = null;
+        }
         StructurePanel.SetActive(!StructurePanel.activeSelf);
         StructureText.GetComponent<TextMeshProUGUI>().text = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().Name;
+        Dictionary<String, Item> itemInventory = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().Inventory;
+        DestroyStructureSlotChildren();
+        int counter = 0;
+        foreach (KeyValuePair<String, Item> i in itemInventory) {
+            PlayerData.StructureSlots[counter].GetComponent<SlotInput>().PopulateSlot(i.Value, itemContainer, itemInventory, counter);
+            counter++;
+        }
+        Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().UpdateOnOpen();
     }
+
+    public void DestroyStructureSlotChildren() {
+        foreach (GameObject g in PlayerData.StructureSlots) {
+            for (int i = 0; i < g.transform.childCount; i++) {
+                GameObject.Destroy(g.transform.GetChild(i).gameObject);
+            }
+        }
+    }
+
 }

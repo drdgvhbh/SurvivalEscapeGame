@@ -41,6 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RedX: {fileID: 1639337159825300, guid: c1cd4ec9b8f90094a8f3f974f69f1d42, type: 2}
+  ItemObj: {fileID: 1609854577235664, guid: 5f42969c5002c4747ab61a46786aaefb, type: 2}
 --- !u!114 &114749084713612704
 MonoBehaviour:
   m_ObjectHideFlags: 1

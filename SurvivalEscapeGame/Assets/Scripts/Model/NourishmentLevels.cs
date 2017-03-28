@@ -10,8 +10,8 @@ public static class NourishmentLevels {
     private static double HRegenerationN = 1.8;
     private static double DecayN = 1/1.15;
     private static double MsN = 1.65;
-    private static double HealthN = System.Math.Pow(2, 1 / 2);
-    public static double StaminaN = 2.1;
+    private static double HealthN = Mathf.Sqrt(2);
+    public static double StaminaN = Mathf.Sqrt(2.1f);
     private static double SRegenerationN = 1 / 0.5;
 
     public static Dictionary<int, float> NourishmentThreshold = new Dictionary<int, float>() {
@@ -56,11 +56,11 @@ public static class NourishmentLevels {
     };
 
     public static Dictionary<int, float> BaseMaximumStamina = new Dictionary<int, float>() {
-        { -2, (float)System.Math.Pow(System.Math.Pow(StaminaN, 1/2), -2) * HighMultiplier },
-        { -1, (float)System.Math.Pow(System.Math.Pow(StaminaN, 1/2), -1) * HighMultiplier },
-        { 0, (float)System.Math.Pow(System.Math.Pow(StaminaN, 1/2), 0) * HighMultiplier },
-        { 1, (float)System.Math.Pow(System.Math.Pow(StaminaN, 1/2), 1) * HighMultiplier },
-        { 2, (float)System.Math.Pow(System.Math.Pow(StaminaN, 1/2), 2) * HighMultiplier }
+        { -2, (float)System.Math.Pow(StaminaN, 2) * HighMultiplier },
+        { -1, (float)System.Math.Pow(StaminaN, 2) * HighMultiplier },
+        { 0, (float)System.Math.Pow(StaminaN , 2) * HighMultiplier },
+        { 1, (float)System.Math.Pow(StaminaN , 2) * HighMultiplier },
+        { 2, (float)System.Math.Pow(StaminaN , 2) * HighMultiplier }
     };
 
     public static Dictionary<int, float> BaseStaminaRegeneration = new Dictionary<int, float>() {

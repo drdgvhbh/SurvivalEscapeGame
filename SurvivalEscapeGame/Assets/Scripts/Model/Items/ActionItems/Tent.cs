@@ -34,5 +34,6 @@ public class Tent : BuildingItem {
     }
 
     public Tent(Tent t) : base(t) {
+        prefab = Resources.Load("Prefabs/Tent");
     }
 }

@@ -85,6 +85,9 @@ public class PlayerData : MonoBehaviour {
     [SerializeField]
     private GameObject NourishmentTextStatus;
 
+    public List<GameObject> FOWStructures;
+    public HashSet<GameObject> AllStructures;
+
     private Dictionary<string, Item> Inventory;
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
     public static List<GameObject> Slots = new List<GameObject>();
@@ -125,12 +128,15 @@ public class PlayerData : MonoBehaviour {
             sI.IsStructureSlot = true;
             StructureSlots.Add(Is);
             StructureSlots[i].transform.SetParent(StructurePanel.transform, false);
+            FOWStructures = new List<GameObject>();
+            AllStructures = new HashSet<GameObject>();
         }
     }
 
     public void LateStart() {
-        this.NourishmentLevel = 1;
+        this.NourishmentLevel = 2;
         this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
+        Debug.Log(MaximumHealth);
         this.Health = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
         this.Stamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
@@ -165,10 +171,11 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Stick(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Stick(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Charcoal(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+
         this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
@@ -210,7 +217,7 @@ public class PlayerData : MonoBehaviour {
         } else if (this.NourishmentLevel == -2) {
             this.NourishmentStatus = 0;
         }
-        NourishmentText.GetComponent<TextMeshProUGUI>().text = this.NourishmentLevel.ToString();
+        NourishmentText.GetComponent<TextMeshProUGUI>().text = (this.NourishmentLevel + 2).ToString();
     }
 
     public void UpdateNourishmentStatus() {
@@ -261,28 +268,7 @@ public class PlayerData : MonoBehaviour {
             inventory.Add(it.GetName(), it);
             for (int i = 0; i < maximumSlotNumber; i++) {
                 if (SlotContainer[i].transform.childCount == 0) {
-                    GameObject item = Instantiate(this.InventoryItem);
-                    ItemContainer.Add(item);
-                    inventory[it.GetName()].ItemObject = item;
-                    if (SlotContainer[i].GetComponent<SlotInput>().IsStructureSlot) {
-                        item.transform.localScale = new Vector3(1.6f, 1.6f, 1.6f);
-                    } else {
-                        item.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    }
-                    item.transform.SetParent(SlotContainer[i].transform, false);
-                    item.transform.localPosition = Vector3.zero;
-
-                    item.GetComponent<Image>().sprite = inventory[it.GetName()].Icon;
-                    item.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = it.GetQuantity().ToString();
-                    item.GetComponent<ItemInput>().Item = it;
-                    if (SlotContainer[i].GetComponent<SlotInput>().CraftingSlot) {
-                        it.Slot = i + PlayerData.NumItemSlots;
-                    } else if (SlotContainer[i].GetComponent<SlotInput>().IsStructureSlot) {
-                        it.Slot = i + PlayerData.NumItemSlots + PlayerData.NumCraftingSlots;
-                    } else {
-                        it.Slot = i;
-                    }
-                    SlotContainer[i].GetComponent<SlotInput>().StoredItem = it;
+                    GameObject item = SlotContainer[i].GetComponent<SlotInput>().PopulateSlot(it, ItemContainer, inventory, i);
                     if (inventory == this.GetInventory()) {
                         FillActiveSlot(it, item);
                     }
@@ -299,7 +285,7 @@ public class PlayerData : MonoBehaviour {
             return true;
         } else {
             GUIText.GetComponent<Text>().text = "Maximum quantity reached!";
-            Debug.Log("You've reached the maximum quantity of this item!");
+            Debug.Log("You've reached the maximum quantity of this item! (" + it.GetName()+")");
         }
         return false;
     }
@@ -390,49 +376,63 @@ public class PlayerData : MonoBehaviour {
     }
 
     private HashSet<Tile> GetRevealedTiles() {
+        IEnumerator<GameObject> fowStructures = FOWStructures.GetEnumerator();
+        HashSet<Tile> AllRevealedTiles = new HashSet<Tile>();
+        bool cont = true;
+        Tile ct = this.CurrentTile;
         int size = VisionRange;
-        if (size < 0)
-            return new HashSet<Tile>();
-        HashSet<Tile> RevealedTiles = new HashSet<Tile>();
-        CurrentTile.IsDiscovered = true;
-        DiscoveredTiles.Add(CurrentTile);
-        RevealedTiles.Add(CurrentTile);
-        CurrentTile.IsRevealed = true;
-        HashSet<Tile> temp = new HashSet<Tile>();
-        for (int i = 0; i < size; i++) {
-            temp = new HashSet<Tile>(RevealedTiles);
-            foreach (Tile t in temp) {
-                Tile left = AddDiscoveredTile(t, Tile.Sides.Left, RevealedTiles);
-                Tile right = AddDiscoveredTile(t, Tile.Sides.Right, RevealedTiles);
-                Tile top = AddDiscoveredTile(t, Tile.Sides.Top, RevealedTiles);
-                Tile bottom = AddDiscoveredTile(t, Tile.Sides.Bottom, RevealedTiles);
+        do {
+            if (size < 0)
+                return new HashSet<Tile>();
+            HashSet<Tile> RevealedTiles = new HashSet<Tile>();
+            ct.IsDiscovered = true;
+            DiscoveredTiles.Add(ct);
+            RevealedTiles.Add(ct);
+            ct.IsRevealed = true;
+            HashSet<Tile> temp = new HashSet<Tile>();
+            for (int i = 0; i < size; i++) {
+                temp = new HashSet<Tile>(RevealedTiles);
+                foreach (Tile t in temp) {
+                    Tile left = AddDiscoveredTile(t, Tile.Sides.Left, RevealedTiles);
+                    Tile right = AddDiscoveredTile(t, Tile.Sides.Right, RevealedTiles);
+                    Tile top = AddDiscoveredTile(t, Tile.Sides.Top, RevealedTiles);
+                    Tile bottom = AddDiscoveredTile(t, Tile.Sides.Bottom, RevealedTiles);
 
-                if (left != null) {
-                    AddDiscoveredTile(left, Tile.Sides.Bottom, RevealedTiles);
-                } else if (bottom != null) {
-                    AddDiscoveredTile(bottom, Tile.Sides.Left, RevealedTiles);
-                }
+                    if (left != null) {
+                        AddDiscoveredTile(left, Tile.Sides.Bottom, RevealedTiles);
+                    } else if (bottom != null) {
+                        AddDiscoveredTile(bottom, Tile.Sides.Left, RevealedTiles);
+                    }
 
-                if (bottom != null) {
-                    AddDiscoveredTile(bottom, Tile.Sides.Right, RevealedTiles);
-                } else if (right != null) {
-                    AddDiscoveredTile(right, Tile.Sides.Bottom, RevealedTiles);
-                }
+                    if (bottom != null) {
+                        AddDiscoveredTile(bottom, Tile.Sides.Right, RevealedTiles);
+                    } else if (right != null) {
+                        AddDiscoveredTile(right, Tile.Sides.Bottom, RevealedTiles);
+                    }
 
-                if (right != null) {
-                    AddDiscoveredTile(right, Tile.Sides.Top, RevealedTiles);
-                } else if (top != null) {
-                    AddDiscoveredTile(top, Tile.Sides.Right, RevealedTiles);
-                }
+                    if (right != null) {
+                        AddDiscoveredTile(right, Tile.Sides.Top, RevealedTiles);
+                    } else if (top != null) {
+                        AddDiscoveredTile(top, Tile.Sides.Right, RevealedTiles);
+                    }
 
-                if (top != null) {
-                    AddDiscoveredTile(top, Tile.Sides.Left, RevealedTiles);
-                } else if (left != null) {
-                    AddDiscoveredTile(left, Tile.Sides.Top, RevealedTiles);
+                    if (top != null) {
+                        AddDiscoveredTile(top, Tile.Sides.Left, RevealedTiles);
+                    } else if (left != null) {
+                        AddDiscoveredTile(left, Tile.Sides.Top, RevealedTiles);
+                    }
                 }
             }
-        }
-        return RevealedTiles;
+
+            if (fowStructures.MoveNext()) {
+                ct = fowStructures.Current.GetComponent<StructureData>().CurrentTile;
+                size = 1;
+            } else {
+                cont = false;
+            }
+            AllRevealedTiles.UnionWith(RevealedTiles);
+        } while (cont == true);
+        return AllRevealedTiles;
     }
 
     private Tile AddDiscoveredTile(Tile t, Tile.Sides side, HashSet<Tile> revealed) {

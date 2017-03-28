@@ -38,6 +38,25 @@ public class PlayerInput : MonoBehaviour {
     public Dictionary<string, Action> Actions = new Dictionary<string, Action>() {
     };
 
+    protected enum PlayerAnimationActions {
+        MoveRight,
+        MoveLeft,
+        MoveUp,
+        MoveDown,
+        IdleLeft,
+        IdleRight         
+    };
+
+    private static Dictionary<PlayerAnimationActions, string> AnimationActions = new Dictionary<PlayerAnimationActions, string>() {
+        {PlayerAnimationActions.MoveRight, "MoveRight" },
+        {PlayerAnimationActions.MoveLeft, "MoveLeft" },
+        {PlayerAnimationActions.MoveUp, "MoveUp" },
+        {PlayerAnimationActions.MoveDown, "MoveDown" },
+        {PlayerAnimationActions.IdleLeft, "IdleLeft" },
+        {PlayerAnimationActions.IdleRight, "IdleRight" }
+    };
+
+
     // Use this for initialization
     private void Awake() {
         Actions.Add(Global.ItemNames[ItemList.Shovel], Dig);
@@ -121,21 +140,42 @@ public class PlayerInput : MonoBehaviour {
 
     public void Move() {
         Animator animCtrl = this.gameObject.GetComponent<Animator>();
-        if ((int)Direction != 2) {
-            GetPlayerData().Direction = 1;
-            if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
-                animCtrl.ResetTrigger("MoveLeft");
-                animCtrl.SetTrigger("MoveRight");
-
-            }
-        } else if ((int)Direction != 4) {
-            GetPlayerData().Direction = -1;
-            if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
-                animCtrl.ResetTrigger("MoveRight");
-                animCtrl.SetTrigger("MoveLeft");
-
-            }
+        foreach (KeyValuePair<PlayerAnimationActions, string> e in AnimationActions) {
+            animCtrl.ResetTrigger(e.Value);
         }
+        if (Direction == Tile.Sides.Right) {
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+           // animCtrl.ResetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveRight]);
+        } else if (Direction == Tile.Sides.Left) {
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleLeft]);
+            //animCtrl.ResetTrigger(AnimationActions[PlayerAnimationActions.IdleLeft]);
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveLeft]);
+        } else if (Direction == Tile.Sides.Bottom) {
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+          //  animCtrl.ResetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveDown]);
+        } else if (Direction == Tile.Sides.Top) {
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+           // animCtrl.ResetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveUp]);
+        }
+        /* if ((int)Direction != 2) {
+             GetPlayerData().Direction = 1;
+             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
+                 animCtrl.ResetTrigger("MoveLeft");
+                 animCtrl.SetTrigger("MoveRight");
+
+             }
+         } else if ((int)Direction != 4) {
+             GetPlayerData().Direction = -1;
+             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
+                 animCtrl.ResetTrigger("MoveRight");
+                 animCtrl.SetTrigger("MoveLeft");
+
+             }
+         }
+         */
     }
 
     protected void Attack() {
@@ -251,6 +291,7 @@ public class PlayerInput : MonoBehaviour {
     protected void BuildingTent() {
         if (Channeling(ItemList.Tent, PlayerActions.BuildTent) == PlayerActions.BuildTent) {
             Tent ai = (Tent)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Tent]]);
+            Debug.Log(ai.prefab);
             ai.BuildStructure(ItemList.Tent, this.GetPlayerData());
         }
     }

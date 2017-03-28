@@ -8,7 +8,8 @@ public class Tile  {
         Grass = 0,
         Sand = 1,
         Mountain = 2,
-        Water = 3
+        Water = 3,
+        Vine = 4
     }
     public enum Sides {
         Top = 1,
@@ -127,5 +128,9 @@ public class Tile  {
             }
         }
         return null;
+    }
+
+    public void AddItem(Item item) {
+        this.Items.Add(item);
     }
 }

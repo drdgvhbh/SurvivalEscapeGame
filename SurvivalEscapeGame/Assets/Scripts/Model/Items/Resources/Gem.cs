@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Gem : Item {
     public Gem(int id, int depthLevel, bool active, int quantity) : base(id, depthLevel, active, quantity) {
-        this.Name = Global.ItemNames[ItemList.Gem];
-        this.Icon = Resources.Load<Sprite>("Sprites/Items/blue_gem_1");
-        this.MaximumQuantity = 5;
+        var thisTextNode = ItemDatabase.JsonNode["Items"]["Gem"];
+        this.Name = thisTextNode["Name"];
+        this.Icon = Resources.LoadAll<Sprite>(thisTextNode["Icon"])[thisTextNode["IconIndex"]];
+        this.MaximumQuantity = thisTextNode["MaximumQuantity"];
         this.Slot = -1;
     }
 

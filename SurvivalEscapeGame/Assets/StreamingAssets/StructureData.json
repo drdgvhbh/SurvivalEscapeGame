@@ -2,7 +2,36 @@
 	"Structures" : 
 	{
 		"Granary" : {
-			"Name" : "Granary"
+			"Name" : "Granary",
+			"Levels" : 
+			{
+				"1" : 
+				{
+					"Health" : 75,
+					"LockedSlots" : 6 
+				},
+				"2" : 
+				{
+					"Health" : 100,
+					"LockedSlots" : 5 
+				},
+				"3" : 
+				{
+					"Health" : 125,
+					"LockedSlots" : 4 
+				}
+			}
+		},
+		"Tent" : {
+			"Name" : "Tent",
+			"Levels" : 
+			{
+				"1" : 
+				{
+					"Health" : 50,
+					"LockedSlots" : 7 
+				}
+			}
 		}
 	}
 }

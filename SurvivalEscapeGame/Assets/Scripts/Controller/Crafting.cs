@@ -21,7 +21,8 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
             {ItemList.Tent, new Tent[0] },
             {ItemList.Radar, new Radar[0] },
             {ItemList.Cocoberry, new Cocoberry[0] },
-            {ItemList.Granary, new Granary[0] }
+            {ItemList.Granary, new Granary[0] },
+            {ItemList.Torch, new Torch[0] }
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
@@ -29,7 +30,8 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
         {ItemList.Tent, Tent.CraftingComponents },
         {ItemList.Radar, Radar.CraftingComponents },
         {ItemList.Cocoberry, Cocoberry.CraftingComponents },
-        {ItemList.Granary, Granary.CraftingComponents }
+        {ItemList.Granary, Granary.CraftingComponents },
+        {ItemList.Torch, Torch.CraftingComponents }
     };
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -46,6 +48,7 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
                 if (!(CraftInventory.ContainsKey(components.Key) && CraftInventory[components.Key].GetQuantity() >= components.Value)) {
                     canCraft = false;
                 } else {
+                    Debug.Log("zzz");
                     ItemsToBeRemoved.Add(CraftInventory[components.Key]);
                 }
             }
@@ -54,6 +57,7 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
                 itemToBeCrafted = Craftable.Key;
                 int oldQuant = 0;
                 foreach (Item it in ItemsToBeRemoved) {
+
                     oldQuant = it.GetQuantity();
                     Pd.RemoveItem(it, it.GetQuantity(), PlayerData.CraftingInventory);
                 }

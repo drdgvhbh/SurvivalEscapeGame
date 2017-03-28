@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class SlotInput : MonoBehaviour, IDropHandler {
     public int SlotID { get; set; }
@@ -19,6 +20,9 @@ public class SlotInput : MonoBehaviour, IDropHandler {
     private GameObject RedX;
 
     private GameObject ActiveRedX;
+
+    [SerializeField]
+    private GameObject ItemObj;
 
 
     protected void Awake() {
@@ -76,7 +80,8 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         List<GameObject> slotsContainer, List<GameObject> itemsContainer, Dictionary<string, Item> InventoryRemove) {
         SlotCraftTransfer(droppedItem, otherSlot, InventoryAdd, numSlots,
             slotsContainer, itemsContainer, InventoryRemove);
-        if (Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData 
+        //Granary 
+        if (Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData
             && InventoryRemove == Pd.GetInventory()) {
             GranaryData gD = (GranaryData)Pd.CurrentTile.Structure.Value.GetComponent<StructureData>();
             GameObject asdf = itemsContainer.Find(g => g.GetComponent<ItemInput>().Item.GetName().Equals(droppedItem.Item.GetName()));
@@ -86,7 +91,15 @@ public class SlotInput : MonoBehaviour, IDropHandler {
                     && Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData) {
             }
         }
-
+        //Torch
+        if (!(Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData)
+                && InventoryRemove == Pd.GetInventory() && droppedItem.Item.GetName().Equals(Global.ItemNames[ItemList.Torch])) {
+            Pd.FOWStructures.Add(Pd.CurrentTile.Structure.Value);
+            Debug.Log("hello");
+        } else if (!(Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData)
+                && !(InventoryRemove == Pd.GetInventory()) && droppedItem.Item.GetName().Equals(Global.ItemNames[ItemList.Torch])) {
+            Pd.FOWStructures.Remove(Pd.CurrentTile.Structure.Value);
+        }
     }
 
     protected void SlotToSlot(ItemInput droppedItem, SlotInput otherSlot) {
@@ -107,21 +120,55 @@ public class SlotInput : MonoBehaviour, IDropHandler {
     }
 
     public bool LockSlot() {
+        if (ActiveRedX == null) {
+            ActiveRedX = GameObject.Instantiate(RedX);
+            ActiveRedX.transform.SetParent(transform, false);
+        }
         if (IsLocked)
             return false;
         IsLocked = true;
-        Debug.Assert(ActiveRedX == null, "This slot isn't locked yet but it has a red X.");
-        ActiveRedX = GameObject.Instantiate(RedX);
-        ActiveRedX.transform.SetParent(transform, false);
+        //Debug.Assert(ActiveRedX == null, "This slot isn't locked yet but it has a red X.");
         return true;
     }
 
     public bool UnlockSlot() {
         if (!IsLocked)
             return false;
-        Debug.Assert(ActiveRedX != null, "This slot is locked yet but it doesnt have a red X.");
+        //Debug.Assert(ActiveRedX != null, "This slot is locked but it doesnt have a red X.");
         IsLocked = false;
         GameObject.Destroy(ActiveRedX);
         return true;
     }
+
+    public GameObject PopulateSlot(Item it, List<GameObject> itemContainer, Dictionary<String, Item> inventory, int i ) {
+        GameObject item = Instantiate(ItemObj);
+        itemContainer.Add(item);
+        inventory[it.GetName()].ItemObject = item;
+        if (this.GetComponent<SlotInput>().IsStructureSlot) {
+            item.transform.localScale = new Vector3(1.6f, 1.6f, 1.6f);
+        } else {
+            item.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
+        item.transform.SetParent(this.transform, false);
+        item.transform.localPosition = Vector3.zero;
+
+        item.GetComponent<Image>().sprite = inventory[it.GetName()].Icon;
+        TMPro.TextMeshProUGUI tmPro = item.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
+        tmPro.text = it.GetQuantity().ToString();
+        tmPro.alignment = TMPro.TextAlignmentOptions.Right;
+        item.GetComponent<ItemInput>().Item = it;
+        if (this.GetComponent<SlotInput>().CraftingSlot) {
+            it.Slot = i + PlayerData.NumItemSlots;
+        } else if (this.GetComponent<SlotInput>().IsStructureSlot) {
+            it.Slot = i + PlayerData.NumItemSlots + PlayerData.NumCraftingSlots;
+        } else {
+            it.Slot = i;
+        }
+        this.GetComponent<SlotInput>().StoredItem = it;
+        if (this.GetComponent<SlotInput>().IsLocked) {
+            LockSlot();
+        }
+        return item;
+    }
 }
+

@@ -14,7 +14,7 @@
 			"Locations" : ["Sand"],
 			"UsableIn" :,
 			"Components" :,
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Pickaxe" : 
@@ -42,7 +42,7 @@
 					"Quantity" : 2
 				}
 			},
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Placeholder" : 
@@ -58,7 +58,7 @@
 			"Locations" :,
 			"UsableIn" :,
 			"Components" :,
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Shovel" : 
@@ -74,7 +74,7 @@
 			"Locations" :,
 			"UsableIn" : ["Sand", "Grass"],
 			"Components" :,
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Stick" : 
@@ -90,7 +90,7 @@
 			"Locations" : ["Sand", "Grass"],
 			"UsableIn" : ,
 			"Components" :,
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Stone" : 
@@ -106,7 +106,7 @@
 			"Locations" : ["Sand", "Grass"],
 			"UsableIn" : ,
 			"Components" :,
-			"Damage"
+			"Damage" : 0
 		}
 ,
 		"Tent" : 
@@ -129,7 +129,7 @@
 					"Quantity" : 4
 				},
 			},
-			"Damage" :
+			"Damage" : 0
 		}
 ,
 		"Granary" : 
@@ -157,7 +157,7 @@
 					"Quantity" : 2
 				}	
 			},
-			"Damage" :
+			"Damage" : 0
 		}
 ,
 		"Wood" : 
@@ -173,7 +173,7 @@
 			"Locations" : ["Grass"],
 			"UsableIn" :,
 			"Components" : ,
-			"Damage" :
+			"Damage" : 0 
 		}
 ,	
 		"Spear" : 
@@ -275,7 +275,7 @@
 		"Berry" : 
 		{
 			"Name" : "Berry",
-			"Description" : "Small, pulpy and edible. Very juicy!",
+			"Description" : "	",
 			"MaximumQuantity" : 5,
 			"Icon" : "Sprites/Items/berry",
 			"IconIndex" : 0,
@@ -302,7 +302,7 @@
 			"Locations" : ,
 			"UsableIn" : ["All"],
 			"Components" :
-						{
+			{
 				"0" :
 				{ 
 					"Type" :"Coconut",
@@ -316,6 +316,52 @@
 			},
 			"Damage" : 0, 
 			"NourishmentReplenishment" : 20
+		}
+,	
+		"Torch" : 
+		{
+			"Name" : "Torch",
+			"Description" : "Lights up the area around the building it is placed in",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/torch",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0.0,
+			"Consumable" : false,
+			"Locations" : ,
+			"UsableIn" : ,
+			"Components" :
+			{
+				"0" :
+				{ 
+					"Type" : "Stick",
+					"Quantity" : 2
+				},
+				"1" :
+				{ 
+					"Type" : "Charcoal",
+					"Quantity" : 1
+				}
+			},
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
+		}
+,	
+		"Charcoal" : 
+		{
+			"Name" : "Charcoal",
+			"Description" : "That firemaking substance",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/charcoal",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0.0,
+			"Consumable" : false,
+			"Locations" : ["Sand"],
+			"UsableIn" : ,
+			"Components" : ,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
 		}
 
 	}

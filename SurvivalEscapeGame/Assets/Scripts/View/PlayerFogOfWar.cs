@@ -17,6 +17,7 @@ public class PlayerFogOfWar : MonoBehaviour {
 
     // 0 -> 0 tiles, 1 -> 1 tiles, 2 -> 9 tiles, 3 -> 25 tiles ...
     private int VisionRange;
+    private int StructureVisionRange;
     [SerializeField]
     private GameObject FOWGrid;
     private Grid Grid;
@@ -29,6 +30,7 @@ public class PlayerFogOfWar : MonoBehaviour {
         VisionRange = this.GetComponent<PlayerData>().VisionRange;
         Grid = FOWGrid.GetComponent<Grid>();
         Tiles = GameGrid.GetComponent<TerrainData>().Tiles;
+        StructureVisionRange = 0;
     }
 
 	private void Update () {
@@ -76,30 +78,53 @@ public class PlayerFogOfWar : MonoBehaviour {
             Debug.DrawLine(p[5], p[3], Color.red);
         }
         
-        HashSet<int> triIndices = GetVisionIndices(currTriIdx);
 
-        Debug.DrawRay(transform.position + new Vector3(0, 0, -2), Vector3.forward, Color.green);
-
-        foreach (int idx in triIndices) {
-            Vector3[] p = new Vector3[6];
-            for (int j = 0; j < numVertsInTri; j++) {
-                p[j] = hitTransform.TransformPoint(vertices[triangles[idx * 3 + j]]);
-                p[j + 3] = hitTransform.TransformPoint(vertices[triangles[(idx + 1) * 3 + j]]);
-                colors[triangles[idx * 3 + j]] = new Color32(0, 0, 0, 0);
-                colors[triangles[(idx + 1) * 3 + j]] = new Color32(0, 0, 0, 0);
+        IEnumerator<GameObject> fowStructures = this.GetComponent<PlayerData>().FOWStructures.GetEnumerator();
+        GameObject currentObject = this.gameObject;
+        int currentVisionRange = VisionRange;
+        bool cont = true;
+        do {
+            if (currentObject == null) {
+                if (fowStructures.MoveNext()) {
+                    currentObject = fowStructures.Current;
+                } else {
+                    cont = false;
+                }
+                continue;
             }
-            Debug.DrawLine(p[0], p[1]);
-            Debug.DrawLine(p[1], p[2]);
-            Debug.DrawLine(p[2], p[0]);
-            Debug.DrawLine(p[3], p[4]);
-            Debug.DrawLine(p[4], p[5]);
-            Debug.DrawLine(p[5], p[3]);
-        }
+            ray = new Ray(currentObject.transform.position + new Vector3(0, 0, -2), Vector3.forward);
+            Physics.Raycast(ray, out hit, 1);
+            currTriIdx = hit.triangleIndex;
+            HashSet<int> triIndices = GetVisionIndices(currTriIdx, currentVisionRange);
+            Debug.DrawRay(currentObject.transform.position + new Vector3(0, 0, -2), Vector3.forward, Color.green);
+
+            foreach (int idx in triIndices) {
+                Vector3[] p = new Vector3[6];
+                for (int j = 0; j < numVertsInTri; j++) {
+                    p[j] = hitTransform.TransformPoint(vertices[triangles[idx * 3 + j]]);
+                    p[j + 3] = hitTransform.TransformPoint(vertices[triangles[(idx + 1) * 3 + j]]);
+                    colors[triangles[idx * 3 + j]] = new Color32(0, 0, 0, 0);
+                    colors[triangles[(idx + 1) * 3 + j]] = new Color32(0, 0, 0, 0);
+                }
+                Debug.DrawLine(p[0], p[1]);
+                Debug.DrawLine(p[1], p[2]);
+                Debug.DrawLine(p[2], p[0]);
+                Debug.DrawLine(p[3], p[4]);
+                Debug.DrawLine(p[4], p[5]);
+                Debug.DrawLine(p[5], p[3]);
+            }
+            if (fowStructures.MoveNext()) {
+                currentObject = fowStructures.Current;
+                currentVisionRange = StructureVisionRange;
+            } else {
+                cont = false;
+            }
+        } while (cont == true);
         mesh.colors32 = colors;
     }
 
-    private HashSet<int> GetVisionIndices(int triIdx) {
-        int size = VisionRange;
+    private HashSet<int> GetVisionIndices(int triIdx, int range) {
+        int size = range;
         if (size < 0)
             return new HashSet<int>();
         HashSet<int> triIndices = new HashSet<int>();

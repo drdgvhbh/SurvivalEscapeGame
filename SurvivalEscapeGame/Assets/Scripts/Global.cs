@@ -11,12 +11,11 @@ public enum Sides {
 }
 
 public enum TileType {
-	Empty = -1,
-	Placeholder = 0,
-	Grass = 1,
-	Sand = 2,
-    Mountain = 3,
-    Water = 4
+	Grass = 0,
+	Sand = 1,
+    Mountain = 2,
+    Water = 3,
+    Vine = 4
 }
 
 public enum PlayerActions {
@@ -44,7 +43,9 @@ public enum ItemList {
     Radar,
     Berry,
     Cocoberry,
-    Granary
+    Granary,
+    Charcoal,
+    Torch
 }
 
 public static class Global {
@@ -69,7 +70,9 @@ public static class Global {
         {ItemList.Radar, "Radar" },
         {ItemList.Berry, "Berry" },
         {ItemList.Cocoberry, "Cocoberry" },
-        {ItemList.Granary, "Granary" }
+        {ItemList.Granary, "Granary" },
+        {ItemList.Charcoal, "Charcoal" },
+        {ItemList.Torch, "Torch" }
     };
 
 

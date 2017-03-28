@@ -31,7 +31,8 @@ public abstract class DiggingItem : ActionItem {
             return;
         }
         tile.TileDepth = tile.TileDepth - 1;
-        foreach (Item it in tile.Items) {
+        List<Item> temp = new List<Item>(tile.Items);
+        foreach (Item it in temp) {
             if (it.GetDepthLevel() == tile.TileDepth) {
                 tile.RemoveItem(it.GetId());
                 if (pd.AddItem(it)) {

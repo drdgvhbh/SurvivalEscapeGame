@@ -21,9 +21,11 @@ public abstract class Food : ActionItem {
     }
 
     public void Eat(PlayerData pd) {
+        Debug.Log(NourishmentReplenishment + " " + StaminaCost);
         pd.Stamina = pd.Stamina - StaminaCost;
         pd.NourishmentStatus = pd.NourishmentStatus + NourishmentReplenishment;
         pd.RemoveItem(this, 1, pd.GetInventory());
+
         pd.GUIText.GetComponent<Text>().text = "Consumed for " + NourishmentReplenishment + " Nourishment points";
     }
 }

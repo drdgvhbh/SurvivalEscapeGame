@@ -38,5 +38,6 @@ public class Granary : BuildingItem {
     }
 
     public Granary(Granary t) : base(t) {
+        prefab = Resources.Load("Prefabs/Granary");
     }
 }

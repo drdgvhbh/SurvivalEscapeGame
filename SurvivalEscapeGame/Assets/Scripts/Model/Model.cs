@@ -24,7 +24,6 @@ public class Model : MonoBehaviour {
 
     [Header("View Properties")]
     public int TileResolution = 32;
-    public Texture2D[] TileTextures;
 
     [SerializeField]
     private GameObject GameGridObj;
@@ -58,6 +57,9 @@ public class Model : MonoBehaviour {
             CreateEnemy(Random.Range(0, Mb.NumTiles));
         new Radar(-1, false);
         new Cocoberry(-1, false);
+        new Tent(-1, false);
+        new Torch(-1, false);
+        //new Spear(-1, false);
         Coroutine = UpgradeEnemies(15.0f);
         StartCoroutine(Coroutine);
         Time.timeScale = 0;

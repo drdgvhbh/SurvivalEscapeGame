@@ -19,7 +19,7 @@
 			"Id" : 0,
 			"Name" : "Grass",
 			"Depth" : 2,
-			"AutoTileNeighbours" : [0, 2],
+			"AutoTileNeighbours" : [0, 2, 4],
 			"IsWalkable" : true,
 			"MovementCost" : 1
 		}
@@ -29,7 +29,7 @@
 			"Id" : 1,
 			"Name" : "Sand",
 			"Depth" : 4,
-			"AutoTileNeighbours" : [0, 1],
+			"AutoTileNeighbours" : [0, 1, 4],
 			"IsWalkable" : true,
 			"MovementCost" : 1
 		}
@@ -39,7 +39,7 @@
 			"Id" : 2,
 			"Name" : "Mountain",
 			"Depth" : 6,
-			"AutoTileNeighbours" : [1, 2],
+			"AutoTileNeighbours" : [1, 2, 4],
 			"IsWalkable" : true,
 			"MovementCost" : 3
 		}
@@ -52,6 +52,16 @@
 			"AutoTileNeighbours" : [3],
 			"IsWalkable" : false,
 			"MovementCost" : -1
+		}
+,
+		"4" : 
+		{
+			"Id" : 4,
+			"Name" : "Vine",
+			"Depth" : 3,
+			"AutoTileNeighbours" : [0, 2, 4],
+			"IsWalkable" : true,
+			"MovementCost" : 2
 		}
 	}
 }

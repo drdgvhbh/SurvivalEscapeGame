@@ -31,6 +31,8 @@ public abstract class BuildingItem : ActionItem {
             structure.transform.position = tile.Position;
             tile.Structure = new KeyValuePair<ItemList, GameObject>(it, structure);
             AddData(structure);
+            structure.GetComponent<StructureData>().CurrentTile = tile;
+            pd.AllStructures.Add(structure);
             pd.RemoveItem(this, 1, pd.GetInventory());
             pd.GUIText.GetComponent<Text>().text = it + " built.";
         } else {

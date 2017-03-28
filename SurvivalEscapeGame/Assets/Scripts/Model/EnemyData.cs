@@ -32,6 +32,8 @@ public class EnemyData : MonoBehaviour {
     private AudioSource PainSound;
     private AudioSource DeathSound;
 
+    private GameObject AttackTarget; 
+
     private static Grid GameGrid;
 
     private Dictionary<PlayerActions, bool> TypeOfPerformingAction = new Dictionary<PlayerActions, bool>() {
@@ -56,8 +58,8 @@ public class EnemyData : MonoBehaviour {
         Player = player;
         TileTobeMovedTo = CurrentTile;
         MovementSpeed = 0.97f;
-        AttackDamage = 0.0f;
-        //AttackDamage = 12.0f;
+        //AttackDamage = 0.0f;
+        AttackDamage = 12.0f;
         AttackCooldown = 1.33333f;
         LerpStep = 0.0f;
         IsAttackOnCooldown = false;
@@ -80,10 +82,19 @@ public class EnemyData : MonoBehaviour {
             return;
         }
         if (!IsPerformingAction && Player != null) {
+            int shortestDistance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
             DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
-            int distance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
+
+            foreach (GameObject go in Player.GetComponent<PlayerData>().AllStructures) {
+                int distance = PathNode.GetDistanceToNode(CurrentTile, go.GetComponent<StructureData>().CurrentTile, GameGrid);
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    DestinationTile = go.GetComponent<StructureData>().CurrentTile;
+                }
+            }
+            Tile realDestination = DestinationTile;
           //  Debug.Log(distance);            
-            if (distance > 4) {
+            if (shortestDistance > 4) {
                 /*Debug.Log(CurrentTile.WalkableNeighbours.Count + ", " + CurrentTile.Neighbours.Count);
                 foreach (KeyValuePair<Tile.Sides, Tile> t in CurrentTile.Neighbours) {
                     Debug.Log(t.Value.IsWalkable);
@@ -103,7 +114,8 @@ public class EnemyData : MonoBehaviour {
             }
             //Debug.Log("???????");
             TileTobeMovedTo = CalculatePath();
-            if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && (TileTobeMovedTo.CurrentGameObject == null || TileTobeMovedTo.CurrentGameObject == this.gameObject)) {
+            if (TileTobeMovedTo != CurrentTile && TileTobeMovedTo != DestinationTile && TileTobeMovedTo.Structure.Value == null
+                    && (TileTobeMovedTo.CurrentGameObject == null || TileTobeMovedTo.CurrentGameObject == this.gameObject)) {
                 TypeOfPerformingAction[PlayerActions.Move] = true;
                 Vector3 dest = TileTobeMovedTo.Position;
                 Animator animCtrl = this.gameObject.GetComponent<Animator>();
@@ -119,7 +131,16 @@ public class EnemyData : MonoBehaviour {
                 IsPerformingAction = true;
                 CurrentTile.CurrentGameObject = null;
                 TileTobeMovedTo.CurrentGameObject = this.gameObject;
-            } else if (CurrentTile.IsAdjacent(Player.GetComponent<PlayerData>().CurrentTile)) {
+            } else if (CurrentTile.IsAdjacent(realDestination)) {
+                if ((realDestination.CurrentGameObject != null && realDestination.CurrentGameObject.GetComponent<EnemyData>() == null
+                        || realDestination.Structure.Value != null)) {
+                    Debug.Log(realDestination.Structure.Value);
+                    if (realDestination.Structure.Value != null) {
+                        AttackTarget = realDestination.Structure.Value;
+                    } else {
+                        AttackTarget = realDestination.CurrentGameObject;
+                    }
+                }
                 TypeOfPerformingAction[PlayerActions.Attack] = true;
                 IsPerformingAction = true;
                 Player.GetComponent<PlayerData>().DiscoverTiles();
@@ -221,8 +242,15 @@ public class EnemyData : MonoBehaviour {
     private void Attack() {
         if (TypeOfPerformingAction[PlayerActions.Attack]) {
             if (IsAttackOnCooldown == false) {
-                AttackSound.Play();
-                Player.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
+                if (this.GetComponent<SpriteRenderer>().color.a == 255) {
+                    AttackSound.Play();
+                }
+                if (AttackTarget.GetComponent<PlayerData>() != null) {
+                    AttackTarget.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
+                } else if (AttackTarget.GetComponent<StructureData>() != null) {
+                    Debug.Log("HELLO????");
+                    AttackTarget.GetComponent<StructureData>().DamageStructure(AttackDamage);
+                }
                 Animator animCtrl = this.gameObject.GetComponent<Animator>();
                 if (direction == 1) {
                     animCtrl.SetTrigger("GoRight");

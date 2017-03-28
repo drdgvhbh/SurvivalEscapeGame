@@ -28,6 +28,35 @@ public class TerrainData : MonoBehaviour {
         return idx;
     }
 
+    private static Dictionary<int, TileType> InverseTileType = new Dictionary<int, TileType>() {
+        { 0, TileType.Grass },
+        { 1, TileType.Sand },
+        { 2, TileType.Mountain},
+        { 3, TileType.Water},
+        { 4, TileType.Vine}
+    };
+
+    public static Dictionary<TileType, List<Item[]>> ItemLocations = new Dictionary<TileType, List<Item[]>>() {
+        { TileType.Grass, new List<Item[]>() {
+                {new Stick[0]},
+                {new Stone[0]},
+                {new Wood[0]},
+                {new Berry[0]}
+            }
+        },
+        { TileType.Sand, new List<Item[]>() {
+                {new Gem[0]},
+                {new Stick[0]},
+                {new Stone[0]},
+                {new Coconut[0]},
+                {new Charcoal[0]}
+            }
+        },
+        { TileType.Mountain, new List<Item[]>()},
+        { TileType.Water, new List<Item[]>()},
+        { TileType.Vine, new List<Item[]>()}
+    };
+
     private static Vector3 GetPositionFromIndex(int tileIdx, Grid Grid) {
         int currentRow = tileIdx / Grid.NumColumns;
         int currentColumn = tileIdx % Grid.NumRows;
@@ -172,6 +201,21 @@ public class TerrainData : MonoBehaviour {
         for (int i = 0; i < Tiles.Length; i++) {
             Tiles[i].CalculateAutoTileID();
             Tiles[i].SetWalkableNeighbours();
+            var thisTextNode = TerrainNode["DropChances"][Tiles[i].Id.ToString()];
+            for (int j = 0; j < ItemLocations[InverseTileType[Tiles[i].Id]].Count; j++) {
+                var itemName = ItemLocations[InverseTileType[Tiles[i].Id]][j].GetType().GetElementType();
+                float rand = Random.Range(0.0f, 100.0f);
+                if (rand <= thisTextNode[itemName.ToString()]) {
+                    var obj = (Item)System.Activator.CreateInstance(
+                         itemName,
+                         Item.IdCounter++,
+                         Random.Range(0, Tiles[i].TileDepth),
+                         false,
+                         1);
+                    Tiles[i].AddItem(obj);
+                }
+            }
+            
         }
 
     }
@@ -194,6 +238,7 @@ public class TerrainData : MonoBehaviour {
         TerrainColors.Add((int)Tile.TileType.Sand, GetColorsFromTexture2D(this.TileTextures[(int)Tile.TileType.Sand], this.TileResolution));
         TerrainColors.Add((int)Tile.TileType.Mountain, GetColorsFromTexture2D(this.TileTextures[(int)Tile.TileType.Mountain], this.TileResolution));
         TerrainColors.Add((int)Tile.TileType.Water, GetColorsFromTexture2D(this.TileTextures[(int)Tile.TileType.Water], this.TileResolution));
+        TerrainColors.Add((int)Tile.TileType.Vine, GetColorsFromTexture2D(this.TileTextures[(int)Tile.TileType.Vine], this.TileResolution));
     }
 
     public void UpdateTileView() {

@@ -13,6 +13,7 @@ public class Coconut : Food {
         this.ChannelDuration = thisTextNode["ChannelDuration"];
         this.Consumable = thisTextNode["Consumable"];
         this.NourishmentReplenishment = thisTextNode["NourishmentReplenishment"];
+        //Debug.Log(this.NourishmentReplenishment);
     }
 
     public Coconut(int id, bool active) : this(id, 0, active, 1) {

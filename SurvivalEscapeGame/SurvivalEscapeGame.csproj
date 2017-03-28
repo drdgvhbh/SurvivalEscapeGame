@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -99,7 +105,6 @@
     <Compile Include="Assets\Scripts\Global.cs" />
     <Compile Include="Assets\Scripts\Model\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Model\GameTimer.cs" />
-    <Compile Include="Assets\Scripts\Model\GranaryData.cs" />
     <Compile Include="Assets\Scripts\Model\Grid.cs" />
     <Compile Include="Assets\Scripts\Model\ItemDatabase.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
@@ -112,20 +117,25 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Spear.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\Wall.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Berry.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Cocoberry.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Coconut.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Item.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\Charcoal.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Fabric.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Gem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Stick.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Stone.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Wood.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Torch.cs" />
     <Compile Include="Assets\Scripts\Model\Model.cs" />
     <Compile Include="Assets\Scripts\Model\NourishmentLevels.cs" />
     <Compile Include="Assets\Scripts\Model\PathNode.cs" />
     <Compile Include="Assets\Scripts\Model\PlayerData.cs" />
-    <Compile Include="Assets\Scripts\Model\StructureData.cs" />
+    <Compile Include="Assets\Scripts\Model\StructureData\GranaryData.cs" />
+    <Compile Include="Assets\Scripts\Model\StructureData\StructureData.cs" />
+    <Compile Include="Assets\Scripts\Model\StructureData\TentData.cs" />
     <Compile Include="Assets\Scripts\Model\TerrainData.cs" />
     <Compile Include="Assets\Scripts\Model\Tile.cs" />
     <Compile Include="Assets\Scripts\View\GraphicIgnoreRaycast.cs" />
