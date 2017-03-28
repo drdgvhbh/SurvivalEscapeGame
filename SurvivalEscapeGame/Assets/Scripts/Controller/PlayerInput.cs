@@ -44,7 +44,8 @@ public class PlayerInput : MonoBehaviour {
         MoveUp,
         MoveDown,
         IdleLeft,
-        IdleRight         
+        IdleRight,
+        DigRight        
     };
 
     private static Dictionary<PlayerAnimationActions, string> AnimationActions = new Dictionary<PlayerAnimationActions, string>() {
@@ -53,7 +54,8 @@ public class PlayerInput : MonoBehaviour {
         {PlayerAnimationActions.MoveUp, "MoveUp" },
         {PlayerAnimationActions.MoveDown, "MoveDown" },
         {PlayerAnimationActions.IdleLeft, "IdleLeft" },
-        {PlayerAnimationActions.IdleRight, "IdleRight" }
+        {PlayerAnimationActions.IdleRight, "IdleRight" },
+        {PlayerAnimationActions.DigRight, "DigRight" }
     };
 
 
@@ -324,6 +326,12 @@ public class PlayerInput : MonoBehaviour {
             ChannelingBarMask.SetActive(true);
             DigSound.Play();
             Digging();
+            Animator animCtrl = this.gameObject.GetComponent<Animator>();
+            foreach (KeyValuePair<PlayerAnimationActions, string> e in AnimationActions) {
+                animCtrl.ResetTrigger(e.Value);
+            }
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+            animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.DigRight]);
         }
     }
 
