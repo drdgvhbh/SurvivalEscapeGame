@@ -82,8 +82,9 @@ public class EnemyData : MonoBehaviour {
             return;
         }
         if (!IsPerformingAction && Player != null) {
-            int shortestDistance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
             DestinationTile = Player.GetComponent<PlayerData>().CurrentTile;
+            int shortestDistance = PathNode.GetDistanceToNode(CurrentTile, DestinationTile, GameGrid);
+           
 
             foreach (GameObject go in Player.GetComponent<PlayerData>().AllStructures) {
                 int distance = PathNode.GetDistanceToNode(CurrentTile, go.GetComponent<StructureData>().CurrentTile, GameGrid);
@@ -92,8 +93,7 @@ public class EnemyData : MonoBehaviour {
                     DestinationTile = go.GetComponent<StructureData>().CurrentTile;
                 }
             }
-            Tile realDestination = DestinationTile;
-          //  Debug.Log(distance);            
+            Tile realDestination = DestinationTile;    
             if (shortestDistance > 4) {
                 /*Debug.Log(CurrentTile.WalkableNeighbours.Count + ", " + CurrentTile.Neighbours.Count);
                 foreach (KeyValuePair<Tile.Sides, Tile> t in CurrentTile.Neighbours) {
