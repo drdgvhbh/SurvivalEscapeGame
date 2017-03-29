@@ -206,10 +206,12 @@ public class PlayerData : MonoBehaviour {
     public void UpdateStamina() {
         this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
         if (CurrentTile.Structure.Key == ItemList.Tent) {
-            this.StaminaRegeneration += 5.0f * Time.deltaTime;
+            this.StaminaRegeneration += 5.0f;
+            Debug.Log(this.StaminaRegeneration);
+            this.StaminaRegeneration *= Time.deltaTime;
         }
         if (this.Stamina < this.MaximumStamina) {
-            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration * Time.deltaTime);
+            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);
         }
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
         StaminaText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Stamina) + " / " + MaximumStamina;
