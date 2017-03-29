@@ -183,9 +183,13 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new SilverOre(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new SilverOre(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+
+
     }
 
     // Update is called once per frame
