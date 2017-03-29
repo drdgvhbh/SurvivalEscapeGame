@@ -88,6 +88,12 @@ public class PlayerData : MonoBehaviour {
     public List<GameObject> FOWStructures;
     public HashSet<GameObject> AllStructures;
 
+    [SerializeField]
+    protected Sprite Death;
+
+    [SerializeField]
+    public AnimatorOverrideController SpearCtrl;
+
     private Dictionary<string, Item> Inventory;
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
     public static List<GameObject> Slots = new List<GameObject>();
@@ -157,7 +163,9 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.BuildTent, false },
             {PlayerActions.Attack, false },
             {PlayerActions.Eat, false },
-            {PlayerActions.BuildGranary, false }
+            {PlayerActions.BuildGranary, false },
+            {PlayerActions.BuildWall, false },
+            {PlayerActions.UseSpear, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
@@ -171,12 +179,13 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new Shovel(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Stick(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Stick(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Charcoal(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-
-        this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new SilverOre(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new SilverOre(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -196,7 +205,7 @@ public class PlayerData : MonoBehaviour {
             this.StaminaRegeneration += 5.0f * Time.deltaTime;
         }
         if (this.Stamina < this.MaximumStamina) {
-            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);
+            this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration * Time.deltaTime);
         }
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
         StaminaText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Stamina) + " / " + MaximumStamina;
@@ -205,7 +214,7 @@ public class PlayerData : MonoBehaviour {
 
     public void UpdateHealth() {
         if (this.Health < MaximumHealth) {
-            this.Health = System.Math.Min(MaximumHealth, this.Health + this.HealthRegeneration);
+            this.Health = System.Math.Min(MaximumHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
         }
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
         HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth;
@@ -213,7 +222,7 @@ public class PlayerData : MonoBehaviour {
 
     public void ApplyNourishmentDecay() {
         if (this.NourishmentStatus > 0) {
-            this.NourishmentStatus = this.NourishmentStatus - this.NourishmentDecayRate;
+            this.NourishmentStatus = this.NourishmentStatus - (this.NourishmentDecayRate * Time.deltaTime);
         } else if (this.NourishmentLevel == -2) {
             this.NourishmentStatus = 0;
         }
@@ -232,21 +241,51 @@ public class PlayerData : MonoBehaviour {
             this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] - this.NourishmentStatus;
         }
         this.NourishmentBar.GetComponent<Image>().fillAmount = this.NourishmentStatus / NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
-        NourishmentTextStatus.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(NourishmentStatus) + " / " + NourishmentLevels.NourishmentThreshold[this.NourishmentLevel];
+        NourishmentTextStatus.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(NourishmentStatus) + " / " + NourishmentLevels.NourishmentThreshold[this.NourishmentLevel].ToString("F2");
     }
 
     public void DamagePlayer(float damage) {
         float oldHealth = Health;
         this.Health = this.Health - damage;
         GUIText.GetComponent<Text>().text = "You took " + damage + " damage! Health: " + oldHealth.ToString("F2") + "->" + Health.ToString("F2");
-        if (this.Health <= 0) {
+        Animator animCtrl = this.gameObject.GetComponent<Animator>();
+        try {
+            foreach (KeyValuePair<PlayerInput.PlayerAnimationActions, string> e in PlayerInput.AnimationActions) {
+                animCtrl.ResetTrigger(e.Value);
+            }
+            if (this.GetComponent<PlayerInput>().Direction != Tile.Sides.Left && this.GetComponent<PlayerInput>().Direction != Tile.Sides.Top) {
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.IdleRight]);
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.DamagedRight]);
+            } else if (this.GetComponent<PlayerInput>().Direction == Tile.Sides.Top) {
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.MoveRight]);
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.IdleRight]);
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.DamagedRight]);
+                this.GetComponent<PlayerInput>().Direction = Tile.Sides.Right;
+            } else {
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.IdleLeft]);
+                animCtrl.SetTrigger(PlayerInput.AnimationActions[PlayerInput.PlayerAnimationActions.DamagedLeft]);
+            }
+        }
+        catch (MissingComponentException e) {
+            Debug.Log("Player should be dead because there is no animator");
+        }
+        if (this.Health <= 0 && Alive == true) {
             Transform camera = this.gameObject.transform.GetChild(0);
             camera.SetParent(this.gameObject.transform.parent.gameObject.transform);
             UpdateHealth();
-            Destroy(this.gameObject);
             this.Alive = false;
+            Destroy(animCtrl);
+            GetComponent<SpriteRenderer>().sprite = Death;
+            GetComponent<PlayerInput>().enabled = false;
+            StartCoroutine(Killme(5.0f));
             GUIText.GetComponent<Text>().text = "You are dead!!!";
+    
         }
+    }
+
+    private IEnumerator Killme(float waitTime) {
+        yield return new WaitForSecondsRealtime(waitTime);
+        Destroy(this.gameObject);
     }
 
 

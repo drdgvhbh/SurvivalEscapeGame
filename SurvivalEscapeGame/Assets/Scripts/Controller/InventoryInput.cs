@@ -6,6 +6,11 @@ public class InventoryInput : MonoBehaviour, IPointerDownHandler {
     private GameObject InventoryPanel;
 
     public void OnPointerDown(PointerEventData eventData) {
+        if (!InventoryPanel.activeSelf) {
+            Time.timeScale = 0.0f;
+        } else {
+            Time.timeScale = 1.0f;
+        }
         InventoryPanel.SetActive(!InventoryPanel.activeSelf);
     }
 

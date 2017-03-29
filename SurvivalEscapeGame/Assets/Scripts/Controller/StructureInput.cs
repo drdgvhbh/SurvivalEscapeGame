@@ -53,6 +53,11 @@ public class StructureInput : MonoBehaviour, IPointerDownHandler {
         GameObject structure = Pd.CurrentTile.Structure.Value;
         if (Pd.CurrentTile.Structure.Value == null)
             return;
+        if (!StructurePanel.activeSelf) {
+            Time.timeScale = 0.0f;
+        } else {
+            Time.timeScale = 1.0f;
+        }
         Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().ItemContainer = new List<GameObject>();
         List<GameObject> itemContainer = Pd.CurrentTile.Structure.Value.GetComponent<StructureData>().ItemContainer;
         for (int i = 0; i < itemContainer.Count; i++) {

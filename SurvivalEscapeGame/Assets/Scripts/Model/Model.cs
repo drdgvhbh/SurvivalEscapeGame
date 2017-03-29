@@ -34,11 +34,11 @@ public class Model : MonoBehaviour {
 
     private IEnumerator UpgradeEnemies(float waitTime) {
         while (true) {
-            //CreateEnemy(Random.Range(0, Mb.NumTiles));
-            //CreateEnemy(Random.Range(0, Mb.NumTiles));
-            //EnemyData.AttackDamage += 3;
-            //EnemyData.MovementSpeed += 0.11f;
-            //EnemyData.MaxHealth += 5;
+            CreateEnemy(Random.Range(0, Mb.NumTiles));
+            CreateEnemy(Random.Range(0, Mb.NumTiles));
+            EnemyData.AttackDamage += 3;
+            EnemyData.MovementSpeed += 0.11f;
+            EnemyData.MaxHealth += 5;
             yield return new WaitForSeconds(waitTime);
         }
     }
@@ -59,7 +59,11 @@ public class Model : MonoBehaviour {
         new Cocoberry(-1, false);
         new Tent(-1, false);
         new Torch(-1, false);
-        //new Spear(-1, false);
+        new Pickaxe(-1, false);
+        new Wall(-1, false);
+        new Spear(-1, false);
+        new Granary(-1, false);
+       
         Coroutine = UpgradeEnemies(15.0f);
         StartCoroutine(Coroutine);
         Time.timeScale = 0;

@@ -8,8 +8,8 @@ public class Wall : BuildingItem {
     };
 
     public Wall(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
-        prefab = Resources.Load("Prefabs/Granary");
-        var thisTextNode = ItemDatabase.JsonNode["Items"]["Granary"];
+        prefab = Resources.Load("Prefabs/Wall");
+        var thisTextNode = ItemDatabase.JsonNode["Items"]["Wall"];
         this.Name = thisTextNode["Name"];
         this.MaximumQuantity = thisTextNode["MaximumQuantity"];
         this.Slot = -1;
@@ -38,6 +38,6 @@ public class Wall : BuildingItem {
     }
 
     public Wall(Wall t) : base(t) {
-        prefab = Resources.Load("Prefabs/Granary");
+        prefab = Resources.Load("Prefabs/Wall");
     }
 }

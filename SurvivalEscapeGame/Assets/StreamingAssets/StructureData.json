@@ -32,6 +32,27 @@
 					"LockedSlots" : 7 
 				}
 			}
+		},
+		"Wall" : {
+			"Name" : "Wall",
+			"Levels" : 
+			{
+				"1" : 
+				{
+					"Health" : 75,
+					"LockedSlots" : 8 
+				},
+				"2" : 
+				{
+					"Health" : 100,
+					"LockedSlots" : 8 
+				},
+				"3" : 
+				{
+					"Health" : 125,
+					"LockedSlots" : 8 
+				}
+			}
 		}
 	}
 }

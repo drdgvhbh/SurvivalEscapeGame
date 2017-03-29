@@ -31,31 +31,39 @@ public class PlayerInput : MonoBehaviour {
 
     private AudioSource Nourish;
 
-    private Tile.Sides Direction;
+    public Tile.Sides Direction;
 
     private Tile DestinationTile;
 
     public Dictionary<string, Action> Actions = new Dictionary<string, Action>() {
     };
 
-    protected enum PlayerAnimationActions {
+    public enum PlayerAnimationActions {
         MoveRight,
         MoveLeft,
         MoveUp,
         MoveDown,
         IdleLeft,
         IdleRight,
-        DigRight        
+        DigRight,
+        AttackRight,
+        AttackLeft,
+        DamagedRight,
+        DamagedLeft,
     };
 
-    private static Dictionary<PlayerAnimationActions, string> AnimationActions = new Dictionary<PlayerAnimationActions, string>() {
+    public static Dictionary<PlayerAnimationActions, string> AnimationActions = new Dictionary<PlayerAnimationActions, string>() {
         {PlayerAnimationActions.MoveRight, "MoveRight" },
         {PlayerAnimationActions.MoveLeft, "MoveLeft" },
         {PlayerAnimationActions.MoveUp, "MoveUp" },
         {PlayerAnimationActions.MoveDown, "MoveDown" },
         {PlayerAnimationActions.IdleLeft, "IdleLeft" },
         {PlayerAnimationActions.IdleRight, "IdleRight" },
-        {PlayerAnimationActions.DigRight, "DigRight" }
+        {PlayerAnimationActions.DigRight, "DigRight" },
+        {PlayerAnimationActions.AttackRight, "AttackRight" },
+        {PlayerAnimationActions.AttackLeft, "AttackLeft" },
+        {PlayerAnimationActions.DamagedRight, "DamagedRight" },
+        {PlayerAnimationActions.DamagedLeft, "DamagedLeft" },
     };
 
 
@@ -68,6 +76,8 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
         Actions.Add(Global.ItemNames[ItemList.Cocoberry], EatCocoberry);
         Actions.Add(Global.ItemNames[ItemList.Granary], BuildGranary);
+        Actions.Add(Global.ItemNames[ItemList.Wall], BuildWall);
+        Actions.Add(Global.ItemNames[ItemList.Spear], UseSpear);
     }
 
     private void Start() {
@@ -92,6 +102,8 @@ public class PlayerInput : MonoBehaviour {
         EatingCoconut();
         EatingBerry();
         EatingCocoberry();
+        BuildingWall();
+        UsingSpear();
         if (Input.GetMouseButtonDown(1)) {
             Attack();
         }
@@ -195,41 +207,54 @@ public class PlayerInput : MonoBehaviour {
             GUItext.text = "Cannot attack while performing another action!";
             return;
         }
-        AttackSound.Play();
-        GetPlayerData().IsAttackOnCooldown = true;
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100.0f)) {
             Animator animCtrl = this.gameObject.GetComponent<Animator>();
-            Vector2 diff = ray.origin - GetPlayerData().position;
-            if (!GetPlayerData().IsWeaponEquipped) {
-                if (diff.x > 0) {
-                    animCtrl.ResetTrigger("MoveRight");
-                    animCtrl.SetTrigger("MoveRight");
-                    animCtrl.SetTrigger("AttackNoWeaponRight");
-                } else {
-                    animCtrl.ResetTrigger("MoveLeft");
-                    animCtrl.SetTrigger("MoveLeft");
-                    animCtrl.SetTrigger("AttackNoWeaponLeft");
-                }
+            Vector2 diff = ray.origin - GetPlayerData().gameObject.transform.position;
+            foreach (KeyValuePair<PlayerAnimationActions, string> e in AnimationActions) {
+                animCtrl.ResetTrigger(e.Value);
             }
-            GetPlayerData().Stamina -= GetPlayerData().AttackStaminaCost;
             Dictionary<Tile.Sides, Tile> neigh = GetPlayerData().CurrentTile.Neighbours;
+            bool exec = false;
             if (Math.Abs(diff.x) > Math.Abs(diff.y)) {
                 if (diff.x > 0 && neigh.ContainsKey(Tile.Sides.Right) && neigh[Tile.Sides.Right].CurrentGameObject != null) {
+                    if (this.GetComponent<PlayerInput>().Direction == Tile.Sides.Top) {
+                        animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveRight]);
+                    }
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.AttackRight]);
                     neigh[Tile.Sides.Right].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+                    this.GetComponent<PlayerInput>().Direction = Tile.Sides.Right;
+                    exec = true;
 
                 } else if (diff.x < 0 && neigh.ContainsKey(Tile.Sides.Left) && neigh[Tile.Sides.Left].CurrentGameObject != null) {
+                    if (this.GetComponent<PlayerInput>().Direction == Tile.Sides.Top) {
+                        animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveRight]);
+                    }
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleLeft]);
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.AttackLeft]);
                     neigh[Tile.Sides.Left].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
-
+                    this.GetComponent<PlayerInput>().Direction = Tile.Sides.Left;
+                    exec = true;
                 }
             } else {
                 if (diff.y > 0 && neigh.ContainsKey(Tile.Sides.Top) && neigh[Tile.Sides.Top].CurrentGameObject != null) {
                     neigh[Tile.Sides.Top].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
-
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveUp]);
+                    exec = true;
                 } else if (diff.y < 0 && neigh.ContainsKey(Tile.Sides.Bottom) && neigh[Tile.Sides.Bottom].CurrentGameObject != null) {
                     neigh[Tile.Sides.Bottom].CurrentGameObject.GetComponent<EnemyData>().DamageEnemy(GetPlayerData().Damage);
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
+                    animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveDown]);
+                    exec = true;
                 }
+            }
+            if (exec) {
+                AttackSound.Play();
+                GetPlayerData().Stamina -= GetPlayerData().AttackStaminaCost;
+                GetPlayerData().IsAttackOnCooldown = true;
             }
 
         }
@@ -290,6 +315,30 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
+    protected void UseSpear() {
+        if (AItemFcns(PlayerActions.UseSpear, ItemList.Spear)) {
+            GUItext.text = "Equipping Spear.";
+            Debug.Log("Equipping spear");
+            ChannelingBarMask.SetActive(true);
+            UsingSpear();
+        }
+    }
+
+    protected void UsingSpear() {
+        if (Channeling(ItemList.Spear, PlayerActions.UseSpear) == PlayerActions.UseSpear) {
+            PlayerData pd = GetComponent<PlayerData>();
+            Spear ai = (Spear)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Spear]]);
+            GUItext.text = "Damage increased from (" + pd.Damage +") -> (" + (float)(pd.Damage + ai.Damage) + ")";
+            pd.Damage += ai.Damage;
+            pd.RemoveItem(ai, 1, pd.GetInventory());
+            Debug.Log("Damage increased from (" + pd.Damage + ") -> (" + (float)(pd.Damage + ai.Damage) + ")");
+            pd.IsWeaponEquipped = true;
+            if (!pd.IsShieldEquipped) {
+                GetComponent<Animator>().runtimeAnimatorController = pd.SpearCtrl;
+            }
+        }
+    }
+
     protected void BuildingTent() {
         if (Channeling(ItemList.Tent, PlayerActions.BuildTent) == PlayerActions.BuildTent) {
             Tent ai = (Tent)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Tent]]);
@@ -311,6 +360,22 @@ public class PlayerInput : MonoBehaviour {
         if (Channeling(ItemList.Granary, PlayerActions.BuildGranary) == PlayerActions.BuildGranary) {
             Granary ai = (Granary)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Granary]]);
             ai.BuildStructure(ItemList.Granary, this.GetPlayerData());
+        }
+    }
+
+    public void BuildWall() {
+        if (AItemFcns(PlayerActions.BuildWall, ItemList.Wall)) {
+            GUItext.text = "Building Wall.";
+            Debug.Log("Building Wall");
+            ChannelingBarMask.SetActive(true);
+            BuildingWall();
+        }
+    }
+
+    protected void BuildingWall() {
+        if (Channeling(ItemList.Wall, PlayerActions.BuildWall) == PlayerActions.BuildWall) {
+            Wall ai = (Wall)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Wall]]);
+            ai.BuildStructure(ItemList.Wall, this.GetPlayerData());
         }
     }
 

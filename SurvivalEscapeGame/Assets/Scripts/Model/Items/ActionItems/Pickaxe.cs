@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class Pickaxe : DiggingItem {
     public static List<KeyValuePair<string, int>> CraftingComponents = new List<KeyValuePair<string, int>>() {
-        { new KeyValuePair<string, int>(Global.ItemNames[ItemList.Wood], 1) },
-        { new KeyValuePair<string, int>(Global.ItemNames[ItemList.Stone], 1) },
     };
 
     public Pickaxe(int id, int depthLevel, bool active) : base(id, depthLevel, active) {
-        this.Name = Global.ItemNames[ItemList.Pickaxe];
-        this.MaximumQuantity = 1;
+        var thisTextNode = ItemDatabase.JsonNode["Items"]["Pickaxe"];
+        this.Name = thisTextNode["Name"];
+        this.MaximumQuantity = thisTextNode["MaximumQuantity"];
         this.Slot = -1;
-        this.Icon = Resources.LoadAll<Sprite>("Sprites/Items/farmTools")[11];
-        this.StaminaCost = 20.0f;
-        this.ChannelDuration = 2.5f;
-        this.Consumable = false;
+        this.Icon = Resources.LoadAll<Sprite>(thisTextNode["Icon"])[thisTextNode["IconIndex"]];
+        this.StaminaCost = thisTextNode["StaminaCost"];
+        this.ChannelDuration = thisTextNode["ChannelDuration"];
+        this.Consumable = thisTextNode["Consumable"];
+        for (int i = 0; i < thisTextNode["Components"].Count; i++) {
+            Pickaxe.CraftingComponents.Add(new KeyValuePair<string, int>(
+                thisTextNode["Components"][i]["Type"],
+                thisTextNode["Components"][i]["Quantity"])
+                );
+        }
     }
 
     public Pickaxe(int id, bool active) : this(id, 0, active) {

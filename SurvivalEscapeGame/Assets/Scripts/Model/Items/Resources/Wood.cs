@@ -14,6 +14,9 @@ public class Wood : Item {
     public Wood(int id, int depthLevel, bool active) : this(id, depthLevel, active, 1) {
     }
 
+    public Wood(int id, bool active) : this(id, 0, active) {
+    }
+
     public Wood(Wood g) : base(g) {
 
     }

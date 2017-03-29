@@ -13,6 +13,9 @@ public class Stone : Item {
     public Stone(int id, int depthLevel, bool active) : this(id, depthLevel, active, 1) {
     }
 
+    public Stone(int id, bool active) : this(id, 0, active) {
+    }
+
     public Stone(Stone g) : base(g) {
 
     }

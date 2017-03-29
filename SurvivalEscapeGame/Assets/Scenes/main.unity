@@ -365,7 +365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2176,7 +2176,6 @@ GameObject:
   - component: {fileID: 628918488}
   - component: {fileID: 628918487}
   - component: {fileID: 628918486}
-  - component: {fileID: 628918485}
   m_Layer: 5
   m_Name: Exit
   m_TagString: Untagged
@@ -2203,18 +2202,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000016086, y: 20.8}
   m_SizeDelta: {x: 8.6, y: 3.24}
   m_Pivot: {x: 0.4999994, y: 0.5000001}
---- !u!114 &628918485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 628918483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf72d7a1f9fa8e2458af57b01a97eaad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 1207717908}
 --- !u!114 &628918486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7583,6 +7570,8 @@ MonoBehaviour:
   StaminaText: {fileID: 1571168218}
   NourishmentTextStatus: {fileID: 1788104911}
   FOWStructures: []
+  Death: {fileID: 21300022, guid: 762a311b6ae20984f94fe5c26d2d9aec, type: 3}
+  SpearCtrl: {fileID: 22100000, guid: 32a26e4130eb2184981707555ecd8236, type: 2}
   GameGrid: {fileID: 1046546126}
 --- !u!114 &1899472616
 MonoBehaviour:
@@ -7603,6 +7592,7 @@ MonoBehaviour:
   GUItext: {fileID: 0}
   ErrorSound: {fileID: 0}
   ItemPickup: {fileID: 0}
+  Direction: 0
 --- !u!212 &1899472617
 SpriteRenderer:
   m_ObjectHideFlags: 0

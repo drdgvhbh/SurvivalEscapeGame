@@ -25,7 +25,9 @@ public enum PlayerActions {
 	BuildTent,
     Attack,
     Eat,
-    BuildGranary
+    BuildGranary,
+    BuildWall,
+    UseSpear
 }
 
 public enum ItemList {
@@ -45,7 +47,9 @@ public enum ItemList {
     Cocoberry,
     Granary,
     Charcoal,
-    Torch
+    Torch,
+    Wall,
+    SilverOre
 }
 
 public static class Global {
@@ -72,7 +76,9 @@ public static class Global {
         {ItemList.Cocoberry, "Cocoberry" },
         {ItemList.Granary, "Granary" },
         {ItemList.Charcoal, "Charcoal" },
-        {ItemList.Torch, "Torch" }
+        {ItemList.Torch, "Torch" },
+        {ItemList.Wall, "Wall" },
+        {ItemList.SilverOre, "SilverOre" }
     };
 
 

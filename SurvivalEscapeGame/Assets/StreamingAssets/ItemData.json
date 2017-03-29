@@ -113,7 +113,7 @@
 		{
 			"Name" : "Tent",
 			"Description" : "A consumable structure than can be placed on the ground. When the player is on the same tile as the tent, the player will regenerate stamina based on the player's nourishment level.",
-			"MaximumQuantity" : 1,
+			"MaximumQuantity" : 5,
 			"Icon" : "Sprites/Items/Tent",
 			"IconIndex" : 0,
 			"StaminaCost" : 10.0,
@@ -175,17 +175,33 @@
 			"Components" : ,
 			"Damage" : 0 
 		}
+,
+		"SilverOre" : 
+		{
+			"Name" : "SilverOre",
+			"Description" : "A silver ore",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/SilverOre",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0,
+			"Consumable" : false,
+			"Locations" : ["Mountain"],
+			"UsableIn" :,
+			"Components" : ,
+			"Damage" : 0 
+		}
 ,	
 		"Spear" : 
 		{
 			"Name" : "Spear",
 			"Description" : "An excellent weapon for striking fear into the hearts of your enemies.",
-			"MaximumQuantity" : 1,
+			"MaximumQuantity" : 5,
 			"Icon" : "Sprites/Items/spear",
 			"IconIndex" : 0,
 			"StaminaCost" : 15.0,
 			"ChannelDuration" : 0.5,
-			"Consumable" : false,
+			"Consumable" : true,
 			"Locations" :,
 			"UsableIn" : ,
 			"Components" :
@@ -197,7 +213,7 @@
 				},
 				"1" :
 				{ 
-					"Type" :"Silver Ore",
+					"Type" :"SilverOre",
 					"Quantity" : 1
 				},
 			},
@@ -226,7 +242,7 @@
 			"Name" : "Fabric",
 			"Description" : "The silk of the land",
 			"MaximumQuantity" : 8,
-			"Icon" : "Sprites/Items/armor",
+			"Icon" : "Sprites/Items/fabric",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
 			"ChannelDuration" : 0,
@@ -360,6 +376,35 @@
 			"Locations" : ["Sand"],
 			"UsableIn" : ,
 			"Components" : ,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
+		}
+,	
+		"Wall" : 
+		{
+			"Name" : "Wall",
+			"Description" : "Good for obstructing enemies",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/temple_walls",
+			"IconIndex" : 0,
+			"StaminaCost" : 5.0,
+			"ChannelDuration" : 0.75,
+			"Consumable" : true,
+			"Locations" : ,
+			"UsableIn" : ,
+			"Components" :
+			{
+				"0" :
+				{ 
+					"Type" : "Wood",
+					"Quantity" : 2
+				},
+				"1" :
+				{ 
+					"Type" : "Stone",
+					"Quantity" : 1
+				}
+			},
 			"Damage" : 0, 
 			"NourishmentReplenishment" : 0
 		}

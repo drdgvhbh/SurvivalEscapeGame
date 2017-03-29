@@ -11,6 +11,8 @@ public class ButtonObjectOff : MonoBehaviour, IPointerDownHandler {
         button.SetActive(false);
         if (button.gameObject.name == "Help") {
             Time.timeScale = 1.0f;
+        } else if (button.gameObject.name == "StructurePanel") {
+            Time.timeScale = 1.0f;
         }
     }
 

@@ -134,7 +134,6 @@ public class EnemyData : MonoBehaviour {
             } else if (CurrentTile.IsAdjacent(realDestination)) {
                 if ((realDestination.CurrentGameObject != null && realDestination.CurrentGameObject.GetComponent<EnemyData>() == null
                         || realDestination.Structure.Value != null)) {
-                    Debug.Log(realDestination.Structure.Value);
                     if (realDestination.Structure.Value != null) {
                         AttackTarget = realDestination.Structure.Value;
                     } else {
