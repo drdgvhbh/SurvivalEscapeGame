@@ -3266,6 +3266,8 @@ MonoBehaviour:
   Player1: {fileID: 1899472606}
   TileResolution: 32
   GameGridObj: {fileID: 1046546126}
+  InventoryPanel: {fileID: 1207717908}
+  StructurePanel: {fileID: 1066250929}
 --- !u!1 &970586807
 GameObject:
   m_ObjectHideFlags: 0

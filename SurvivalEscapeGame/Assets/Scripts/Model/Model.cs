@@ -29,6 +29,13 @@ public class Model : MonoBehaviour {
     private GameObject GameGridObj;
     private Grid Mb;
 
+    [SerializeField]
+    private GameObject InventoryPanel;
+    [SerializeField]
+    private GameObject StructurePanel;
+
+    private bool init;
+
 
     private IEnumerator Coroutine;
 
@@ -44,7 +51,19 @@ public class Model : MonoBehaviour {
     }
 
     private void Awake() {
+        init = false;
+    }
 
+    protected void Update() {
+        if (init) {
+            if (Player1.GetComponent<PlayerData>().Alive && (InventoryPanel.activeSelf || StructurePanel.activeSelf)) {
+                Time.timeScale = 0;
+            } else if ((Player1.GetComponent<PlayerData>().Alive && !(InventoryPanel.activeSelf || StructurePanel.activeSelf))) {
+                Time.timeScale = 1.0f;
+            } else {
+                Time.timeScale = 0;
+            }
+        }
     }
     private void Start() {
         CreateActivePanel(NumberOfActiveSlots);
@@ -68,6 +87,7 @@ public class Model : MonoBehaviour {
         StartCoroutine(Coroutine);
         Time.timeScale = 0;
         Player1.GetComponent<PlayerData>().DiscoverTiles();
+        init = true;
     }
 
     private void CreateEnemy(int idx) {

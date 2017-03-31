@@ -64,10 +64,10 @@ public static class NourishmentLevels {
     };
 
     public static Dictionary<int, float> BaseStaminaRegeneration = new Dictionary<int, float>() {
-        { -2, (float)System.Math.Pow(SRegenerationN, -2) * VeryLowMultiplier },
-        { -1, (float)System.Math.Pow(SRegenerationN, -1) * VeryLowMultiplier },
-        { 0, (float)System.Math.Pow(SRegenerationN, 0) * VeryLowMultiplier },
-        { 1, (float)System.Math.Pow(SRegenerationN, 1) * VeryLowMultiplier },
-        { 2, (float)System.Math.Pow(SRegenerationN, 2) * VeryLowMultiplier }
+        { -2, (float)System.Math.Pow(SRegenerationN, -2)},
+        { -1, (float)System.Math.Pow(SRegenerationN, -1) },
+        { 0, (float)System.Math.Pow(SRegenerationN, 0) },
+        { 1, (float)System.Math.Pow(SRegenerationN, 1) },
+        { 2, (float)System.Math.Pow(SRegenerationN, 2) }
     };                               
 }
