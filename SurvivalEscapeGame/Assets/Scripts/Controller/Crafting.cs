@@ -17,7 +17,6 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
     }
 
     public static Dictionary<ItemList, Item[]> Types = new Dictionary<ItemList, Item[]>() {
-        {ItemList.Pickaxe, new Pickaxe[0] },
         {ItemList.Tent, new Tent[0] },
         {ItemList.Radar, new Radar[0] },
         {ItemList.Cocoberry, new Cocoberry[0] },
@@ -28,7 +27,6 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
-        {ItemList.Pickaxe, Pickaxe.CraftingComponents },
         {ItemList.Tent, Tent.CraftingComponents },
         {ItemList.Radar, Radar.CraftingComponents },
         {ItemList.Cocoberry, Cocoberry.CraftingComponents },
@@ -41,7 +39,7 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
     public void OnPointerDown(PointerEventData eventData) {
         if (Pd == null)
             Pd = Player.GetComponent<PlayerData>();
-        ItemList itemToBeCrafted = ItemList.Placeholder;        
+        ItemList itemToBeCrafted;        
         Dictionary<string, Item> CraftInventory = PlayerData.CraftingInventory;
         //List of Craftable Items
         foreach (KeyValuePair<ItemList, List<KeyValuePair<string, int>>> Craftable in CraftableItems) {

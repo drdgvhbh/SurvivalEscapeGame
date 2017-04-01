@@ -16,6 +16,10 @@ public class Cocoberry : Food {
         this.ChannelDuration = thisTextNode["ChannelDuration"];
         this.Consumable = thisTextNode["Consumable"];
         this.NourishmentReplenishment = thisTextNode["NourishmentReplenishment"];
+        this.HealthReplenishment = thisTextNode["HealthReplenishment"];
+        this.NourishmentReplenishment = thisTextNode["NourishmentReplenishment"];
+        this.StaminaReplenishment = thisTextNode["StaminaReplenishment"];
+        this.HealthReplenishment = thisTextNode["HealthReplenishment"];
         for (int i = 0; i < thisTextNode["Components"].Count; i++) {
             Cocoberry.CraftingComponents.Add(new KeyValuePair<string, int>(
                 thisTextNode["Components"][i]["Type"],

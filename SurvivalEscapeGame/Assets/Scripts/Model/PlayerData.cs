@@ -142,7 +142,6 @@ public class PlayerData : MonoBehaviour {
     public void LateStart() {
         this.NourishmentLevel = 0;
         this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
-        Debug.Log(MaximumHealth);
         this.Health = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
         this.Stamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
@@ -165,7 +164,8 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.Eat, false },
             {PlayerActions.BuildGranary, false },
             {PlayerActions.BuildWall, false },
-            {PlayerActions.UseSpear, false }
+            {PlayerActions.UseSpear, false },
+            {PlayerActions.UseRadar, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
@@ -188,8 +188,8 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-
-
+        this.AddItem(new SacredItem(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        this.AddItem(new Radar(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -206,14 +206,14 @@ public class PlayerData : MonoBehaviour {
     public void UpdateStamina() {
         this.StaminaRegeneration = NourishmentLevels.BaseStaminaRegeneration[this.NourishmentLevel];
         if (CurrentTile.Structure.Key == ItemList.Tent) {
-            this.StaminaRegeneration += 5.0f;
+            this.StaminaRegeneration += MaximumStamina * 0.2f;
         }
         this.StaminaRegeneration *= Time.deltaTime;
 
         this.Stamina = System.Math.Min(MaximumStamina, this.Stamina + this.StaminaRegeneration);
 
         this.StaminaBar.GetComponent<Image>().fillAmount = this.Stamina / this.MaximumStamina;
-        StaminaText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Stamina) + " / " + MaximumStamina;
+        StaminaText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Stamina) + " / " + MaximumStamina.ToString("F0");
 
     }
 
@@ -222,7 +222,7 @@ public class PlayerData : MonoBehaviour {
             this.Health = System.Math.Min(MaximumHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
         }
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
-        HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth;
+        HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth.ToString("F0");
     }
 
     public void ApplyNourishmentDecay() {
@@ -345,13 +345,22 @@ public class PlayerData : MonoBehaviour {
                 activeSlot.GetChild(0).GetComponent<Image>().color = new Color(255, 255, 255, 255);
                 activeSlot.GetChild(1).GetComponent<Image>().sprite = item.GetComponent<Image>().sprite;
                 activeSlot.GetChild(1).GetComponent<Image>().color = new Color(255, 255, 255, 255);
-                activeSlot.GetChild(2).GetComponent<Text>().text = ActiveInput.Hotkeys[activeSlot.GetComponent<ActiveInput>().Slot].ToString();
+                UpdateActiveHotkey(activeSlot);
+                activeSlot.GetChild(2).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
+                activeSlot.GetChild(2).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Right;
+               
                 ActionItem ai = (ActionItem)it;
-                activeSlot.GetChild(3).GetComponent<Text>().text = ai.StaminaCost.ToString();
+                activeSlot.GetChild(3).GetComponent<TextMeshProUGUI>().text = ai.StaminaCost.ToString();
+                activeSlot.GetChild(3).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
+                activeSlot.GetChild(3).GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Right;
                 it.ActiveContainer = activeSlot.gameObject;
                 break;
             }
         }
+    }
+
+    public void UpdateActiveHotkey(Transform t) {
+        t.GetChild(2).GetComponent<TextMeshProUGUI>().text = ActiveInput.Hotkeys[t.GetComponent<ActiveInput>().Slot].ToString();
     }
 
     public void RemoveItem(Item it, int quantity, Dictionary<string, Item> inventory) {
@@ -363,8 +372,16 @@ public class PlayerData : MonoBehaviour {
                 inventory.Remove(it.GetName());
                 Destroy(it.ItemObject);
                 if (it.GetType().IsSubclassOf(typeof(ActionItem)) && it.ActiveContainer != null) {
+                    Model.GetComponent<Model>().activePanels.Remove(it.ActiveContainer);
                     Destroy(it.ActiveContainer);
                     Model.GetComponent<Model>().CreateActivePanel();
+                    for (int i = 0; i < Model.GetComponent<Model>().activePanels.Count; i++) {
+                        GameObject activePanel = Model.GetComponent<Model>().activePanels[i];
+                        activePanel.GetComponent<ActiveInput>().SetSlot(i);
+                        if (activePanel.GetComponent<ActiveInput>().Item != null) {
+                            UpdateActiveHotkey(activePanel.transform);
+                        }
+                    }
                 }
                 
             }
@@ -419,7 +436,7 @@ public class PlayerData : MonoBehaviour {
         }
     }
 
-    private HashSet<Tile> GetRevealedTiles() {
+    public HashSet<Tile> GetRevealedTiles() {
         IEnumerator<GameObject> fowStructures = FOWStructures.GetEnumerator();
         HashSet<Tile> AllRevealedTiles = new HashSet<Tile>();
         bool cont = true;
@@ -469,6 +486,9 @@ public class PlayerData : MonoBehaviour {
             }
 
             if (fowStructures.MoveNext()) {
+                if (ct == null) {
+                    fowStructures.Reset();
+                }
                 ct = fowStructures.Current.GetComponent<StructureData>().CurrentTile;
                 size = 1;
             } else {

@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour {
 
     private AudioSource DigSound;
     private AudioSource WalkSound;
-    public AudioSource ErrorSound;
+    public AudioSource ErrorSound, RadarFound, RadarNotFound;
 
     private AudioSource AttackSound;
     public AudioSource ItemPickup;
@@ -70,7 +70,6 @@ public class PlayerInput : MonoBehaviour {
     // Use this for initialization
     private void Awake() {
         Actions.Add(Global.ItemNames[ItemList.Shovel], Dig);
-        Actions.Add(Global.ItemNames[ItemList.Pickaxe], DigMountain);
         Actions.Add(Global.ItemNames[ItemList.Tent], BuildTent);
         Actions.Add(Global.ItemNames[ItemList.Coconut], EatCoconut);
         Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
@@ -78,6 +77,8 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Granary], BuildGranary);
         Actions.Add(Global.ItemNames[ItemList.Wall], BuildWall);
         Actions.Add(Global.ItemNames[ItemList.Spear], UseSpear);
+        Actions.Add(Global.ItemNames[ItemList.Banana], EatBanana);
+        Actions.Add(Global.ItemNames[ItemList.Radar], UseRadar);
     }
 
     private void Start() {
@@ -88,6 +89,8 @@ public class PlayerInput : MonoBehaviour {
         ItemPickup = this.GetComponents<AudioSource>()[3];
         Nourish = this.GetComponents<AudioSource>()[4];
         ErrorSound = this.GetComponents<AudioSource>()[5];
+        RadarNotFound = this.GetComponents<AudioSource>()[6];
+        RadarFound = this.GetComponents<AudioSource>()[7];
     }
 
     private void Update() {
@@ -104,6 +107,8 @@ public class PlayerInput : MonoBehaviour {
         EatingCocoberry();
         BuildingWall();
         UsingSpear();
+        EatingBanana();
+        UsingRadar();
         if (Input.GetMouseButtonDown(1)) {
             Attack();
         }
@@ -306,6 +311,29 @@ public class PlayerInput : MonoBehaviour {
         return PlayerActions.NotThisAction;
     }
 
+    public void UseRadar() {
+        if (AItemFcns(PlayerActions.UseRadar, ItemList.Radar)) {
+            GUItext.text = "Searching for Sacred Items";
+            Debug.Log("Searching for Sacred Items");
+            ChannelingBarMask.SetActive(true);
+            UsingRadar();
+        }
+    }
+
+    protected void UsingRadar() {
+        if (Channeling(ItemList.Radar, PlayerActions.UseRadar) == PlayerActions.UseRadar) {
+            Radar ai = (Radar)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Radar]]);
+            GetComponent<PlayerData>().Stamina -= ai.StaminaCost;
+            if (ai.IsSacredTileInVisionRange(GetComponent<PlayerData>())) {
+                GUItext.text = "There is a sacred item near here.";
+                RadarFound.Play();
+            } else {
+                RadarNotFound.Play();
+                GUItext.text = "Nothing was found.";
+            }
+        }
+    }
+
     public void BuildTent() {
         if (AItemFcns(PlayerActions.BuildTent, ItemList.Tent)) {
             GUItext.text = "Building tent.";
@@ -381,11 +409,6 @@ public class PlayerInput : MonoBehaviour {
 
 
     public void Dig() {
-        if (GetPlayerData().CurrentTile.Id == (int)TileType.Mountain) {
-            ErrorSound.Play();
-            GUItext.text = "Cannot use a shovel in a mountain!";
-            return;
-        }
         if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
             GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.NumDigs + " times.";
             ChannelingBarMask.SetActive(true);
@@ -397,27 +420,6 @@ public class PlayerInput : MonoBehaviour {
             }
             animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
             animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.DigRight]);
-        }
-    }
-
-    public void DigMountain() {
-        if (GetPlayerData().CurrentTile.Id != (int)TileType.Mountain) {
-            ErrorSound.Play();
-            GUItext.text = "Cannnot use a pickaxe when not in a mountain!";
-            return;
-        }
-        if (AItemFcns(PlayerActions.Dig, ItemList.Shovel)) {
-            GUItext.text = "Digging... This tile has been dug " + GetPlayerData().CurrentTile.NumDigs + " times.";
-            ChannelingBarMask.SetActive(true);
-            DigSound.Play();
-            Digging();
-        }
-    }
-
-    protected void DiggingMountain() {
-        if (Channeling(ItemList.Pickaxe, PlayerActions.Dig) == PlayerActions.Dig) {
-            Pickaxe p = (Pickaxe)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Pickaxe]]);
-            p.Dig(this.GetPlayerData(), this);
         }
     }
 
@@ -472,6 +474,22 @@ public class PlayerInput : MonoBehaviour {
         if (Channeling(ItemList.Coconut, PlayerActions.Eat) == PlayerActions.Eat) {
             Coconut coco = (Coconut)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Coconut]]);
             coco.Eat(this.GetPlayerData());
+            Nourish.Play();
+        }
+    }
+
+    public void EatBanana() {
+        if (AItemFcns(PlayerActions.Eat, ItemList.Banana)) {
+            GUItext.text = "Consuming banana.";
+            ChannelingBarMask.SetActive(true);
+            EatingCoconut();
+        }
+    }
+
+    protected void EatingBanana() {
+        if (Channeling(ItemList.Banana, PlayerActions.Eat) == PlayerActions.Eat) {
+            Banana bana = (Banana)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Banana]]);
+            bana.Eat(this.GetPlayerData());
             Nourish.Play();
         }
     }

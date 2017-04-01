@@ -20,7 +20,9 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
         { 2, KeyCode.C },
         { 3, KeyCode.V },
         { 4, KeyCode.B },
-        { 5, KeyCode.N }
+        { 5, KeyCode.N },
+        { 6, KeyCode.E },
+        { 7, KeyCode.R }
     };
     private void Awake() {
         this.Slot = -1;
@@ -42,6 +44,9 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
             catch (KeyNotFoundException e) {
                 Debug.Log("No implementation for usage of the item " + Item.GetName() + "!");
             }
+            catch (NullReferenceException e) {
+                Item = null;
+            }
         }
     }
 
@@ -55,5 +60,9 @@ public class ActiveInput : MonoBehaviour, IPointerDownHandler  {
             }
         }
 
+    }
+
+    public void SetSlot(int i) {
+        this.Slot = i;
     }
 }

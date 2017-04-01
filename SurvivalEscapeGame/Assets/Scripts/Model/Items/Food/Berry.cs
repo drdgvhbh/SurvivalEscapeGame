@@ -13,6 +13,8 @@ public class Berry : Food {
         this.ChannelDuration = thisTextNode["ChannelDuration"];
         this.Consumable = thisTextNode["Consumable"];
         this.NourishmentReplenishment = thisTextNode["NourishmentReplenishment"];
+        this.StaminaReplenishment = thisTextNode["StaminaReplenishment"];
+        this.HealthReplenishment = thisTextNode["HealthReplenishment"];
     }
 
     public Berry(int id, bool active) : this(id, 0, active, 1) {

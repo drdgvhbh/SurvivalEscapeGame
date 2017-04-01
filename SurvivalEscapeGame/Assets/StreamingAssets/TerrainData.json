@@ -19,7 +19,6 @@
  	{
  		"0" : 
 	 	{
-	 		"Stick" : 30,
 	 		"Stone" : 25,
 	 		"Wood" : 25,
 	 		"Berry" : 40
@@ -27,7 +26,6 @@
 	 	"1" : 
 	 	{
 	 		"Gem" : 10,
-	 		"Stick" : 30,
 	 		"Stone" : 25,
 	 		"Coconut" : 45,
 	 		"Charcoal" : 30
@@ -41,6 +39,9 @@
 	 	},
 	 	"4" : 
 	 	{
+	 		"Berry" : 20,
+	 		"Stone" : 10,
+	 		"Banana" : 40
 	 	}
  	}
 }

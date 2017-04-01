@@ -17,50 +17,6 @@
 			"Damage" : 0
 		}
 ,
-		"Pickaxe" : 
-		{
-			"Name" : "Pickaxe",
-			"Description" : "A tool for mining ore in the mountains.",
-			"MaximumQuantity" : 1,
-			"Icon" : "Sprites/Items/farmTools",
-			"IconIndex" : 11,
-			"StaminaCost" : 20.0,
-			"ChannelDuration" : 2.5,
-			"Consumable" : false,
-			"Locations" :,
-			"UsableIn" : ["Mountains"],
-			"Components" : 
-			{
-				"0" :
-				{ 
-					"Type" :"Wood",
-					"Quantity" : 1
-				},
-				"1" :
-				{ 
-					"Type" :"Stone",
-					"Quantity" : 2
-				}
-			},
-			"Damage" : 0
-		}
-,
-		"Placeholder" : 
-		{
-			"Name" : "Placeholder",
-			"Description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu mollis lectus. Suspendisse ultricies euismod.",
-			"MaximumQuantity" : 0,
-			"Icon" : "Sprites/Items/placeholder",
-			"IconIndex" : 0,
-			"StaminaCost" : 0,
-			"ChannelDuration" : 0,
-			"Consumable" : false,
-			"Locations" :,
-			"UsableIn" :,
-			"Components" :,
-			"Damage" : 0
-		}
-,
 		"Shovel" : 
 		{
 			"Name" : "Shovel",
@@ -77,22 +33,6 @@
 			"Damage" : 0
 		}
 ,
-		"Stick" : 
-		{
-			"Name" : "Stick",
-			"Description" : "A wooden stick. Sharp and deadly.",
-			"MaximumQuantity" : 5,
-			"Icon" : "Sprites/Items/stick",
-			"IconIndex" : 0,
-			"StaminaCost" : 0,
-			"ChannelDuration" : 0,
-			"Consumable" : false,
-			"Locations" : ["Sand", "Grass"],
-			"UsableIn" : ,
-			"Components" :,
-			"Damage" : 0
-		}
-,
 		"Stone" : 
 		{
 			"Name" : "Stone",
@@ -103,7 +43,7 @@
 			"StaminaCost" : 0,
 			"ChannelDuration" : 0,
 			"Consumable" : false,
-			"Locations" : ["Sand", "Grass"],
+			"Locations" : ["Sand", "Grass", "Vine"],
 			"UsableIn" : ,
 			"Components" :,
 			"Damage" : 0
@@ -153,7 +93,7 @@
 				},
 				"1" :
 				{ 
-					"Type" :"Sticks",
+					"Type" :"Stone",
 					"Quantity" : 2
 				}	
 			},
@@ -220,6 +160,21 @@
 			"Damage" : 15 
 		}
 ,	
+		"SacredItem" : 
+		{
+			"Name" : "SacredItem",
+			"Description" : "A very sacred Item. Can be crafted into a distress beacon",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/sacredItem",
+			"IconIndex" : 0,
+			"StaminaCost" : 0,
+			"ChannelDuration" : 0.0,
+			"Consumable" : true,
+			"Locations" : ["All"],
+			"UsableIn" : ,
+			"Damage" : 0
+		}
+,	
 		"Coconut" : 
 		{
 			"Name" : "Coconut",
@@ -227,14 +182,33 @@
 			"MaximumQuantity" : 5,
 			"Icon" : "Sprites/Items/coconut",
 			"IconIndex" : 0,
-			"StaminaCost" : 3.0,
+			"StaminaCost" : 0.0,
 			"ChannelDuration" : 0.75,
 			"Consumable" : true,
 			"Locations" : ["Sand"],
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 6
+			"NourishmentReplenishment" : 6,
+			"StaminaReplenishment" : 6
+		}
+,	
+		"Banana" : 
+		{
+			"Name" : "Banana",
+			"Description" : "Its a banana.",
+			"MaximumQuantity" : 5,
+			"Icon" : "Sprites/Items/banana",
+			"IconIndex" : 0,
+			"StaminaCost" : 0.0,
+			"ChannelDuration" : 0.75,
+			"Consumable" : true,
+			"Locations" : ["Vine"],
+			"UsableIn" : ["All"],
+			"Components" :,
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 6,
+			"StaminaReplenishment" : 6
 		}
 ,	
 		"Fabric" : 
@@ -257,12 +231,12 @@
 		"Radar" : 
 		{
 			"Name" : "Radar",
-			"Description" : "Scans the ground to see if there is a sacred item within a two tile radius.",
+			"Description" : "Scans the ground to see if there is a sacred item within a your vision range.",
 			"MaximumQuantity" : 1,
 			"Icon" : "Sprites/Items/radar",
 			"IconIndex" : 0,
 			"StaminaCost" : 3.0,
-			"ChannelDuration" : 5.0,
+			"ChannelDuration" : 2.0,
 			"Consumable" : false,
 			"Locations" : ,
 			"UsableIn" : ["All"],
@@ -295,14 +269,15 @@
 			"MaximumQuantity" : 5,
 			"Icon" : "Sprites/Items/berry",
 			"IconIndex" : 0,
-			"StaminaCost" : 3.0,
+			"StaminaCost" : 0.0,
 			"ChannelDuration" : 0.75,
 			"Consumable" : true,
-			"Locations" : ["Grass"],
+			"Locations" : ["Grass", "Vine"],
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 4
+			"NourishmentReplenishment" : 4,
+			"HealthReplenishment" : 6
 		}
 ,	
 		"Cocoberry" : 
@@ -350,7 +325,7 @@
 			{
 				"0" :
 				{ 
-					"Type" : "Stick",
+					"Type" : "Wood",
 					"Quantity" : 2
 				},
 				"1" :

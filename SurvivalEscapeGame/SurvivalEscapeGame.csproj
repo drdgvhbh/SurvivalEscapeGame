@@ -106,12 +106,12 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\DiggingItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Food.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Granary.cs" />
-    <Compile Include="Assets\Scripts\Model\Items\ActionItems\Pickaxe.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Radar.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Spear.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Tent.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Wall.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Food\Banana.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Berry.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Cocoberry.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Coconut.cs" />
@@ -119,8 +119,8 @@
     <Compile Include="Assets\Scripts\Model\Items\Resources\Charcoal.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Fabric.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Gem.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Resources\SacredItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\SilverOre.cs" />
-    <Compile Include="Assets\Scripts\Model\Items\Resources\Stick.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Stone.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Resources\Wood.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Torch.cs" />

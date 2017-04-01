@@ -27,17 +27,15 @@ public enum PlayerActions {
     Eat,
     BuildGranary,
     BuildWall,
-    UseSpear
+    UseSpear,
+    UseRadar
 }
 
 public enum ItemList {
-    Placeholder,
 	Shovel,
 	Gem,
 	Tent,
     Wood,
-    Stick,
-    Pickaxe,
     Stone,
     Spear,
     Coconut,
@@ -49,7 +47,9 @@ public enum ItemList {
     Charcoal,
     Torch,
     Wall,
-    SilverOre
+    SilverOre,
+    Banana,
+    SacredItem
 }
 
 public static class Global {
@@ -60,13 +60,10 @@ public static class Global {
 	public static UnityEngine.Random Random = new UnityEngine.Random();
 
 	public static Dictionary<ItemList, string> ItemNames = new Dictionary<ItemList, string>() {
-        {ItemList.Placeholder, "Placeholder" },
         {ItemList.Shovel, "Shovel" },
 		{ItemList.Gem, "Gem" },
 		{ItemList.Tent, "Tent" },
         {ItemList.Wood, "Wood" },
-        {ItemList.Stick, "Stick" },
-        {ItemList.Pickaxe, "Pickaxe" },
         {ItemList.Stone, "Stone" },
         {ItemList.Spear, "Spear" },
         {ItemList.Coconut, "Coconut" },
@@ -78,7 +75,9 @@ public static class Global {
         {ItemList.Charcoal, "Charcoal" },
         {ItemList.Torch, "Torch" },
         {ItemList.Wall, "Wall" },
-        {ItemList.SilverOre, "SilverOre" }
+        {ItemList.SilverOre, "SilverOre" },
+        {ItemList.Banana, "Banana" },
+        {ItemList.SacredItem, "SacredItem" }
     };
 
 

@@ -16,7 +16,7 @@ public class Model : MonoBehaviour {
     private GameObject ActivePanel;
     [SerializeField]
     private GameObject ActiveSlot;
-    private static int NumberOfActiveSlots = 6;
+    private static int NumberOfActiveSlots = 8;
     public static List<GameObject> ActiveContainer = new List<GameObject>();
 
     [Header("Player")]
@@ -33,8 +33,12 @@ public class Model : MonoBehaviour {
     private GameObject InventoryPanel;
     [SerializeField]
     private GameObject StructurePanel;
+    [SerializeField]
+    private GameObject Help;
 
     private bool init;
+
+    public List<GameObject> activePanels = new List<GameObject>();
 
 
     private IEnumerator Coroutine;
@@ -56,11 +60,11 @@ public class Model : MonoBehaviour {
 
     protected void Update() {
         if (init) {
-            if (Player1.GetComponent<PlayerData>().Alive && (InventoryPanel.activeSelf || StructurePanel.activeSelf)) {
+            if (Player1.GetComponent<PlayerData>().Alive && (InventoryPanel.activeSelf || StructurePanel.activeSelf || Help.activeSelf)) {
                 Time.timeScale = 0;
-            } else if ((Player1.GetComponent<PlayerData>().Alive && !(InventoryPanel.activeSelf || StructurePanel.activeSelf))) {
+            } else if ((Player1.GetComponent<PlayerData>().Alive && !(InventoryPanel.activeSelf || StructurePanel.activeSelf || Help.activeSelf))) {
                 Time.timeScale = 1.0f;
-            } else {
+            } else if (!Player1.GetComponent<PlayerData>().Alive) {
                 Time.timeScale = 0;
             }
         }
@@ -72,13 +76,13 @@ public class Model : MonoBehaviour {
         this.Day = true;
         Terrain = GameGridObj.GetComponent<TerrainData>().Tiles;
         this.CreatePlayerProperties();
-        for (int i = 0; i < 1; i++) 
+        for (int i = 0; i < 1; i++) {
             CreateEnemy(Random.Range(0, Mb.NumTiles));
+        }
         new Radar(-1, false);
         new Cocoberry(-1, false);
         new Tent(-1, false);
         new Torch(-1, false);
-        new Pickaxe(-1, false);
         new Wall(-1, false);
         new Spear(-1, false);
         new Granary(-1, false);
@@ -126,14 +130,16 @@ public class Model : MonoBehaviour {
         return this.Day;
     }
 
-    public void CreateActivePanel() {
+    public GameObject CreateActivePanel() {
         GameObject activeSlot = GameObject.Instantiate(ActiveSlot);
         activeSlot.transform.SetParent(ActivePanel.transform, false);
-        ActiveContainer.Add(activeSlot);       
+        ActiveContainer.Add(activeSlot);
+        return activeSlot;  
     }
-    public void CreateActivePanel(int quantity) {
+    public List<GameObject> CreateActivePanel(int quantity) {
         for (int i = 0; i < quantity; i++) {
-            CreateActivePanel();
+            activePanels.Add(CreateActivePanel());
         }
+        return activePanels;
     }
 }

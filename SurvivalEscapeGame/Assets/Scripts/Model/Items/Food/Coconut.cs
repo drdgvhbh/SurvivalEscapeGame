@@ -13,6 +13,8 @@ public class Coconut : Food {
         this.ChannelDuration = thisTextNode["ChannelDuration"];
         this.Consumable = thisTextNode["Consumable"];
         this.NourishmentReplenishment = thisTextNode["NourishmentReplenishment"];
+        this.StaminaReplenishment = thisTextNode["StaminaReplenishment"];
+        this.HealthReplenishment = thisTextNode["HealthReplenishment"];
         //Debug.Log(this.NourishmentReplenishment);
     }
 

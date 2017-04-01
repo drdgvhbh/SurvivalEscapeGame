@@ -78,7 +78,7 @@ public class EnemyData : MonoBehaviour {
     }
 
     private void DoThings() {
-        if (!intialized) {
+        if (!intialized ) {
             return;
         }
         if (!IsPerformingAction && Player != null) {

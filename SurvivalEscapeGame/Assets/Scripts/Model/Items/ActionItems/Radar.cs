@@ -28,4 +28,8 @@ public class Radar : ActionItem {
 
     public Radar(Radar s) : base(s) {
     }
+
+    public bool IsSacredTileInVisionRange(PlayerData pd) {
+        return pd.GetRevealedTiles().Overlaps((TerrainData.SacredItems));
+    }
 }

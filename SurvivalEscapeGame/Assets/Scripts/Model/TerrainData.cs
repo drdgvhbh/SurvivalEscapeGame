@@ -16,6 +16,9 @@ public class TerrainData : MonoBehaviour {
         }
     }
 
+    public static HashSet<Tile> SacredItems = new HashSet<Tile>();
+    public static int MaxSacredItems;
+
 
     //WONKY
     public static int GetIndexFromPosition(Vector3 pos, Grid Grid) {
@@ -38,7 +41,6 @@ public class TerrainData : MonoBehaviour {
 
     public static Dictionary<TileType, List<Item[]>> ItemLocations = new Dictionary<TileType, List<Item[]>>() {
         { TileType.Grass, new List<Item[]>() {
-                {new Stick[0]},
                 {new Stone[0]},
                 {new Wood[0]},
                 {new Berry[0]}
@@ -46,15 +48,22 @@ public class TerrainData : MonoBehaviour {
         },
         { TileType.Sand, new List<Item[]>() {
                 {new Gem[0]},
-                {new Stick[0]},
                 {new Stone[0]},
                 {new Coconut[0]},
                 {new Charcoal[0]}
             }
         },
-        { TileType.Mountain, new List<Item[]>()},
+        { TileType.Mountain, new List<Item[]>()
+            {new SilverOre[0]}
+        },
         { TileType.Water, new List<Item[]>()},
-        { TileType.Vine, new List<Item[]>()}
+        { TileType.Vine, new List<Item[]>()
+            {
+                {new Berry[0]},
+                {new Stone[0]},
+                {new Banana[0]}
+            }
+        }
     };
 
     private static Vector3 GetPositionFromIndex(int tileIdx, Grid Grid) {
@@ -86,9 +95,18 @@ public class TerrainData : MonoBehaviour {
         CreateTexture();
         UpdateTileView();
         WalkableTiles = (from t in Tiles where t.IsWalkable == true select t).ToArray();
+        MaxSacredItems = (int)(Mathf.Log(Mathf.FloorToInt(Grid.NumColumns * Grid.NumRows), 2));
+        List<Tile> sacredTiles = new List<Tile>(WalkableTiles);
+        for (int i = 0; i < MaxSacredItems; i++) {
+            int idx = Random.Range(0, sacredTiles.Count);
+            sacredTiles[idx].AddItem(new SacredItem(++Item.IdCounter, 0, false, 1));
+            SacredItems.Add(sacredTiles[idx]);
+            sacredTiles.Remove(sacredTiles[idx]);
+        }
+        Debug.Log(MaxSacredItems);
     }
 
-	private void Start () {
+    private void Start () {
         /*for (int i = 0; i < Tiles.Length; i++) {
             Debug.Log("Id:" + Tiles[i].Id + " Neighbour Length: " + Tiles[i].Neighbours.Count);
         }*/
