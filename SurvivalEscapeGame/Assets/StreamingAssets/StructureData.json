@@ -3,6 +3,7 @@
 	{
 		"Granary" : {
 			"Name" : "Granary",
+			"MaxLevel" : 3,
 			"Levels" : 
 			{
 				"1" : 
@@ -24,6 +25,7 @@
 		},
 		"Tent" : {
 			"Name" : "Tent",
+			"MaxLevel" : 1,
 			"Levels" : 
 			{
 				"1" : 
@@ -35,24 +37,78 @@
 		},
 		"Wall" : {
 			"Name" : "Wall",
+			"MaxLevel" : 5,
 			"Levels" : 
 			{
 				"1" : 
 				{
-					"Health" : 75,
-					"LockedSlots" : 8 
+					"Health" : 100,
+					"LockedSlots" : 8, 
+					"ReturnDmg" : 15
 				},
 				"2" : 
 				{
-					"Health" : 100,
-					"LockedSlots" : 8 
+					"Health" : 200,
+					"LockedSlots" : 8, 
+					"ReturnDmg" : 30
 				},
 				"3" : 
 				{
-					"Health" : 125,
-					"LockedSlots" : 8 
+					"Health" : 300,
+					"LockedSlots" : 8, 
+					"ReturnDmg" : 45
+				},
+				"4" : 
+				{
+					"Health" : 400,
+					"LockedSlots" : 8, 
+					"ReturnDmg" : 60
+				},
+				"5" : 
+				{
+					"Health" : 500,
+					"LockedSlots" : 8, 
+					"ReturnDmg" : 75
 				}
 			}
+		},
+		"DistressBeacon" : {
+			"Name" : "DistressBeacon",
+			"MaxLevel" : 5,
+			"Levels" : 
+			{
+				"1" : 
+				{
+					"Health" : 150,
+					"LockedSlots" : 8,
+					"DistressRadius" : 2 
+				},
+				"2" : 
+				{
+					"Health" : 175,
+					"LockedSlots" : 8,
+					"DistressRadius" : 4 
+				},
+				"3" : 
+				{
+					"Health" : 200,
+					"LockedSlots" : 8,
+					"DistressRadius" : 6
+				},
+				"4" : 
+				{
+					"Health" : 225,
+					"LockedSlots" : 8,
+					"DistressRadius" : 8
+				},
+				"5" : 
+				{
+					"Health" : 250,
+					"LockedSlots" : 8,
+					"DistressRadius" : 10
+				},
+			}
 		}
+
 	}
 }

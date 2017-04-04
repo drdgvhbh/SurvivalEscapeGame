@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\ActionItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\BuildingItem.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\DiggingItem.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\DistressBeacon.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Food.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Granary.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Radar.cs" />
@@ -128,6 +129,8 @@
     <Compile Include="Assets\Scripts\Model\NourishmentLevels.cs" />
     <Compile Include="Assets\Scripts\Model\PathNode.cs" />
     <Compile Include="Assets\Scripts\Model\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\Model\SaviorData.cs" />
+    <Compile Include="Assets\Scripts\Model\StructureData\BeaconData.cs" />
     <Compile Include="Assets\Scripts\Model\StructureData\GranaryData.cs" />
     <Compile Include="Assets\Scripts\Model\StructureData\StructureData.cs" />
     <Compile Include="Assets\Scripts\Model\StructureData\TentData.cs" />

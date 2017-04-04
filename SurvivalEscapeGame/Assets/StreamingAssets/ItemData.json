@@ -5,7 +5,7 @@
 		{
 			"Name" : "Gem",
 			"Description" : "A very precious stone.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/blue_gem_1",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -37,7 +37,7 @@
 		{
 			"Name" : "Stone",
 			"Description" : "A mythical stone dated back to the First Age.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/stone",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -53,7 +53,7 @@
 		{
 			"Name" : "Tent",
 			"Description" : "A consumable structure than can be placed on the ground. When the player is on the same tile as the tent, the player will regenerate stamina based on the player's nourishment level.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/Tent",
 			"IconIndex" : 0,
 			"StaminaCost" : 10.0,
@@ -76,7 +76,7 @@
 		{
 			"Name" : "Granary",
 			"Description" : "A storage building for food. Leaving food in the granary will cause the food to mutliply.",
-			"MaximumQuantity" : 1,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/Granary",
 			"IconIndex" : 0,
 			"StaminaCost" : 10.0,
@@ -104,7 +104,7 @@
 		{
 			"Name" : "Wood",
 			"Description" : "A wooden log.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/wood",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -120,7 +120,7 @@
 		{
 			"Name" : "SilverOre",
 			"Description" : "A silver ore",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/SilverOre",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -136,7 +136,7 @@
 		{
 			"Name" : "Spear",
 			"Description" : "An excellent weapon for striking fear into the hearts of your enemies.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/spear",
 			"IconIndex" : 0,
 			"StaminaCost" : 15.0,
@@ -164,8 +164,8 @@
 		{
 			"Name" : "SacredItem",
 			"Description" : "A very sacred Item. Can be crafted into a distress beacon",
-			"MaximumQuantity" : 5,
-			"Icon" : "Sprites/Items/sacredItem",
+			"MaximumQuantity" : 10,
+			"Icon" : "Sprites/Items/sacred",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
 			"ChannelDuration" : 0.0,
@@ -179,7 +179,7 @@
 		{
 			"Name" : "Coconut",
 			"Description" : "An excellent beverage and a source of potassium!",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/coconut",
 			"IconIndex" : 0,
 			"StaminaCost" : 0.0,
@@ -189,15 +189,15 @@
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 6,
-			"StaminaReplenishment" : 6
+			"NourishmentReplenishment" : 5,
+			"StaminaReplenishment" : 22
 		}
 ,	
 		"Banana" : 
 		{
 			"Name" : "Banana",
 			"Description" : "Its a banana.",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/banana",
 			"IconIndex" : 0,
 			"StaminaCost" : 0.0,
@@ -215,7 +215,7 @@
 		{
 			"Name" : "Fabric",
 			"Description" : "The silk of the land",
-			"MaximumQuantity" : 8,
+			"MaximumQuantity" : 15,
 			"Icon" : "Sprites/Items/fabric",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -262,11 +262,35 @@
 			"NourishmentReplenishment" : 0
 		}
 ,	
+		"DistressBeacon" : 
+		{
+			"Name" : "DistressBeacon",
+			"Description" : "Activate this to call for help!",
+			"MaximumQuantity" : 1,
+			"Icon" : "Sprites/Items/beacon",
+			"IconIndex" : 0,
+			"StaminaCost" : 50.0,
+			"ChannelDuration" : 5.0,
+			"Consumable" : false,
+			"Locations" : ,
+			"UsableIn" : ["All"],
+			"Components" : 
+			{
+				"0" :
+				{ 
+					"Type" :"SacredItem",
+					"Quantity" : 4
+				}
+			},
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 0
+		}
+,	
 		"Berry" : 
 		{
 			"Name" : "Berry",
 			"Description" : "	",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/berry",
 			"IconIndex" : 0,
 			"StaminaCost" : 0.0,
@@ -276,8 +300,8 @@
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 4,
-			"HealthReplenishment" : 6
+			"NourishmentReplenishment" : 5,
+			"HealthReplenishment" : 20
 		}
 ,	
 		"Cocoberry" : 
@@ -306,14 +330,15 @@
 				}
 			},
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 20
+			"NourishmentReplenishment" : 25,
+			"HealthReplenishment" : 5
 		}
 ,	
 		"Torch" : 
 		{
 			"Name" : "Torch",
 			"Description" : "Lights up the area around the building it is placed in",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/torch",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -342,7 +367,7 @@
 		{
 			"Name" : "Charcoal",
 			"Description" : "That firemaking substance",
-			"MaximumQuantity" : 5,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/charcoal",
 			"IconIndex" : 0,
 			"StaminaCost" : 0,
@@ -358,8 +383,8 @@
 		"Wall" : 
 		{
 			"Name" : "Wall",
-			"Description" : "Good for obstructing enemies",
-			"MaximumQuantity" : 5,
+			"Description" : "Good for obstructing enemies. Enemies who attack walls take damage.",
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/temple_walls",
 			"IconIndex" : 0,
 			"StaminaCost" : 5.0,

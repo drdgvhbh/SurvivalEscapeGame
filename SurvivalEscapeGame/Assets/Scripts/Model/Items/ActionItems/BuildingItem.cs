@@ -21,6 +21,7 @@ public abstract class BuildingItem : ActionItem {
         this.StaminaCost = ai.StaminaCost;
         this.ChannelDuration = ai.ChannelDuration;
         this.Consumable = ai.Consumable;
+  
     }
 
     public void BuildStructure(ItemList it, PlayerData pd) {
@@ -35,9 +36,12 @@ public abstract class BuildingItem : ActionItem {
             pd.AllStructures.Add(structure);
             pd.RemoveItem(this, 1, pd.GetInventory());
             pd.GUIText.GetComponent<Text>().text = it + " built.";
-        } else {
-            pd.GUIText.GetComponent<Text>().text = "This tile already has a structure built on it!";
-            Debug.Log("This tile already has a structure built on it!");
+        } else if (tile.Structure.Value.GetComponent<StructureData>().Name.Equals(GetName()))  {
+            pd.RemoveItem(this, 1, pd.GetInventory());
+            pd.GUIText.GetComponent<Text>().text = tile.Structure.Value.GetComponent<StructureData>().Name + " leveled up.";
+            tile.Structure.Value.GetComponent<StructureData>().LevelUp();
+            Debug.Log(tile.Structure.Value.GetComponent<StructureData>().Name + " leveled up.");
+            Debug.Log(tile.Structure.Value.GetComponent<StructureData>().Health);
         }
     }
 

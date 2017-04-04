@@ -28,7 +28,8 @@ public enum PlayerActions {
     BuildGranary,
     BuildWall,
     UseSpear,
-    UseRadar
+    UseRadar,
+    UseBeacon
 }
 
 public enum ItemList {
@@ -49,7 +50,8 @@ public enum ItemList {
     Wall,
     SilverOre,
     Banana,
-    SacredItem
+    SacredItem,
+    DistressBeacon
 }
 
 public static class Global {
@@ -77,7 +79,8 @@ public static class Global {
         {ItemList.Wall, "Wall" },
         {ItemList.SilverOre, "SilverOre" },
         {ItemList.Banana, "Banana" },
-        {ItemList.SacredItem, "SacredItem" }
+        {ItemList.SacredItem, "SacredItem" },
+        {ItemList.DistressBeacon, "DistressBeacon" }
     };
 
 

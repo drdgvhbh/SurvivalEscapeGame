@@ -239,7 +239,7 @@ public class EnemyData : MonoBehaviour {
     }
 
     private void Attack() {
-        if (TypeOfPerformingAction[PlayerActions.Attack]) {
+        if (TypeOfPerformingAction[PlayerActions.Attack] && AttackTarget != null) {
             if (IsAttackOnCooldown == false) {
                 if (this.GetComponent<SpriteRenderer>().color.a == 255) {
                     AttackSound.Play();
@@ -247,8 +247,10 @@ public class EnemyData : MonoBehaviour {
                 if (AttackTarget.GetComponent<PlayerData>() != null) {
                     AttackTarget.GetComponent<PlayerData>().DamagePlayer(AttackDamage);
                 } else if (AttackTarget.GetComponent<StructureData>() != null) {
-                    Debug.Log("HELLO????");
                     AttackTarget.GetComponent<StructureData>().DamageStructure(AttackDamage);
+                    if (AttackTarget.GetComponent<WallData>() != null) {
+                        DamageEnemy(AttackTarget.GetComponent<WallData>().ReturnDmg);
+                    }
                 }
                 Animator animCtrl = this.gameObject.GetComponent<Animator>();
                 if (direction == 1) {

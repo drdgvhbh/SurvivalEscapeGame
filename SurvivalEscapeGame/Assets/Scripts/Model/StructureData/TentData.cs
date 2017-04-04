@@ -26,11 +26,20 @@ public class TentData : StructureData {
         Name = TentNode["Name"];
         Ongoing = new Dictionary<SlotInput, int>();
         Level = 1;
+        MaxLevel = TentNode["MaxLevel"];
         NumLocked = TentNode["Levels"][Level.ToString()]["LockedSlots"];
         Health = TentNode["Levels"][Level.ToString()]["Health"];
     }
 
     protected new void Start() {
 
+    }
+
+    public override void LevelUp() {
+        if (Level < MaxLevel) {
+            base.LevelUp();
+            NumLocked = TentNode["Levels"][Level.ToString()]["LockedSlots"];
+            Health = TentNode["Levels"][Level.ToString()]["Health"];
+        }
     }
 }

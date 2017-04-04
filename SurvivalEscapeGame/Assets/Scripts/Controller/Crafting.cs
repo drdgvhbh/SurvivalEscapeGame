@@ -23,7 +23,8 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
         {ItemList.Granary, new Granary[0] },
         {ItemList.Torch, new Torch[0] },
         {ItemList.Wall, new Wall[0] },
-        {ItemList.Spear, new Spear[0]}
+        {ItemList.Spear, new Spear[0]},
+        {ItemList.DistressBeacon, new DistressBeacon[0] }
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
@@ -33,7 +34,8 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
         {ItemList.Granary, Granary.CraftingComponents },
         {ItemList.Torch, Torch.CraftingComponents },
         {ItemList.Wall, Wall.CraftingComponents },
-        {ItemList.Spear, Spear.CraftingComponents }
+        {ItemList.Spear, Spear.CraftingComponents },
+        {ItemList.DistressBeacon, DistressBeacon.CraftingComponents }
     };
 
     public void OnPointerDown(PointerEventData eventData) {

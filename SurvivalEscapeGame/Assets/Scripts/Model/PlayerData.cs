@@ -140,7 +140,7 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void LateStart() {
-        this.NourishmentLevel = 0;
+        this.NourishmentLevel = 1;
         this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.Health = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
@@ -165,7 +165,8 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.BuildGranary, false },
             {PlayerActions.BuildWall, false },
             {PlayerActions.UseSpear, false },
-            {PlayerActions.UseRadar, false }
+            {PlayerActions.UseRadar, false },
+            {PlayerActions.UseBeacon, false }
         };
         this.Inventory = new Dictionary<string, Item>();
         this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
@@ -180,16 +181,12 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new Tent(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Coconut(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new SilverOre(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wood(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Granary(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new SacredItem(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
-        this.AddItem(new Radar(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
     }
 
     // Update is called once per frame
@@ -197,6 +194,7 @@ public class PlayerData : MonoBehaviour {
         this.MaximumStamina = NourishmentLevels.BaseMaximumStamina[this.NourishmentLevel];
         this.MovementSpeed = NourishmentLevels.BaseMovementSpeed[this.NourishmentLevel];
         this.HealthRegeneration = NourishmentLevels.BaseHealthRegeneration[this.NourishmentLevel];
+        this.MaximumHealth = NourishmentLevels.BaseMaximumHealth[this.NourishmentLevel];
         this.UpdateHealth();
         this.ApplyNourishmentDecay();
         this.UpdateNourishmentStatus();
@@ -218,9 +216,7 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateHealth() {
-        if (this.Health < MaximumHealth) {
-            this.Health = System.Math.Min(MaximumHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
-        }
+        this.Health = System.Math.Min(MaximumHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
         this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
         HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth.ToString("F0");
     }
@@ -432,6 +428,9 @@ public class PlayerData : MonoBehaviour {
         foreach (Tile t in GetRevealedTiles()) {
             if (t.CurrentGameObject != null ) {
                 t.CurrentGameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
+            }
+            if (t.Savior != null) {
+                t.Savior.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
             }
         }
     }

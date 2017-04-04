@@ -79,6 +79,7 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Spear], UseSpear);
         Actions.Add(Global.ItemNames[ItemList.Banana], EatBanana);
         Actions.Add(Global.ItemNames[ItemList.Radar], UseRadar);
+        Actions.Add(Global.ItemNames[ItemList.DistressBeacon], UseBeacon);
     }
 
     private void Start() {
@@ -109,6 +110,7 @@ public class PlayerInput : MonoBehaviour {
         UsingSpear();
         EatingBanana();
         UsingRadar();
+        UsingBeacon();
         if (Input.GetMouseButtonDown(1)) {
             Attack();
         }
@@ -331,6 +333,22 @@ public class PlayerInput : MonoBehaviour {
                 RadarNotFound.Play();
                 GUItext.text = "Nothing was found.";
             }
+        }
+    }
+
+    public void UseBeacon() {
+        if (AItemFcns(PlayerActions.UseBeacon, ItemList.DistressBeacon)) {
+            GUItext.text = "Constructing Distress Beacon";
+            Debug.Log("Constructing Distress Beacon");
+            ChannelingBarMask.SetActive(true);
+            UsingBeacon();
+        }
+    }
+
+    protected void UsingBeacon() {
+        if (Channeling(ItemList.DistressBeacon, PlayerActions.UseBeacon) == PlayerActions.UseBeacon) {
+            DistressBeacon ai = (DistressBeacon)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.DistressBeacon]]);
+            ai.BuildStructure(ItemList.DistressBeacon, this.GetPlayerData());
         }
     }
 

@@ -24,8 +24,14 @@ public class GameTimer : MonoBehaviour {
     private IEnumerator ReduceTime() {
         while (!GetIsTimeUp()) {
             Text.text = (Timer / 60).ToString() + ":" + (Timer % 60).ToString();
-            Timer--;
-            if (Player.gameObject != null && (Timer <= 0 || Player.GetComponent<PlayerData>().Alive == false)) {
+            Timer++;
+            if (Player.gameObject == null
+                || Player.GetComponent<PlayerData>().Alive == false
+                || (GameObject.Find("DistressBeacon(Clone)") 
+                    && GameObject.Find("Savior(Clone)") 
+                    && GameObject.Find("DistressBeacon(Clone)").transform.position.Equals(GameObject.Find("Savior(Clone)").transform.position))
+                ) {
+                Player.GetComponent<PlayerInput>().enabled = false;
                 GameOverText.SetActive(true);
                 Guide.SetActive(false);
                 Time.timeScale = 0.0f;
@@ -46,7 +52,7 @@ public class GameTimer : MonoBehaviour {
 
     private void Start() {
         SetIsTimeUp(false);
-        Timer = 600;
+        Timer = 0;
         Interval = 1.0f;
         Coroutine = ReduceTime();
         Text = TextObj.GetComponent<Text>();

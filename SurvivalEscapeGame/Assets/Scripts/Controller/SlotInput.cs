@@ -84,12 +84,16 @@ public class SlotInput : MonoBehaviour, IDropHandler {
         if (Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData
             && InventoryRemove == Pd.GetInventory()) {
             GranaryData gD = (GranaryData)Pd.CurrentTile.Structure.Value.GetComponent<StructureData>();
-            GameObject asdf = itemsContainer.Find(g => g.GetComponent<ItemInput>().Item.GetName().Equals(droppedItem.Item.GetName()));
-            gD.StartCoroutine(gD.MutliplyItem(asdf.gameObject.transform.parent.GetComponent<SlotInput>()));
-            if (InventoryRemove == Pd.GetInventory()
-                    && InventoryAdd[droppedItem.Item.GetName()].GetQuantity() == 1
-                    && Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData) {
+            /*foreach (GameObject g in itemsContainer) {
+                if (g.gameObject == null) {
+                    itemsContainer.Remove(g);
+                }
+            }*/
+            GameObject asdf = itemsContainer.Find(g => g.gameObject && g.GetComponent<ItemInput>().Item.GetName().Equals(droppedItem.Item.GetName()));
+            if (!(asdf.GetComponent<ItemInput>().Item is Food)) {
+                return;
             }
+            gD.StartCoroutine(gD.MutliplyItem(asdf.gameObject.transform.parent.GetComponent<SlotInput>()));
         }
         //Torch
         if (!(Pd.CurrentTile.Structure.Value.GetComponent<StructureData>() is GranaryData)

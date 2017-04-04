@@ -47,6 +47,7 @@ public class Tile  {
     public int NumDigs { get; set; }
 
     public GameObject CurrentGameObject { get; set; }
+    public GameObject Savior { get; set; }
 
     public KeyValuePair<ItemList, GameObject> Structure { get; set; }
 

@@ -17,7 +17,7 @@ public class GranaryData : StructureData {
     }
 
     public static float Interval = 1.0f;
-    public static float MultiplyTime = 5.0f;
+    public static float MultiplyTime = 45.0f;
 
     public Dictionary<SlotInput, int> Ongoing;
 
@@ -26,6 +26,7 @@ public class GranaryData : StructureData {
         Name = GranaryNode["Name"];
         Ongoing = new Dictionary<SlotInput, int>();
         Level = 1;
+        MaxLevel = GranaryNode["MaxLevel"];
         NumLocked = GranaryNode["Levels"][Level.ToString()]["LockedSlots"];
         Health = GranaryNode["Levels"][Level.ToString()]["Health"];
 
@@ -62,6 +63,13 @@ public class GranaryData : StructureData {
                 g.GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<ItemInput>().Item.GetQuantity().ToString();
             }
         }
+    }
 
+    public override void LevelUp() {
+        if (Level < MaxLevel) {
+            base.LevelUp();
+            NumLocked = GranaryNode["Levels"][Level.ToString()]["LockedSlots"];
+            Health = GranaryNode["Levels"][Level.ToString()]["Health"];
+        }
     }
 }

@@ -17,6 +17,7 @@ public abstract class StructureData : MonoBehaviour {
 
     protected int NumLocked;
     protected int Level;
+    protected int MaxLevel;
 
     protected void Awake() {
         Inventory = new Dictionary<string, Item>();
@@ -45,5 +46,9 @@ public abstract class StructureData : MonoBehaviour {
             Pd.GetComponent<PlayerData>().AllStructures.Remove(this.gameObject);
             GameObject.Destroy(this.gameObject);
         }
+    }
+
+    public virtual void LevelUp() {
+        Level++;
     }
 }

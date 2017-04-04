@@ -95,7 +95,7 @@ public class TerrainData : MonoBehaviour {
         CreateTexture();
         UpdateTileView();
         WalkableTiles = (from t in Tiles where t.IsWalkable == true select t).ToArray();
-        MaxSacredItems = (int)(Mathf.Log(Mathf.FloorToInt(Grid.NumColumns * Grid.NumRows), 2));
+        MaxSacredItems = (int)(Mathf.Pow((Mathf.Log(Mathf.FloorToInt(Grid.NumColumns * Grid.NumRows), 2)), 2)) / 2;
         List<Tile> sacredTiles = new List<Tile>(WalkableTiles);
         for (int i = 0; i < MaxSacredItems; i++) {
             int idx = Random.Range(0, sacredTiles.Count);
@@ -103,7 +103,7 @@ public class TerrainData : MonoBehaviour {
             SacredItems.Add(sacredTiles[idx]);
             sacredTiles.Remove(sacredTiles[idx]);
         }
-        Debug.Log(MaxSacredItems);
+
     }
 
     private void Start () {

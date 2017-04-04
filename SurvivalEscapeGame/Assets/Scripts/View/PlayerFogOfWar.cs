@@ -68,6 +68,9 @@ public class PlayerFogOfWar : MonoBehaviour {
                 if (Tiles[i / 2].CurrentGameObject != null) {
                     Tiles[i / 2].CurrentGameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
                 }
+                if (Tiles[i / 2].Savior != null) {
+                    Tiles[i / 2].Savior.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
+                }
             }
 
             Debug.DrawLine(p[0], p[1], Color.red);
