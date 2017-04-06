@@ -32,12 +32,13 @@ public class PlayerData : MonoBehaviour {
     public float StaminaRegeneration;
     public bool Alive;
     public bool IsWeaponEquipped;
-    public bool IsShieldEquipped;
+    public bool IsArmourEquipped;
     public int Direction = 1;
     public float Damage;
     public float AttackStaminaCost;
     public bool IsAttackOnCooldown;
     public float AttackCooldown = 0.33f;
+    public float HealthBonus;
     public int VisionRange { get; private set; }
 
     private float MaximumNourishmentStatus;
@@ -93,6 +94,10 @@ public class PlayerData : MonoBehaviour {
 
     [SerializeField]
     public AnimatorOverrideController SpearCtrl;
+    [SerializeField]
+    public AnimatorOverrideController ArmorCtrl;
+    [SerializeField]
+    public AnimatorOverrideController EquippedCtrl;
 
     private Dictionary<string, Item> Inventory;
     public static Dictionary<string, Item> CraftingInventory = new Dictionary<string, Item>();
@@ -151,6 +156,7 @@ public class PlayerData : MonoBehaviour {
         this.NourishmentStatus = NourishmentLevels.NourishmentThreshold[this.NourishmentLevel] / 2;
         this.NourishmentDecayRate = NourishmentLevels.NourishmentDecayRate[this.NourishmentLevel];
         this.position = this.GetComponent<Transform>().position;
+        HealthBonus = 0;
         this.Alive = true;
         this.IsPerformingAction = false;
         IsAttackOnCooldown = false;
@@ -166,7 +172,8 @@ public class PlayerData : MonoBehaviour {
             {PlayerActions.BuildWall, false },
             {PlayerActions.UseSpear, false },
             {PlayerActions.UseRadar, false },
-            {PlayerActions.UseBeacon, false }
+            {PlayerActions.UseBeacon, false},
+            {PlayerActions.UseHeavyArmour, false}
         };
         this.Inventory = new Dictionary<string, Item>();
         this.GetComponent<PlayerFogOfWar>().UpdateFogOfWar();
@@ -187,6 +194,7 @@ public class PlayerData : MonoBehaviour {
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
         this.AddItem(new Wall(++Item.IdCounter, true), this.GetInventory(), NumItemSlots, Slots, Items);
+        //
     }
 
     // Update is called once per frame
@@ -216,9 +224,10 @@ public class PlayerData : MonoBehaviour {
     }
 
     public void UpdateHealth() {
-        this.Health = System.Math.Min(MaximumHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
-        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / MaximumHealth;
-        HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + MaximumHealth.ToString("F0");
+        float maxHealth = MaximumHealth + HealthBonus;
+        this.Health = System.Math.Min(maxHealth, this.Health + (this.HealthRegeneration * Time.deltaTime));
+        this.HealthBar.GetComponent<Image>().fillAmount = this.Health / maxHealth;
+        HealthText.GetComponent<TextMeshProUGUI>().text = System.Math.Ceiling(Health) + " / " + maxHealth.ToString("F0");
     }
 
     public void ApplyNourishmentDecay() {

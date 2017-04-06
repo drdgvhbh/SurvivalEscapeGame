@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class GameTimer : MonoBehaviour {
 
     [SerializeField]
     private GameObject TextObj;
-    private Text Text;
+    private TextMeshProUGUI Text;
 
     [SerializeField]
     private GameObject GameOverText;
@@ -55,7 +56,7 @@ public class GameTimer : MonoBehaviour {
         Timer = 0;
         Interval = 1.0f;
         Coroutine = ReduceTime();
-        Text = TextObj.GetComponent<Text>();
+        Text = TextObj.GetComponent<TextMeshProUGUI>();
         StartCoroutine(ReduceTime());
 
     }

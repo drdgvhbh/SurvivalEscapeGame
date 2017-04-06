@@ -160,6 +160,35 @@
 			"Damage" : 15 
 		}
 ,	
+		"HeavyArmour" : 
+		{
+			"Name" : "HeavyArmour",
+			"Description" : "A strong piece of armour that increases your health.",
+			"MaximumQuantity" : 10,
+			"Icon" : "Sprites/Items/heavyarmor",
+			"IconIndex" : 0,
+			"StaminaCost" : 15.0,
+			"ChannelDuration" : 0.5,
+			"Consumable" : true,
+			"Locations" :,
+			"UsableIn" : ,
+			"Components" :
+			{
+				"0" :
+				{ 
+					"Type" :"Fabric",
+					"Quantity" : 3
+				},
+				"1" :
+				{ 
+					"Type" :"SilverOre",
+					"Quantity" : 1
+				},
+			},
+			"Damage" : 0, 
+			"HealthBonus" : 15
+		}		
+,	
 		"SacredItem" : 
 		{
 			"Name" : "SacredItem",
@@ -207,8 +236,8 @@
 			"UsableIn" : ["All"],
 			"Components" :,
 			"Damage" : 0, 
-			"NourishmentReplenishment" : 6,
-			"StaminaReplenishment" : 6
+			"NourishmentReplenishment" : 10,
+			"StaminaReplenishment" : 0
 		}
 ,	
 		"Fabric" : 
@@ -245,12 +274,12 @@
 				"0" :
 				{ 
 					"Type" :"Wood",
-					"Quantity" : 3
+					"Quantity" : 1
 				},
 				"1" :
 				{ 
 					"Type" :"Stone",
-					"Quantity" : 4
+					"Quantity" : 2
 				},
 				"2" :
 				{ 
@@ -289,7 +318,7 @@
 		"Berry" : 
 		{
 			"Name" : "Berry",
-			"Description" : "	",
+			"Description" : "A not so poisonous type of plant.",
 			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/berry",
 			"IconIndex" : 0,
@@ -308,7 +337,7 @@
 		{
 			"Name" : "Cocoberry",
 			"Description" : "A fine combination of coconuts and berries. This item provides more nourishment points in comparison to its individual components",
-			"MaximumQuantity" : 3,
+			"MaximumQuantity" : 10,
 			"Icon" : "Sprites/Items/cocoberry",
 			"IconIndex" : 0,
 			"StaminaCost" : 3.0,
@@ -332,6 +361,36 @@
 			"Damage" : 0, 
 			"NourishmentReplenishment" : 25,
 			"HealthReplenishment" : 5
+		}
+,	
+		"BerryBananaCocosalad" : 
+		{
+			"Name" : "BerryBananaCocosalad",
+			"Description" : "What a fine and delicious treat",
+			"MaximumQuantity" : 10,
+			"Icon" : "Sprites/Items/fruitsalad",
+			"IconIndex" : 0,
+			"StaminaCost" : 10.0,
+			"ChannelDuration" : 1.0,
+			"Consumable" : true,
+			"Locations" : ,
+			"UsableIn" : ["All"],
+			"Components" :
+			{
+				"0" :
+				{ 
+					"Type" :"Cocoberry",
+					"Quantity" : 2
+				},
+				"1" :
+				{ 
+					"Type" :"Banana",
+					"Quantity" : 1
+				}
+			},
+			"Damage" : 0, 
+			"NourishmentReplenishment" : 85,
+			"HealthReplenishment"
 		}
 ,	
 		"Torch" : 

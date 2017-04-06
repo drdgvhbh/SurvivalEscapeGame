@@ -78,7 +78,8 @@ public class ItemMenu : MonoBehaviour {
             + "<b>Damage:</b> " + thisTextNode["Damage"] + "\n"
             + "<b>Nourishment Replenishment:</b> " + thisTextNode["NourishmentReplenishment"] + "\n"
             + "<b>Health Replenishment:</b> " + thisTextNode["HealthReplenishment"] + "\n"
-            + "<b>Stamina Replenishment:</b> " + thisTextNode["StaminaReplenishment"] + "\n";
+            + "<b>Stamina Replenishment:</b> " + thisTextNode["StaminaReplenishment"] + "\n"
+            + "<b>Health Bonus:</b> " + thisTextNode["HealthBonus"] + "\n";
         AdvancedEffects.GetComponent<Text>().text = AdvancedString;
         Image.GetComponent<Image>().sprite = Resources.LoadAll<Sprite>(thisTextNode["Icon"])[thisTextNode["IconIndex"]];
     }

@@ -61,7 +61,7 @@ public class Model : MonoBehaviour {
                         squinf = true;
                 } while (squinf == false);
                 CreateEnemy(idx);
-                if (counter != 0 && counter % 4 == 0) {
+                if (counter != 0 && counter % 5 == 0) {
                     numSpawns++;
                 }
             }
@@ -113,7 +113,8 @@ public class Model : MonoBehaviour {
         new Spear(-1, false);
         new Granary(-1, false);
         new DistressBeacon(-1, false);
-       
+        new BerryBananaCocosalad(-1, false);
+        new HeavyArmour(-1, false);
         Coroutine = UpgradeEnemies(15.0f);
        StartCoroutine(Coroutine);
         Time.timeScale = 0;

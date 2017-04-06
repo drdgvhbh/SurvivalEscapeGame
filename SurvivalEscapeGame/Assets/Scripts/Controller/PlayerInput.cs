@@ -74,12 +74,15 @@ public class PlayerInput : MonoBehaviour {
         Actions.Add(Global.ItemNames[ItemList.Coconut], EatCoconut);
         Actions.Add(Global.ItemNames[ItemList.Berry], EatBerry);
         Actions.Add(Global.ItemNames[ItemList.Cocoberry], EatCocoberry);
+        Actions.Add(Global.ItemNames[ItemList.BerryBananaCocosalad], EatBerryBananaCocosalad);
         Actions.Add(Global.ItemNames[ItemList.Granary], BuildGranary);
         Actions.Add(Global.ItemNames[ItemList.Wall], BuildWall);
         Actions.Add(Global.ItemNames[ItemList.Spear], UseSpear);
         Actions.Add(Global.ItemNames[ItemList.Banana], EatBanana);
         Actions.Add(Global.ItemNames[ItemList.Radar], UseRadar);
         Actions.Add(Global.ItemNames[ItemList.DistressBeacon], UseBeacon);
+        Actions.Add(Global.ItemNames[ItemList.HeavyArmour], UseHeavyArmour);       
+
     }
 
     private void Start() {
@@ -111,6 +114,8 @@ public class PlayerInput : MonoBehaviour {
         EatingBanana();
         UsingRadar();
         UsingBeacon();
+        EatingBerryBananaCocosalad();
+        UsingHeavyArmour();
         if (Input.GetMouseButtonDown(1)) {
             Attack();
         }
@@ -181,22 +186,6 @@ public class PlayerInput : MonoBehaviour {
            // animCtrl.ResetTrigger(AnimationActions[PlayerAnimationActions.IdleRight]);
             animCtrl.SetTrigger(AnimationActions[PlayerAnimationActions.MoveUp]);
         }
-        /* if ((int)Direction != 2) {
-             GetPlayerData().Direction = 1;
-             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
-                 animCtrl.ResetTrigger("MoveLeft");
-                 animCtrl.SetTrigger("MoveRight");
-
-             }
-         } else if ((int)Direction != 4) {
-             GetPlayerData().Direction = -1;
-             if (!(GetPlayerData().IsWeaponEquipped && GetPlayerData().IsShieldEquipped)) {
-                 animCtrl.ResetTrigger("MoveRight");
-                 animCtrl.SetTrigger("MoveLeft");
-
-             }
-         }
-         */
     }
 
     protected void Attack() {
@@ -352,6 +341,32 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
+    protected void UseHeavyArmour() {
+        if (AItemFcns(PlayerActions.UseHeavyArmour, ItemList.HeavyArmour)) {
+            GUItext.text = "Equipping Heavy Armour.";
+            Debug.Log("Equipping Heavy Armour");
+            ChannelingBarMask.SetActive(true);
+            UsingHeavyArmour();
+        }
+    }
+
+    public void UsingHeavyArmour() {
+        if (Channeling(ItemList.HeavyArmour, PlayerActions.UseHeavyArmour) == PlayerActions.UseHeavyArmour) {
+            PlayerData pd = GetComponent<PlayerData>();
+            HeavyArmour ai = (HeavyArmour)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.HeavyArmour]]);
+            GUItext.text = "Health increased by" + ai.HealthBonus;
+            pd.HealthBonus += ai.HealthBonus;
+            pd.RemoveItem(ai, 1, pd.GetInventory());
+            Debug.Log("Health increased by" + ai.HealthBonus + ")");
+            pd.IsArmourEquipped = true;
+            if (!pd.IsWeaponEquipped) {
+                GetComponent<Animator>().runtimeAnimatorController = pd.ArmorCtrl;
+            } else if (pd.IsArmourEquipped) {
+                GetComponent<Animator>().runtimeAnimatorController = pd.EquippedCtrl;
+            }
+        }
+    }
+
     public void BuildTent() {
         if (AItemFcns(PlayerActions.BuildTent, ItemList.Tent)) {
             GUItext.text = "Building tent.";
@@ -379,8 +394,10 @@ public class PlayerInput : MonoBehaviour {
             pd.RemoveItem(ai, 1, pd.GetInventory());
             Debug.Log("Damage increased from (" + pd.Damage + ") -> (" + (float)(pd.Damage + ai.Damage) + ")");
             pd.IsWeaponEquipped = true;
-            if (!pd.IsShieldEquipped) {
+            if (!pd.IsArmourEquipped) {
                 GetComponent<Animator>().runtimeAnimatorController = pd.SpearCtrl;
+            } else if (pd.IsWeaponEquipped) {
+                GetComponent<Animator>().runtimeAnimatorController = pd.EquippedCtrl;
             }
         }
     }
@@ -476,6 +493,22 @@ public class PlayerInput : MonoBehaviour {
         if (Channeling(ItemList.Berry, PlayerActions.Eat) == PlayerActions.Eat) {
             Berry berry = (Berry)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.Berry]]);
             berry.Eat(this.GetPlayerData());
+            Nourish.Play();
+        }
+    }
+
+    public void EatBerryBananaCocosalad() {
+        if (AItemFcns(PlayerActions.Eat, ItemList.BerryBananaCocosalad)) {
+            GUItext.text = "Consuming Berry Banana Cocosalad.";
+            ChannelingBarMask.SetActive(true);
+            EatingBerryBananaCocosalad();
+        }
+    }
+
+    protected void EatingBerryBananaCocosalad() {
+        if (Channeling(ItemList.BerryBananaCocosalad, PlayerActions.Eat) == PlayerActions.Eat) {
+            BerryBananaCocosalad bbc = (BerryBananaCocosalad)(this.GetPlayerData().GetInventory()[Global.ItemNames[ItemList.BerryBananaCocosalad]]);
+            bbc.Eat(this.GetPlayerData());
             Nourish.Play();
         }
     }

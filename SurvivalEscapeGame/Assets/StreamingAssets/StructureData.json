@@ -8,17 +8,17 @@
 			{
 				"1" : 
 				{
-					"Health" : 75,
+					"Health" : 250,
 					"LockedSlots" : 6 
 				},
 				"2" : 
 				{
-					"Health" : 100,
+					"Health" : 250,
 					"LockedSlots" : 5 
 				},
 				"3" : 
 				{
-					"Health" : 125,
+					"Health" : 250,
 					"LockedSlots" : 4 
 				}
 			}
@@ -30,7 +30,7 @@
 			{
 				"1" : 
 				{
-					"Health" : 50,
+					"Health" : 125,
 					"LockedSlots" : 7 
 				}
 			}
@@ -43,31 +43,31 @@
 				"1" : 
 				{
 					"Health" : 100,
-					"LockedSlots" : 8, 
+					"LockedSlots" : 7, 
 					"ReturnDmg" : 15
 				},
 				"2" : 
 				{
 					"Health" : 200,
-					"LockedSlots" : 8, 
+					"LockedSlots" : 7, 
 					"ReturnDmg" : 30
 				},
 				"3" : 
 				{
 					"Health" : 300,
-					"LockedSlots" : 8, 
+					"LockedSlots" : 7, 
 					"ReturnDmg" : 45
 				},
 				"4" : 
 				{
 					"Health" : 400,
-					"LockedSlots" : 8, 
+					"LockedSlots" : 7, 
 					"ReturnDmg" : 60
 				},
 				"5" : 
 				{
 					"Health" : 500,
-					"LockedSlots" : 8, 
+					"LockedSlots" : 7, 
 					"ReturnDmg" : 75
 				}
 			}

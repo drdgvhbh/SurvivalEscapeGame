@@ -24,7 +24,9 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
         {ItemList.Torch, new Torch[0] },
         {ItemList.Wall, new Wall[0] },
         {ItemList.Spear, new Spear[0]},
-        {ItemList.DistressBeacon, new DistressBeacon[0] }
+        {ItemList.DistressBeacon, new DistressBeacon[0] },
+        {ItemList.BerryBananaCocosalad, new BerryBananaCocosalad[0] },
+        {ItemList.HeavyArmour, new HeavyArmour[0] }
     };
 
     public static Dictionary<ItemList, List<KeyValuePair<string, int>>> CraftableItems = new Dictionary<ItemList, List<KeyValuePair<string, int>>> {
@@ -35,7 +37,9 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
         {ItemList.Torch, Torch.CraftingComponents },
         {ItemList.Wall, Wall.CraftingComponents },
         {ItemList.Spear, Spear.CraftingComponents },
-        {ItemList.DistressBeacon, DistressBeacon.CraftingComponents }
+        {ItemList.DistressBeacon, DistressBeacon.CraftingComponents },
+        {ItemList.BerryBananaCocosalad, BerryBananaCocosalad.CraftingComponents },
+        {ItemList.HeavyArmour, HeavyArmour.CraftingComponents }
     };
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -52,7 +56,6 @@ public class Crafting : MonoBehaviour, IPointerDownHandler {
                 if (!(CraftInventory.ContainsKey(components.Key) && CraftInventory[components.Key].GetQuantity() >= components.Value)) {
                     canCraft = false;
                 } else {
-                    Debug.Log("zzz");
                     ItemsToBeRemoved.Add(CraftInventory[components.Key]);
                 }
             }

@@ -107,6 +107,7 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\DistressBeacon.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Food.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Granary.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\ActionItems\HeavyArmor.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Radar.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Shovel.cs" />
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Spear.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Assets\Scripts\Model\Items\ActionItems\Wall.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Banana.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Berry.cs" />
+    <Compile Include="Assets\Scripts\Model\Items\Food\BerryBananaCocosalad.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Cocoberry.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Food\Coconut.cs" />
     <Compile Include="Assets\Scripts\Model\Items\Item.cs" />
